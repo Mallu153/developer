@@ -1,0 +1,9 @@
+<div class="row justify-content-md-center">
+  <div class="col-md-10 p-2">
+    <app-service-request-support-process-tree
+      *ngIf="items?.length > 0"
+      [data]="items"
+      [key]="key"
+    ></app-service-request-support-process-tree>
+  </div>
+</div>

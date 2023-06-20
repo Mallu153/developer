@@ -1,0 +1,560 @@
+<section id="basic-hidden-label-form-layouts">
+  <div class="row match-height">
+    <div class="col-lg-12 col-12">
+      <div class="card">
+        <div class="card-header" [hidden]="!hideItinerarySearch[0]">
+          <h4 class="card-title">{{ pageTitle }}</h4>
+          <form [formGroup]="addPriceForm" autocomplete="off">
+            <div class="form-row">
+              <div class="col-md-3 col-12">
+                <div class="form-group mb-2">
+                  <label for="Itinerary">Itinerary </label>
+                  <!-- bindLabel="itineraryName"
+                  bindValue="id" -->
+                  <ng-select
+                    [items]="itinerary$ | async"
+                    class="custom"
+                    [minTermLength]="minLengthItineraryTerm"
+                    bindLabel="itineraryName"
+                    [loading]="itineraryLoading"
+                    placeholder="Itinerary"
+                    typeToSearchText="Please enter {{ minLengthItineraryTerm }} or more characters"
+                    [typeahead]="itineraryInput$"
+                    formControlName="itinerary"
+                    (change)="onChangeItinerary(addPriceForm.value.itinerary)"
+                    [ngClass]="{
+                      'is-invalid': (submitted || f.itinerary.touched) && f.itinerary.errors,
+                      'edit-ng-select-readonly': edit
+                    }"
+                  >
+                    <ng-template ng-multi-label-tmp let-items="items">
+                      <div class="ng-value" *ngFor="let item of items | slice: 0:0">
+                        <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                      </div>
+                      <div class="ng-value" *ngIf="items?.length > 0">
+                        <span class="ng-value-label">
+                          {{ items?.length }}
+                          selected
+                        </span>
+                      </div>
+                    </ng-template>
+                  </ng-select>
+                  <div *ngIf="(submitted || f.itinerary.touched) && f.itinerary.errors" class="invalid-feedback">
+                    <div *ngIf="f.itinerary.errors.required">This field is required</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="card-content">
+          <div class="card-body">
+            <form [formGroup]="addPriceForm" autocomplete="off" *ngIf="itineraryInfo && itineraryInfo.length > 0">
+              <h4 class="card-title mb-2">
+                {{ priceTitle }}
+                <p class="pull-right font-medium-1" (click)="showItinerayInfo(0)" *ngIf="!hideItinerarySearch[0]">
+                 search
+                </p>
+                <p class="pull-right font-medium-1" (click)="showItinerayInfo(0)" *ngIf="hideItinerarySearch[0]">
+                  hide
+                </p>
+              </h4>
+              <div class="form-row ">
+
+                <div class="col-md-2 col-12 border border-right-0 ">
+                  <div class="form-group mb-2">
+                    <label for="businessUnit">Business Unit</label
+                    ><select
+                      id="businessUnit"
+                      name="businessUnit"
+                      (change)="onChangeBuisnessUnit($event.target.value)"
+                      class="form-control square"
+                      formControlName="businessUnit"
+                    >
+                      <option value="">Choose</option>
+                      <option *ngFor="let bu of businessUnit" [value]="bu.BusinessUnitId">
+                        {{ bu.Name }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-2 col-12  border-top border-bottom ">
+                  <div class="form-group mb-2">
+                    <label for="costCenter">Cost Center</label
+                    ><select
+                      id="costCenter"
+                      name="costCenter"
+                      (change)="onChangeCostCenter($event.target.value)"
+                      class="form-control square"
+                      formControlName="costCenter"
+                    >
+                      <option value="">Choose</option>
+                      <option [value]="costcenter.CostcenterId" *ngFor="let costcenter of costCenter">
+                        {{ costcenter.Name }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-2 col-12  border-top border-bottom ">
+                  <div class="form-group mb-2">
+                    <label for="location">Location</label
+                    ><select id="location" name="location" class="form-control square" formControlName="location">
+                      <option value="">Choose</option>
+                      <option [value]="location.id" *ngFor="let location of location">
+                        {{ location.name }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-2 col-12 border-top border-bottom border-right">
+                  <div class="form-group mb-2">
+                    <label for="customerType">Customer Type</label
+                    ><select
+                      id="customerType"
+                      name="customerType"
+                      class="form-control square"
+                      formControlName="customerType"
+                    >
+                      <option value="">Choose</option>
+                      <option [value]="type.id" *ngFor="let type of customerType">{{type.name}}</option>
+                    </select>
+                  </div>
+                </div>
+
+              </div>
+              <div class="form-row mt-2">
+                <div class="col-md-3 col-12">
+                  <div class="form-group mb-2">
+                    <label for="priceName"> Name</label>
+                    <input
+                      type="text"
+                      id="priceName"
+                      name="priceName"
+                      placeholder="Price Name"
+                      class="form-control square"
+                      formControlName="priceName"
+                      [ngClass]="{ 'is-invalid': (submitted || f.priceName.touched) && f.priceName.errors }"
+                    />
+                    <div *ngIf="(submitted || f.priceName.touched) && f.priceName.errors" class="invalid-feedback">
+                      <div *ngIf="f.priceName.errors.required">This field is required</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3 col-12">
+                  <div class="form-group mb-2">
+                    <label for="Description">Description</label>
+                    <textarea
+                      id="Description"
+                      rows="2"
+                      placeholder="Description"
+                      name="Description"
+                      class="form-control square description-box"
+                      formControlName="description"
+                    >
+                    </textarea>
+                  </div>
+                </div>
+                <div class="col-md-2 col-12 ">
+                  <div class="form-group mb-2  ">
+                    <label for="From">Start Date </label>
+                    <input
+                      type="date"
+                      id="From"
+                      name="From"
+                      class="form-control square "
+                      formControlName="fromDate"
+                      [ngClass]="{ 'is-invalid': (submitted || f.fromDate.touched) && f.fromDate.errors }"
+                    />
+                    <div *ngIf="(submitted || f.fromDate.touched) && f.fromDate.errors" class="invalid-feedback">
+                      <div *ngIf="f.fromDate.errors.required">This field is required</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-2 col-12  ">
+                  <div class="form-group mb-2 ">
+                    <label for="To">End Date </label>
+                    <input
+                      type="date"
+                      id="To"
+                      [min]="addPriceForm.value.fromDate"
+                      name="To"
+                      class="form-control square "
+                      formControlName="toDate"
+                      [ngClass]="{ 'is-invalid': (submitted || f.toDate.touched) && f.toDate.errors }"
+                    />
+                    <div *ngIf="(submitted || f.toDate.touched) && f.toDate.errors" class="invalid-feedback">
+                      <div *ngIf="f.toDate.errors.required">This field is required</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="col-12">
+                  <div class="table-responsive">
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr class="refresh">
+                          <th class="text-center" scope="col" title="Line Number" width="2%">#</th>
+                          <th class="text-center" scope="col" title="Day" width="4%">Day</th>
+
+                          <th class="text-center " scope="col" title="Activity" width="20%">Activity</th>
+                          <th class="text-center" scope="col" title="Dynamic Price" width="2%">Dyn</th>
+                          <th class="text-center" scope="col" title="Standard Price" width="2%">Std</th>
+                          <th class="text-center" scope="col" title="Set Grouping" width="2%">Set</th>
+                          <th class="text-center" scope="col" title="Set Name" width="10%">Set Name</th>
+                          <th class="text-center" scope="col" title="Primary Set" width="2%">PS</th>
+                          <th class="text-center" scope="col" title="Item">Item</th>
+                          <th class="text-center" scope="col" title="Pax Wise">PW</th>
+                          <th class="text-center" scope="col" title="Adult Price">Adult</th>
+                          <th class="text-center" scope="col" title="Child Price">Child</th>
+                          <th class="text-center" scope="col" title="Infant Price">Infant</th>
+                          <th scope="col" class="text-center">
+                            <button
+                              class="btn btn-outline-info btn-sm square"
+                              title="Add New Row"
+                              type="button"
+                              (click)="addPriceLines()"
+                            >
+                              <i class="ft-plus"></i>
+                            </button>
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody formArrayName="priceLines">
+                        <tr *ngFor="let price of priceLines.controls; let i = index" [formGroupName]="i">
+                          <td>{{ i + 1 }}</td>
+                          <td>
+                            <span *ngIf="price.value.itineraryInfoNumber"> {{ price.value.day }}</span>
+                            <label for="day" class="sr-only">Day</label>
+                            <input
+                              type="text"
+                              id="day"
+                              name="day"
+                              *ngIf="!price.value.itineraryInfoNumber"
+                              class="form-control form-control-sm square border-0"
+                              formControlName="day"
+                            />
+                          </td>
+                          <td>
+                            <span *ngIf="price.value.itineraryInfoNumber">{{ price.value.activity }} </span><br/>
+
+                            <span *ngIf="price.value.activity==='FLIGHT'&&price.value.flightFrom">
+                              {{ price.value.flightFrom}} - {{ price.value.flightTo}} - {{ price.value.flightAirline}} - {{ price.value.flightClass}} - {{ price.value.startTime}} - {{ price.value.endTime}}
+                            </span>
+                            <span *ngIf="price.value.activity==='HOTEL'&&price.value.hotelName">
+                              {{ price.value.hotelName}} - {{ price.value.hotelRoomType}} - {{ price.value.startTime}} - {{ price.value.endTime}}
+                            </span>
+                            <span *ngIf="price.value.activity==='GENERAL'&& price.value.activityName">
+                              {{ price.value.activityName}} - {{ price.value.activityLocation}} - {{ price.value.startTime}} - {{ price.value.endTime}}
+                            </span>
+                            <label for="Activity" class="sr-only">Activity</label>
+                            <input
+                              type="text"
+                              id="Activity"
+                              *ngIf="!price.value.itineraryInfoNumber"
+                              name="Activity"
+                              class="form-control form-control-sm square border-0"
+                              formControlName="activity"
+                            />
+                          </td>
+                          <td>
+
+                            <ul class="list-unstyled mb-0 text-center">
+                              <li class="d-inline-block mr-2 mb-2">
+                                <div class="checkbox">
+                                  <label for="Dynamic-{{ i }}" class="sr-only">Dynamic</label>
+                                  <input
+                                    type="checkbox"
+                                    id="dynamicPrice-{{ i }}"
+                                    (change)="onChangeDynamicInput($event, i,'change')"
+                                    formControlName="dynamic"
+                                  /><label for="dynamicPrice-{{ i }}"><span></span></label>
+                                </div>
+                              </li>
+                            </ul>
+                          </td>
+                          <td>
+
+                            <ul class="list-unstyled mb-0 text-center">
+                              <li class="d-inline-block mr-2 mb-2">
+                                <div class="checkbox">
+                                  <label for="Standard-{{ i }}" class="sr-only">Standard</label>
+                                  <input type="checkbox" id="standardPrice-{{ i }}"
+                                   (change)="onChangeStandard($event, i)"
+                                   formControlName="standard" />
+                                   <label
+                                    for="standardPrice-{{ i }}"
+                                    ><span></span
+                                  ></label>
+                                </div>
+                              </li>
+                            </ul>
+                          </td>
+                          <td>
+
+                            <ul class="list-unstyled mb-0 text-center">
+                              <li class="d-inline-block mr-2 mb-2">
+                                <div class="checkbox">
+                                  <label for="setGroup-{{ i }}" class="sr-only">Set Group</label>
+                                  <input
+                                    type="checkbox"
+                                    id="setGroup-{{ i }}"
+                                    (change)="onChangeSetGroup(price.value.setGroup, i, price.value.setName)"
+                                    formControlName="setGroup"
+                                  /><label for="setGroup-{{ i }}"><span></span></label>
+                                </div>
+                              </li>
+                            </ul>
+                          </td>
+                          <td>
+
+                           <!--  (keypress)="onChangeSetName(i, price.value.setName,price.value.setGroup)" -->
+                            <label for="setName" class="sr-only">Set Name</label>
+                            <input
+                              type="text"
+                              id="setName"
+                              name="setName"
+                              (keypress)="onChangeSetName(i, price.value.setName,price.value.setGroup)"
+                              (input)="onChangeSetName(i, price.value.setName,price.value.setGroup)"
+
+                              *ngIf="price.value.setGroup"
+                              class="form-control form-control-sm square border-0"
+                              formControlName="setName"
+                              [ngClass]="{
+                                'is-invalid':
+                                  priceLines.controls[i].get('setName').errors &&
+                                  isValidFormSubmitted != null &&
+                                  !isValidFormSubmitted
+                              }"
+                            />
+                            <div
+                              class="invalid-feedback"
+                              *ngIf="
+                                priceLines.controls[i].get('setName').errors?.required &&
+                                isValidFormSubmitted != null &&
+                                !isValidFormSubmitted
+                              "
+                            >
+                              This field is required
+                            </div>
+                          </td>
+                          <td>
+
+                            <ul
+                              class="list-unstyled mb-0 text-center"
+                              *ngIf="price.value.setName && price.value.setGroup"
+                            >
+                              <li class="d-inline-block mr-2 mb-2">
+                                <div class="checkbox">
+                                  <label for="setH-{{ i }}" class="sr-only">Set H</label>
+                                  <input
+                                    type="checkbox"
+                                    id="setH-{{ i }}"
+                                    (change)="onChangeSetH($event, i, price.value.setName)"
+                                    formControlName="setH"
+                                    [ngClass]="{
+                                      'is-invalid':
+                                        priceLines.controls[i].get('setH').errors &&
+                                        isValidFormSubmitted != null &&
+                                        !isValidFormSubmitted
+                                    }"
+                                  /><label for="setH-{{ i }}"><span></span></label>
+                                  <div
+                              class="invalid-feedback"
+                              *ngIf="
+                                priceLines.controls[i].get('setH').errors?.required &&
+                                isValidFormSubmitted != null &&
+                                !isValidFormSubmitted
+                              "
+                            >
+                              This field is required
+                            </div>
+                                </div>
+                              </li>
+                            </ul>
+                          </td>
+                          <td>
+
+                            <label for="Item" class="sr-only">Item</label>
+                            <select
+                              id="item"
+                              name="item"
+                              class="form-control form-control-sm square border-0"
+                              formControlName="item"
+                              [ngClass]="{
+                                'is-invalid':
+                                  priceLines.controls[i].get('item').errors &&
+                                  isValidFormSubmitted != null &&
+                                  !isValidFormSubmitted
+                              }"
+                            >
+                              <option value=""></option>
+                              <option *ngFor="let item of itemListInfo" [value]="item.itemId">
+                                {{ item.itemName }}
+                              </option>
+                            </select>
+                            <div
+                              class="invalid-feedback"
+                              *ngIf="
+                                priceLines.controls[i].get('item').errors?.required &&
+                                isValidFormSubmitted != null &&
+                                !isValidFormSubmitted
+                              "
+                            >
+                              This field is required
+                            </div>
+                          </td>
+                          <td>
+
+                            <ul class="list-unstyled mb-0 text-center">
+                              <li class="d-inline-block mr-2 mb-2">
+                                <div class="checkbox">
+                                  <label for="breakup-{{ i }}" class="sr-only">Breakup</label>
+                                  <input type="checkbox" id="breakup-{{ i }}"
+                                  (change)="onChangeBreakUps($event,i)"
+                                   formControlName="breakup" /><label
+                                    for="breakup-{{ i }}"
+                                    ><span></span
+                                  ></label>
+                                </div>
+                              </li>
+                            </ul>
+                          </td>
+                          <td>
+
+                            <label for="Adult" class="sr-only">Adult</label>
+                            <input
+                              type="text"
+                              id="Adult"
+                              (keypress)="validatenumber($event)"
+                              name="Adult"
+                              formControlName="adult"
+
+                              decimalPipe
+                              class="form-control form-control-sm text-right square border-0"
+                              [ngClass]="{
+                                'is-invalid':
+                                  priceLines.controls[i].get('adult').errors &&
+                                  isValidFormSubmitted != null &&
+                                  !isValidFormSubmitted
+                              }"
+                            />
+                            <div
+                              class="invalid-feedback"
+                              *ngIf="
+                                priceLines.controls[i].get('adult').errors?.required &&
+                                isValidFormSubmitted != null &&
+                                !isValidFormSubmitted
+                              "
+                            >
+                              This field is required
+                            </div>
+                          </td>
+                          <td>
+
+                            <label for="Child" class="sr-only">Child</label>
+                            <input
+                              type="text"
+                              id="Child"
+                              decimalPipe
+                              (keypress)="validatenumber($event)"
+                              name="Child"
+                              *ngIf="price.value.breakup"
+                              formControlName="child"
+                              class="form-control form-control-sm text-right square border-0"
+                              [ngClass]="{
+                                'is-invalid':
+                                  priceLines.controls[i].get('child').errors &&
+                                  isValidFormSubmitted != null &&
+                                  !isValidFormSubmitted
+                              }"
+                            />
+                            <div
+                              class="invalid-feedback"
+                              *ngIf="
+                                priceLines.controls[i].get('child').errors?.required &&
+                                isValidFormSubmitted != null &&
+                                !isValidFormSubmitted
+                              "
+                            >
+                              This field is required
+                            </div>
+                          </td>
+                          <td>
+
+                            <label for="Infant" class="sr-only">Infant</label>
+                            <input
+                              type="text"
+                              id="Infant"
+                              decimalPipe
+                              (keypress)="validatenumber($event)"
+                              *ngIf="price.value.breakup"
+                              name="Infant"
+                              formControlName="infant"
+                              class="form-control form-control-sm text-right square border-0"
+                              [ngClass]="{
+                                'is-invalid':
+                                  priceLines.controls[i].get('infant').errors &&
+                                  isValidFormSubmitted != null &&
+                                  !isValidFormSubmitted
+                              }"
+                            />
+                            <div
+                              class="invalid-feedback"
+                              *ngIf="
+                                priceLines.controls[i].get('infant').errors?.required &&
+                                isValidFormSubmitted != null &&
+                                !isValidFormSubmitted
+                              "
+                            >
+                              This field is required
+                            </div>
+                          </td>
+                          <td class="text-center">
+                            <button
+                              class="btn btn-outline-info btn-sm square"
+                              *ngIf="!price.value.itineraryInfoNumber"
+                              (click)="deletePriceLines(i)"
+                              type="button"
+                              title="Remove"
+                            >
+                              <i class="ft-minus"></i>
+                            </button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-2">
+                <button type="button" *ngIf="!edit" class="btn btn-primary mr-2" (click)="onSubmitAddPriceForm('save')">
+                  <i class="ft-bookmark mr-1"></i>Save
+                </button>
+                <button type="button" *ngIf="edit" (click)="onSubmitAddPriceForm('update')" class="btn btn-primary mr-2">
+                  <i class="ft-bookmark mr-1"></i>Update
+                </button>
+                <button type="button" *ngIf="!edit" class="btn btn-secondary" (click)="reset()">
+                  <i class="ft-x mr-1"></i>Cancel
+                </button>
+                <button
+                  type="button"
+                  [routerLink]="['/dashboard/packages/price-list']"
+                  *ngIf="edit"
+                  class="btn btn-secondary"
+                >
+                  <i class="ft-x mr-1"></i>Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+

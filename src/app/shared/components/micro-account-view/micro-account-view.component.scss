@@ -1,0 +1,27 @@
+.timeline-center .timeline-item-credit::after {
+  content: "";
+  position: absolute;
+  left: 20px;
+  top: 32px;
+  width: 1rem;
+  z-index: 0;
+  border: 1px dashed #e0e0e0;
+}
+.timeline-center .timeline-item-credit > .timeline-badge {
+  left: -20px;
+}
+.timeline-center .timeline-item-credit {
+  padding: 0px 0px 30px 35px;
+}
+.timeline .timeline-item-credit {
+  float: right;
+  clear: right;
+}
+
+.fa-money-payment::before {
+  content: "\f0d6";
+}
+
+.fa-ticket-cancel::before {
+  content: "\f145";
+}

@@ -1,0 +1,33 @@
+.inset-shadow {
+  // box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.5);
+  box-shadow: inset 0 0 5px 0 rgba(25, 42, 70, 0.11);
+}
+
+.custom-card-header-in-price{
+  background: #f7f7f7;
+  color: #2470c7;
+}
+
+.custom-card-header-in-price span.icon-block {
+  color: #fff;
+  background-color: #2f8be6;
+  border-color: #2f8be6;
+  border-radius: 50px;
+  -moz-border-radius: 50px;
+  -webkit-border-radius: 50px;
+  text-align: center;
+  display: inline-block;
+  padding: 8px;
+  width: 40px;
+  height: 40px;
+}
+
+.w-25px{
+  width: 25px;
+}
+.h-25px{
+  height: 25px;
+}
+.lh-25px{
+  line-height: 25px;
+}

@@ -1,0 +1,218 @@
+<!-- Requests Calendar Starts-->
+<section id="requests-calendar">
+  <ng-template #modalContent let-close="close">
+    <div class="modal-header">
+      <h5 class="modal-title">{{ modalData?.action }}</h5>
+      <button type="button" class="close" (click)="close()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form action="#" class="form form-horizontal">
+        <div class="form-body">
+          <div class="form-group">
+            <label>Event Title:</label>
+            <input
+              type="text"
+              name="event-title"
+              class="form-control"
+              [(ngModel)]="modalData?.event.title"
+              (keyup)="refresh.next()"
+            />
+          </div>
+          <div class="row">
+            <div class="col-lg-6 col-12">
+              <div class="form-group">
+                <label>Primary Color:</label>
+                <input
+                  type="color"
+                  name="primary-color"
+                  [(ngModel)]="modalData?.event.color.primary"
+                  (change)="refresh.next()"
+                />
+              </div>
+            </div>
+            <div class="col-lg-6 col-12">
+              <div class="form-group">
+                <label>Secondary Color:</label>
+                <input
+                  type="color"
+                  name="secondary-color"
+                  [(ngModel)]="modalData?.event.color.secondary"
+                  (change)="refresh.next()"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-6 col-12">
+              <div class="form-group">
+                <label>Starts At:</label>
+                <mwl-demo-utils-date-time-picker
+                  name="starts-at"
+                  [(ngModel)]="modalData?.event.start"
+                  (ngModelChange)="refresh.next()"
+                  placeholder="Not set"
+                >
+                </mwl-demo-utils-date-time-picker>
+              </div>
+            </div>
+            <div class="col-lg-6 col-12">
+              <div class="form-group">
+                <label>Ends At:</label>
+                <mwl-demo-utils-date-time-picker
+                  name="ends-at"
+                  [(ngModel)]="modalData?.event.end"
+                  (ngModelChange)="refresh.next()"
+                  placeholder="Not set"
+                >
+                </mwl-demo-utils-date-time-picker>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-secondary" (click)="close()">OK</button>
+    </div>
+  </ng-template>
+
+  <div class="card">
+    <div class="card-content">
+      <div class="card-body">
+        <div class="d-sm-flex justify-content-between align-items-center mb-3">
+          <div class="text-center text-sm-left mb-2 mb-sm-0">
+            <div class="btn-group">
+              <a
+                class="btn ft-chevron-left"
+                mwlCalendarPreviousView
+                [view]="view"
+                [(viewDate)]="viewDate"
+                (click)="getBookings()"
+              >
+                <i class="icon icon-arrows-left"></i>
+              </a>
+              <a class="btn btn-outline-light text-primary" mwlCalendarToday [(viewDate)]="viewDate">
+                {{ viewDate | calendarDate: view + 'ViewTitle':'en' }}
+              </a>
+              <a
+                class="btn ft-chevron-right"
+                mwlCalendarNextView
+                [view]="view"
+                [(viewDate)]="viewDate"
+                (click)="getBookings()"
+              >
+                <i class="icon icon-arrows-right"></i>
+              </a>
+            </div>
+          </div>
+
+          <div class="text-center text-sm-left mb-2 mb-sm-0">
+            <!-- <button class="btn btn-outline-primary float-right "  *ngIf="router?.url?.includes('/dashboard/cash-management/cash-dashboard')"  [routerLink]="['/dashboard/request/pax-search']">
+              Create Request
+            </button> -->
+            <button class="btn btn-outline-primary float-right mr-1" (click)="getBookings('refreshApi')">
+              <i class="ft-refresh-cw"></i>
+            </button>
+          </div>
+        </div>
+        <ng-template #loading>
+          <div class="text-center">
+            <i class="fas fa-spin fa-spinner fa-3x"></i> <br />
+            Loading bookings...
+          </div>
+        </ng-template>
+        <div *ngIf="bookings$ | async; else loading; let events">
+          <!--
+            (dayClicked)="dayClicked($event.day)"
+             [activeDayIsOpen]="activeDayIsOpen"
+            (eventClicked)="handleEvent('Clicked', $event.event)"
+            (eventTimesChanged)="eventTimesChanged($event)"
+           -->
+          <mwl-calendar-month-view
+            [viewDate]="viewDate"
+            [events]="events"
+            [refresh]="refresh"
+            [cellTemplate]="customCellTemplate"
+          >
+          </mwl-calendar-month-view>
+          <ng-template #customCellTemplate let-day="day" let-locale="locale">
+            <div class="cal-cell-top">
+              <!-- <span class="cal-day-badge"  triggers="mouseenter:mouseleave"   [ngbPopover]="'Issued vouchered total count'"  *ngIf="day?.events[0]?.meta?.issuedVoucheredCount > 0">
+                {{ day?.events[0]?.meta?.issuedVoucheredCount }}
+              </span>
+              <span class="notIssuedVoucheredCount cal-day-badge"  triggers="mouseenter:mouseleave"   [ngbPopover]="'Not issued vouchered total count'" *ngIf="day?.events[0]?.meta?.notIssuedVoucheredCount > 0">
+                {{ day?.events[0]?.meta?.notIssuedVoucheredCount }}
+              </span> -->
+              <span class="cal-day-number">{{ day.date | calendarDate: 'monthViewDayNumber':locale }}</span>
+            </div>
+            <div class="cal-events" *ngIf="day?.events[0]?.meta?.productIssuedInfo?.length > 0">
+              <div
+                class="cal-event text-primary"
+                *ngFor="let product of day?.events[0]?.meta?.productIssuedInfo; let i = index; trackBy: trackByFn"
+              >
+                <i
+                  class="icon mr-1 fas"
+                  triggers="mouseenter:mouseleave"
+                  [ngbPopover]="product?.productName"
+                  [ngClass]="{
+                    ' fa-plane1': product?.productId === products.flight,
+                    'fa-hotel1': product?.productId === products.hotel,
+                    ' fa-map-marker1': product?.productId === products.Attraction,
+                    ' fa-car': product?.productId === products.Ancillary
+                  }"
+                ></i>
+
+                <span class="d-flex align-items-center">
+                  <a
+                    target="_blank"
+                    [routerLink]="['/dashboard/reports/booking/view']"
+                    [queryParams]="{
+                      booking_product_name: product?.productName,
+                      booking_product_no: product?.productId,
+                      date_of_journey: day?.events[0]?.meta.referenceDate,
+                      booking_user: day?.events[0]?.meta.userId,
+                      issused: 'Yes'
+                    }"
+                  >
+                    {{ product?.productIssuedVouchered }}
+                  </a>
+                </span>
+                <span class="d-flex align-items-center">
+                  <span class="mx-1 text-dark">/</span>
+                  <i
+                    class="icon fas"
+                    style="margin-right: 3px"
+                    triggers="mouseenter:mouseleave"
+                    [ngbPopover]="product?.productName"
+                    [ngClass]="{
+                      ' fa-plane2': product?.productId === products.flight,
+                      'fa-hotel2': product?.productId === products.hotel,
+                      ' fa-map-marker2': product?.productId === products.Attraction,
+                      ' fa-car': product?.productId === products.Ancillary
+                    }"
+                  ></i>
+                  <a
+                    target="_blank"
+                    class="text-success"
+                    [routerLink]="['/dashboard/reports/booking/view']"
+                    [queryParams]="{
+                      booking_product_name: product?.productName,
+                      booking_product_no: product?.productId,
+                      date_of_journey: day?.events[0]?.meta.referenceDate,
+                      booking_user: day?.events[0]?.meta.userId,
+                      issused: 'No'
+                    }"
+                  >
+                    {{ product?.productNotIssuedVouchered }}
+                  </a>
+                </span>
+              </div>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

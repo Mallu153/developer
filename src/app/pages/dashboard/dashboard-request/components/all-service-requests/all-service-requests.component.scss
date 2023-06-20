@@ -1,0 +1,83 @@
+.pointer {
+  cursor: pointer;
+}
+/* /input type=number increment hiddeen css/ */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  /* display: none; <- Crashes Chrome on hover */
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+input[type='number']:hover {
+  -moz-appearance: textfield; /* Firefox */
+  appearance: textfield; /* Firefox */
+}
+
+.listtr {
+  background: #975aff;
+  color: #ffffff;
+  padding: 10px;
+}
+th,
+td,
+td {
+  border-bottom-width: 0;
+}
+
+.table td,
+.table th {
+  font-size: 14px !important;
+  text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  padding: 14px;
+}
+
+.table th {
+  border-top: 0px solid #975aff;
+}
+
+.table-responsive {
+  border: 0px solid #cecece;
+}
+
+.wrap-text {
+  word-wrap: break-word;
+}
+
+.color-light {
+  color: #ffffff;
+}
+
+
+
+.table thead th {
+  border-bottom: 0px solid #e0e0e0;
+}
+/* a,
+a:hover {
+  text-decoration: none;
+  color: #975aff;
+} */
+
+//tabs overcome css
+.nav-tabs {
+  border-bottom: 0;
+  /* border-bottom: 1px solid #dee2e6;  */
+}
+
+.nav-tabs .nav-link.active {
+  border-bottom: 0;
+  /* border-bottom: 2px solid #975aff; */
+}
+.long--text {
+ overflow: hidden;
+width: 100%;
+display: -webkit-box;
+-webkit-line-clamp: 1;
+-webkit-box-orient: vertical;
+}
+
+

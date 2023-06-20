@@ -1,0 +1,208 @@
+<section id="basic-hidden-label-form-layouts">
+  <div class="row match-height">
+    <div class="col-lg-12 col-12">
+      <div class="card">
+        <div class="card-header high-late py-1 mt-1" (click)="collapse.toggle()" [attr.aria-expanded]="!isCollapsed"
+        aria-controls="collapseExample">
+          <h4 class="card-title">Submitted RFQ Search
+            <span class="ft-chevron-down-right high-late" >
+              <i class="ft-chevron-down" *ngIf="!isCollapsed"></i>
+              <i class="ft-chevron-up" *ngIf="isCollapsed"></i>
+            </span>
+          </h4>
+        </div>
+        <div class="card-content" #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
+          <div class="card-body">
+            <form [formGroup]="openRFQForm">
+              <div class="form-row">
+                <div class="col-md-2 col-12">
+                  <div class="form-group mb-2">
+                    <label for="SR-Number">SR Number</label>
+                    <input
+                      type="number"
+                      id="SR-Number"
+                      class="form-control square"
+                      placeholder="Enter SR Number"
+                      name="SR-Number"
+                      formControlName="srId"
+                    />
+                  </div>
+                </div>
+                <div class="col-md-3 col-12">
+                  <div class="form-group mb-2">
+                    <label for="customer">Customer</label>
+                    <input
+                      type="search"
+                      id="Customer"
+                      placeholder="Enter Customer Name"
+                      class="form-control square"
+                      name="Customer"
+                      #typeaheadInstance="ngbTypeahead"
+                      [resultTemplate]="searchResultTemplate"
+                      [inputFormatter]="formatter"
+                      [ngbTypeahead]="onSearchCustomer"
+                      formControlName="customerId"
+                      (selectItem)="bindValueOfControl($event, 'customerId')"
+                      (change)="onChangeCustomer($event.target.value)"
+                    />
+                    <ng-template #searchResultTemplate let-r="result" let-t="term">
+                      <ngb-highlight [result]="r.businessName" [term]="t"></ngb-highlight>
+                    </ng-template>
+                  </div>
+                </div>
+                <div class="col-md-2 col-12">
+                  <div class="form-group mb-2">
+                    <label for="CustomerContact">Customer Contact</label>
+
+                    <ng-select #customerContactSelect [items]="contactList"
+                    placeholder="Select"
+                    [searchable]="false" bindLabel="Requestor" bindValue="CUSTOMERCONTACTID" formControlName="customerContactId">
+                      <ng-template ng-header-tmp>
+                          <input class="form-control square" type="text" (input)="customerContactSelect.filter($event.target.value)"/>
+                      </ng-template>
+                  </ng-select>
+                  </div>
+                </div>
+                <div class="col-md-3 col-12">
+                  <div class="form-group mb-2">
+                    <label for="Supplier">Supplier</label>
+
+                    <input
+                      id="supplier"
+                      type="search"
+                      #suppliertypeaheadInstance="ngbTypeahead"
+                      class="form-control square"
+                      placeholder="Enter Supplier Name"
+                      [resultTemplate]="searchSupplierResultTemplate"
+                      [inputFormatter]="Supplierformatter"
+                      formControlName="supplierId"
+                      [ngbTypeahead]="onSearchSupplier"
+                      (selectItem)="bindValueOfControlSupplier($event, 'supplierId')"
+                      (change)="onChangeSupplier($event.target.value)"
+                    />
+
+                    <ng-template #searchSupplierResultTemplate let-r="result" let-t="term">
+                      <ngb-highlight [result]="r.businessName" [term]="t"></ngb-highlight>
+                    </ng-template>
+                  </div>
+                </div>
+                <div class="col-md-2 col-12">
+                  <div class="form-group mb-2">
+                    <label for="SupplierContact">Supplier Contact</label>
+                    <ng-select #SupplierContactSelect [items]="supplierContactList"
+                    placeholder="Select"
+                    [searchable]="false" bindLabel="Requestor" bindValue="CUSTOMERCONTACTID" formControlName="supplierContactId">
+                      <ng-template ng-header-tmp>
+                          <input class="form-control square" type="text" (input)="SupplierContactSelect.filter($event.target.value)"/>
+                      </ng-template>
+                  </ng-select>
+
+                  </div>
+                </div>
+
+              </div>
+              <div class="form-row">
+                <div class="col-md-2 col-12">
+                  <div class="form-group mb-2">
+                    <label for="sr-creation-date">SR Creation Date</label>
+                    <input
+                      type="date"
+                      id="sr-creation-date"
+                      class="form-control square"
+                      formControlName="srCreationDate"
+                      name="sr-creation-date"
+                    />
+                  </div>
+                </div>
+                <div class="col-md-2 col-12">
+                  <div class="form-group mb-2">
+                    <label for="rfq-creation-date">RFQ Creation Date</label>
+                    <input
+                      type="date"
+                      id="rfq-creation-date"
+                      class="form-control square"
+                      formControlName="rfqCreationDate"
+                      name="rfq-creation-date"
+                    />
+                  </div>
+                </div>
+              </div>
+              <button type="button" (click)="onSubmittedSearchForm()" class="btn btn-primary mr-2">
+                <i class="ft-search mr-1"></i>Search
+              </button>
+              <button type="button" (click)="reset()" class="btn btn-secondary"><i class="ft-x mr-1"></i>Reset</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<ngx-spinner size="medium" type="ball-circus" *ngIf="loading"></ngx-spinner>
+
+
+<section id="simple-table" *ngIf="apiResponseData && apiResponseData.length >0">
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+
+        <div class="card-content">
+          <div class="card-body">
+            <fieldset class="form-group" *ngIf="apiResponseData && apiResponseData.length >0">
+              <label>Show
+                <select name="users-list-select"[(ngModel)]="pageSize" class="form-control form-control-sm d-inline-block width-100 p-right-25 ">
+                  <option [ngValue]="10">10</option>
+                  <option [ngValue]="15">15</option>
+                  <option [ngValue]="25">25</option>
+                  <option [ngValue]="50">50</option>
+                  <option [ngValue]="100">100</option>
+                </select>
+                entries</label>
+
+            </fieldset>
+            <div class="table-responsive">
+              <table class="table m-0">
+                <thead>
+                  <tr class="refresh high-late">
+                    <th>#</th>
+                    <th scope="col"  [appSort]="apiResponseData" data-order="desc"data-name="SRID">Sr ID</th>
+                    <th scope="col" [appSort]="apiResponseData" data-order="desc"data-name="srLineId">Sr Line ID</th>
+                    <th scope="col" [appSort]="apiResponseData" data-order="desc"data-name="rfqId">RFQ ID</th>
+                    <th scope="col" [appSort]="apiResponseData" data-order="desc"data-name="BusinessName">Customer </th>
+                    <th scope="col" [appSort]="apiResponseData" data-order="desc"data-name="contactName">Customer Contact </th>
+                    <th scope="col" [appSort]="apiResponseData" data-order="desc"data-name="supplierName">Supplier </th>
+                    <th scope="col" [appSort]="apiResponseData" data-order="desc"data-name="supplierContactName">Supplier Contact </th>
+                    <th scope="col" [appSort]="apiResponseData" data-order="desc"data-name="SupplierTotal">Supplier Total </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let data of apiResponseData | filter:searchText | slice: (page-1) * pageSize : page * pageSize; let i=index;trackBy: trackByFn">
+                    <td>{{ (page -1) * pageSize + i + 1 }}</td>
+                    <td>{{data.SRID}}</td>
+                    <td>{{data.srLineId}}</td>
+                    <td>{{data.rfqId}}</td>
+                    <td>{{data.BusinessName}}</td>
+                    <td>{{data.contactName}}</td>
+                    <td>{{data.supplierName}}</td>
+                    <td>{{data.supplierContactName}}</td>
+                    <td>{{data.SupplierTotal}}</td>
+                  </tr>
+
+                </tbody>
+              </table>
+              <div class="d-flex justify-content-between p-2" *ngIf="apiResponseData?.length >0">
+                <p>Showing 1 to {{pageSize}} of {{apiResponseData?.length}} entries</p>
+                <ngb-pagination [collectionSize]="apiResponseData?.length" [(page)]="page" [maxSize]="10" [boundaryLinks]="true"
+                  [pageSize]="pageSize" size="sm" class="d-flex justify-content-center">
+                </ngb-pagination>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+

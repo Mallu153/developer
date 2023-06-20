@@ -1,0 +1,426 @@
+
+
+<section >
+  <div class="row">
+    <div class="col-7">
+      <div class="card-header ">
+        <h4 class="card-title ">Quotes</h4>
+      </div>
+      <div class="card-content ">
+        <div  class="card-body">
+          <div class=" table  table-bordered " *ngIf="quote && quote.length >0 ; else no_quotes_data_content">
+            <table class="table m-0">
+              <thead>
+                <tr class="refresh cursor-pointer">
+
+                  <th scope="col"   style="width:25%"   [appSort]="quote" data-order="desc" data-name="channel">Booking Channel</th>
+                  <th scope="col"   style="width:25%"   [appSort]="quote" data-order="desc" data-name="sr_id">SR Number</th>
+                  <th scope="col"   style="width:25%"   [appSort]="quote" data-order="desc" data-name="booking_ref_no">PNR / Supplier Reference</th>
+                  <th scope="col"    style="width:25%"  [appSort]="quote" data-order="desc" data-name="reference"> Route / Hotel / Ancillary / Attractions</th>
+                  <th scope="col"  style="width:25%"  [appSort]="quote" data-order="desc" data-name="supplier_reference">Amount</th>
+
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="
+                    let quotesData of quote; trackBy: trackByFn
+                  "
+                >
+
+                  <td >{{ quotesData.channel }}</td>
+                  <td class="text-primary cursor-pointer" >
+
+                    <span (click)="redirectQuote(quotesData.sr_id)">
+                      {{quotesData.sr_id }}
+                    </span>
+
+                </td>
+                  <td >
+
+                      {{quotesData.booking_ref_no }}
+
+                  </td>
+                  <td  >
+
+                    {{quotesData.reference }}
+
+                </td>
+                <td  >
+
+                  {{quotesData.total_price }}
+
+              </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <ng-template #no_quotes_data_content>
+            <div >
+              no data found
+            </div>
+
+          </ng-template>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+
+
+<section >
+  <div class="row">
+    <div class="col-7">
+      <div class="card-header ">
+        <h4 class="card-title ">PNR / Booking</h4>
+      </div>
+      <div class="card-content ">
+        <div  class="card-body">
+          <div class=" table  table-bordered " *ngIf="referenceData && referenceData.length >0 ; else no_reference_data_content">
+            <table class="table m-0">
+              <thead>
+                <tr class="refresh cursor-pointer">
+                 <!--  <th scope="col" style="width: 25%;"  [appSort]="referenceData" data-order="desc" data-name="booking_id">Booking ID</th> -->
+                  <th scope="col"   style="width:25%"   [appSort]="referenceData" data-order="desc" data-name="booking_channel">Booking Channel</th>
+                  <th scope="col"    style="width:25%"  [appSort]="referenceData" data-order="desc" data-name="booking_reference"> Booking Reference</th>
+                  <th scope="col"  style="width:25%"  [appSort]="referenceData" data-order="desc" data-name="supplier_reference">PNR / Supplier Reference</th>
+                  <th scope="col"    style="width:25%"  [appSort]="referenceData" data-order="desc" data-name="supplier_reference_date">Supplier Reference Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="
+                    let reference of referenceData; trackBy: trackByFn
+                  "
+                >
+
+                  <td >{{ reference.booking_channel }}</td>
+                  <td class="text-primary cursor-pointer" >
+
+                     <span (click)="refernceNumberToRedirect(reference.booking_channel,reference.booking_id,reference.supplier_reference )">
+                      {{reference.booking_reference }}
+                     </span>
+
+                  </td>
+                  <td class="text-primary cursor-pointer"  >
+
+                    <span  (click)="refernceNumberToRedirect(reference.booking_channel,reference.booking_id,reference.supplier_reference )">
+                      {{ reference.supplier_reference }}
+                    </span>
+                  </td>
+                  <td>{{ reference.supplier_reference_date  }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <ng-template #no_reference_data_content>
+            <div >
+              no data found
+            </div>
+
+          </ng-template>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+
+<section >
+  <div class="row">
+    <div class="col-7">
+      <div class="card-header">
+        <h4 class="card-title">Tickets</h4>
+      </div>
+      <div class="card-content ">
+        <div  class="card-body">
+
+          <div class=" table  table-bordered" *ngIf="subReferenceData && subReferenceData.length >0 ; else no_sub_reference_data_content">
+            <table class="table m-0">
+              <thead>
+                <tr class="refresh cursor-pointer">
+
+                  <th scope="col"      [appSort]="subReferenceData" data-order="desc" data-name="booking_channel">Booking Channel</th>
+                  <th scope="col"      [appSort]="subReferenceData" data-order="desc" data-name="booking_reference">Booking Reference</th>
+                  <th scope="col"    [appSort]="subReferenceData" data-order="desc" data-name="supplier_reference">PNR </th>
+                  <th scope="col"     [appSort]="subReferenceData" data-order="desc" data-name="supplier_reference_date">PNR Date</th>
+
+                  <th scope="col"     [appSort]="subReferenceData" data-order="desc" data-name="supplier_sub_reference">Ticket </th>
+                  <th scope="col"      [appSort]="subReferenceData" data-order="desc" data-name="supplier_sub_reference_date">Ticket  Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="
+                    let subReference of subReferenceData; trackBy: trackByFn
+                  "
+                >
+
+                  <td >{{subReference.booking_channel }}</td>
+                  <td class="text-primary cursor-pointer" >
+                    <span (click)="refernceNumberToRedirect(subReference.booking_channel,subReference.booking_id,subReference.supplier_reference )">
+                      {{ subReference.booking_reference }}
+                    </span>
+
+                  </td>
+                  <td class="text-primary cursor-pointer" >
+
+                    <span (click)="refernceNumberToRedirect(subReference.booking_channel,subReference.booking_id,subReference.supplier_reference )">
+                      {{ subReference.supplier_reference }}
+                    </span>
+
+                  </td>
+                  <td>{{ subReference.supplier_reference_date  }}</td>
+
+                  <td>{{ subReference.supplier_sub_reference  }}</td>
+                  <td>{{ subReference.supplier_sub_reference_date  }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <ng-template #no_sub_reference_data_content>
+            <div >
+              no data found
+            </div>
+
+          </ng-template>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section >
+  <div class="row">
+    <div class="col-7">
+      <div class="card-header">
+        <h4 class="card-title">Receipts </h4>
+      </div>
+      <div class="card-content ">
+        <div  class="card-body">
+
+          <div class=" table  table-bordered " *ngIf="receiptData && receiptData.length >0 ; else no_receiptData_content">
+            <table class="table m-0">
+              <thead>
+                <tr class="refresh cursor-pointer">
+
+                  <th scope="col"      [appSort]="receiptData" data-order="desc" data-name="receipt_number">Receipt Number</th>
+                  <th scope="col"       [appSort]="receiptData" data-order="desc" data-name="receipt_date">Receipt Date</th>
+                  <th scope="col"   [appSort]="receiptData" data-order="desc" data-name="refrence_value">Refrence Value</th>
+                  <th scope="col"     [appSort]="receiptData" data-order="desc" data-name="receipt_applied_amount">Receipt Applied Amount</th>
+                  <th scope="col"   [appSort]="receiptData" data-order="desc" data-name="receipt_source">Receipt Source</th>
+
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="
+                    let  receipt of receiptData; trackBy: trackByFn
+                  "
+                >
+
+                  <td  class="text-primary cursor-pointer" >
+
+                    <span (click)="receiptRedirect(receipt.receipt_number)">
+                      {{  receipt.receipt_number }}
+                    </span>
+                  </td>
+                  <td>{{  receipt.receipt_date }}</td>
+                  <td>{{  receipt.refrence_value }}</td>
+                  <td>{{  receipt.receipt_applied_amount  }}</td>
+                  <td>{{  receipt.receipt_source  }}</td>
+
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <ng-template #no_receiptData_content>
+            <div >
+              no data found
+            </div>
+
+          </ng-template>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+
+
+<section >
+  <div class="row">
+    <div class="col-7">
+      <div class="card-header">
+        <h4 class="card-title">Payments</h4>
+      </div>
+      <div class="card-content ">
+        <div  class="card-body">
+
+          <div class=" table  table-bordered "*ngIf="paymentData && paymentData.length >0 ; else no_payment_content">
+            <table class="table m-0">
+              <thead>
+                <tr class="refresh cursor-pointer">
+
+                  <th scope="col"      [appSort]="paymentData" data-order="desc" data-name="payment_number">Payment Number</th>
+                  <th scope="col"       [appSort]="paymentData" data-order="desc" data-name="payment_date">Payment Date</th>
+                  <th scope="col"   [appSort]="paymentData" data-order="desc" data-name="refrence_value">Refrence Value</th>
+                  <th scope="col"     [appSort]="paymentData" data-order="desc" data-name="payment_applied_amount">Payment Applied Amount</th>
+                  <th scope="col"   [appSort]="paymentData" data-order="desc" data-name="payment_source">Payment Source</th>
+
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="
+                    let  payment of paymentData ; trackBy: trackByFn
+                  "
+                >
+
+                  <td class="text-primary cursor-pointer">
+                    <span  (click)=" paymentRedirect(payment.payment_number)">
+                      {{  payment.payment_number }}
+                    </span>
+
+                  </td>
+                  <td>{{  payment.payment_date }}</td>
+                  <td>{{  payment.refrence_value }}</td>
+                  <td>{{  payment.payment_applied_amount  }}</td>
+                  <td>{{  payment.payment_source  }}</td>
+
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <ng-template #no_payment_content>
+            <div >
+              no data found
+            </div>
+
+          </ng-template>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<section >
+  <div class="row">
+    <div class="col-7">
+      <div class="card-header">
+        <h4 class="card-title">LPO </h4>
+      </div>
+      <div class="card-content ">
+        <div  class="card-body">
+          <div class=" table  table-bordered " *ngIf="purchaseOrderData && purchaseOrderData.length >0 ; else no_purchaseOrderData_content">
+            <table class="table m-0">
+              <thead>
+                <tr class="refresh cursor-pointer">
+
+                  <th scope="col"  style="width: 25%;"     [appSort]="purchaseOrderData" data-order="desc" data-name="lpo_header_reference">LPO Header Reference</th>
+                  <th scope="col"  style="width: 25%;"     [appSort]="purchaseOrderData" data-order="desc" data-name="lpo_number">LPO Number</th>
+                  <th scope="col"  style="width: 25%;"   [appSort]="purchaseOrderData" data-order="desc" data-name="lpo_date">LPO Date</th>
+                  <th scope="col" style="width: 25%;"    [appSort]="purchaseOrderData" data-order="desc" data-name="refrence_value">Reference</th>
+                  <th scope="col" style="width: 25%;"    [appSort]="purchaseOrderData" data-order="desc" data-name="lpo_amount">LPO Amount</th>
+
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="
+                    let p of purchaseOrderData; trackBy: trackByFn
+                  "
+                >
+
+                  <td >{{ p.lpo_header_reference }}</td>
+                  <td>{{ p.lpo_number }}</td>
+                  <td>{{ p.lpo_date }}</td>
+                  <td>{{ p.refrence_value  }}</td>
+                  <td>{{ p.lpo_amount  }}</td>
+
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <ng-template #no_purchaseOrderData_content>
+            <div >
+              no data found
+            </div>
+
+          </ng-template>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section >
+  <div class="row">
+    <div class="col-7">
+      <div class="card-header">
+        <h4 class="card-title">Invoices</h4>
+      </div>
+      <div class="card-content ">
+        <div  class="card-body">
+
+          <div class=" table  table-bordered " *ngIf="invoiceData && invoiceData.length >0 ; else no_invoiceData_content">
+            <table class="table m-0">
+              <thead>
+                <tr class="refresh cursor-pointer">
+
+                  <th scope="col"      [appSort]="invoiceData" data-order="desc" data-name="invoice_number">Invoice Number</th>
+                  <th scope="col"       [appSort]="invoiceData" data-order="desc" data-name="invoice_date">Invoice Date</th>
+                  <th scope="col"   [appSort]="invoiceData" data-order="desc" data-name="invoice_due_date">Invoice Due Date </th>
+                  <th scope="col"     [appSort]="invoiceData" data-order="desc" data-name="refrence_value">Reference</th>
+                  <th scope="col"     [appSort]="invoiceData" data-order="desc" data-name="invoice_amount">Invoice Amount</th>
+
+
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="
+                    let  invoice of invoiceData ; trackBy: trackByFn
+                  "
+                >
+
+                  <td >{{  invoice.invoice_number }}</td>
+                  <td>{{  invoice.invoice_date }}</td>
+                  <td>{{  invoice.invoice_due_date }}</td>
+                  <td>{{  invoice.refrence_value }}</td>
+                  <td>{{  invoice.invoice_amount  }}</td>
+
+
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <ng-template #no_invoiceData_content>
+
+
+              <div >
+                no data found
+              </div>
+
+          </ng-template>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+

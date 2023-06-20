@@ -1,0 +1,149 @@
+
+
+<section *ngIf="keys&&keys?.includes(requestDetailsTrip)&&serviceRequestData && serviceRequestData?.contact">
+  <div
+    class="mx-0 row align-items-center bg-white py-1 px-2 rounded shadow-sm mobile-cs-only"
+
+  >
+    <h5 class="card-title mb-0">
+      <span class="text-sm" style="font-size: 14px !important"
+        ><span *ngIf="serviceRequestData?.dmcFlag === 1"> DMC </span>SR#:
+        <span class="text-info-blue"
+          >{{ serviceRequestData?.requestId }} <span *ngIf="srLineId">- {{ srLineId }} </span></span
+        >,
+      </span>
+
+      <span class="vip-line" placement="bottom" [ngbPopover]="CustomerContent">
+        <img src="assets/img/company-icon.svg" width="27" class="mb-2" />
+        {{ serviceRequestData?.customerName }}
+      </span>
+      ,
+      <ng-template #CustomerContent>
+        <span class="text-sm" style="font-size: 14px !important" *ngIf="liability">
+          Avilability Credit Limit - {{ liability }}
+        </span>
+      </ng-template>
+      <ng-template #popContent>
+        <span class="text-sm" style="font-size: 14px !important">
+          {{ serviceRequestData?.contact?.primaryPhoneNumber }} ,
+          {{ serviceRequestData?.contact?.primaryEmail }}
+        </span>
+      </ng-template>
+      <span class="text-info-blue" placement="bottom" [ngbPopover]="popContent"
+        ><img src="assets/img/company-contact1.svg" width="30" class="mb-2" />
+        {{ serviceRequestData?.contact?.firstName + ' ' + serviceRequestData?.contact?.lastName }}
+      </span>
+    </h5>
+
+    <div class="text-info-blue" style="margin-left: auto">
+      <ul ngbNav class="nav-justified">
+        <li class="nav-item" placement="bottom" ngbTooltip="Calendar" *ngIf="keys?.includes(calendarTrip)">
+          <a class="nav-link"><i class="ft-calendar" style="font-size: 20px"></i></a>
+        </li>
+        <li class="nav-item" placement="bottom" ngbTooltip="Call" *ngIf="keys?.includes(callTrip)">
+          <a class="nav-link"><i class="ft-phone-call" style="font-size: 20px"></i></a>
+        </li>
+        <li class="nav-item" placement="bottom" ngbTooltip="Mail" *ngIf="keys?.includes(mailTrip)">
+          <a (click)="openGetSrMailBox()" class="nav-link"><i class="ft-mail" style="font-size: 20px"></i></a>
+        </li>
+        <li class="nav-item" placement="bottom" ngbTooltip="Chat" *ngIf="keys?.includes(chatTrip)">
+          <a (click)="openChat()" class="nav-link"><i class="ft-message-square" style="font-size: 20px"></i></a>
+        </li>
+        <li class="nav-item" placement="bottom" ngbTooltip="Video Call" *ngIf="keys?.includes(videoCallTrip)">
+          <a class="nav-link"><i class="ft-video" style="font-size: 20px"></i></a>
+        </li>
+        <li class="nav-item" placement="bottom" ngbTooltip="Whatsapp" *ngIf="keys?.includes(whatsAppTrip)">
+          <a class="nav-link" style="margin-top: -2px" (click)="openWhatsApp(serviceRequestData)"
+            ><!-- <img src="assets/img/whatsapp-icon.png" alt="whatsup icon" /> -->
+            <i class="fab fa-whatsapp" style="font-size: 20px"></i>
+          </a>
+        </li>
+        <li class="nav-item pr-2" placement="bottom" ngbTooltip="Timeline" *ngIf="keys?.includes(timeLineTrip)">
+          <a
+            class="nav-link"
+            target="_blank"
+            routerLinkActive="active"
+            [routerLink]="['/dashboard/booking/service-request-communication-time-line']"
+            [queryParams]="{ requestId: requestId, contactId: contactId, from: 'package' }"
+          >
+            <!--  <img src="assets/img/timeline-icon.png" alt="timeline" /> -->
+            <i class="far fa-list-alt" style="font-size: 20px"></i>
+          </a>
+        </li>
+        <li
+          class="nav-item pr-2"
+          *ngIf="keys?.includes(travelItineraryTrip)"
+          placement="bottom"
+          ngbTooltip="Travel Itinerary"
+          style="border-right: 1px solid #f1f1f1"
+        >
+          <a class="nav-link" (click)="itinerary(serviceRequestData?.requestId)"><i class="icon-map"></i> </a>
+        </li>
+
+        <li class="btn pt-0 px-2 pb-0 d-flex align-items-center"></li>
+
+        <div class="row" *ngIf="teamList && teamList.length > 0">
+          <div class="col">
+            <div ngbDropdown class="d-inline-block">
+              <div class="btn pt-0 px-2 pb-0 align-items-center d-flex" id="dropdownForm1" ngbDropdownToggle>
+                <span>
+                  <img src="assets/img/team-icon2.png" width="28" />
+                  {{ teamName }}<br style="height: 2px" />
+                  <span class="small-text text-info">{{ defaultStatusName }}</span>
+                </span>
+              </div>
+              <div
+                ngbDropdownMenu
+                placement="right"
+                class="dropdown-menu dropdown-menu-lg-end"
+                aria-labelledby="dropdownForm1"
+              >
+                <app-task-status-configuration
+                  *ngIf="
+                    teamList &&
+                    teamList.length > 0 &&
+                    teamMembersList &&
+                    teamMembersList.length > 0 &&
+                    transitionsList &&
+                    transitionsList.length > 0
+                  "
+                  [teamList]="teamList"
+                  [teamMembersList]="teamMembersList"
+                  [transitionsData]="transitionsList"
+                  [defaultStatus]="defaultStatusData"
+                ></app-task-status-configuration>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- <div class="card">
+  <div class="card-content">
+    <div class="card-body py-1 px-2">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div> -->
+<div>
+  <router-outlet></router-outlet>
+</div>
+
+<div *ngIf="keys?.includes(requestDependsList)">
+  <div *ngIf="hide_product_details">
+    <app-all-service-request-list
+      [allServiceRequestshowsList]="allServiceRequestsData"
+      [checkProducts]="productsAvailability"
+      [editRequestDetailskey]="requestDependsListeditView"
+      [searchkey]="requestDependsListSearch"
+      [chatkey]="requestDependsListChat"
+      [phoneCallkey]="requestDependsListPhoneCall"
+      [emailkey]="requestDependsListEMail"
+      [PersonNamekey]="requestDependsListPersonName"
+      *ngIf="allServiceRequestsData && allServiceRequestsData?.length > 0"
+    ></app-all-service-request-list>
+  </div>
+</div>

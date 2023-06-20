@@ -1,0 +1,102 @@
+<div class="row">
+  <div class="col-md-12 col-sm-12">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title mb-2 px-3">Quote Added But Not Sent Reports</h4>
+      </div>
+      <div class="card-content">
+        <div class="card-body">
+          <div class="float-right">
+            <form [formGroup]="quotesAddedForm">
+              <div class="search w-45" style="margin-top: -3px">
+                <label for="agent">Agents</label>
+                <select
+                  id="category"
+                  (change)="onChangeAddedAgent()"
+                  name="category"
+                  class="form-control-sm"
+                  formControlName="agent"
+                >
+                  <option value="">Choose</option>
+                  <option [value]="agent.userId" *ngFor="let agent of AgentList">
+                    {{ agent.userName }}
+                  </option>
+                </select>
+              </div>
+            </form>
+          </div>
+          <fieldset class="form-group">
+            <label
+              >Show
+              <select
+                name="users-list-select"
+                class="form-control form-control-sm d-inline-block width-100 p-right-25 pl-4 mx-1"
+                (click)="updateLimit($event)"
+              >
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+              </select>
+            </label>
+          </fieldset>
+          <ngx-datatable
+            [rows]="rows"
+            [rowHeight]="'auto'"
+            #tableRowDetails
+            class="bootstrap core-bootstrap"
+            [limit]="limitRef"
+            [columnMode]="ColumnMode.force"
+            [headerHeight]="50"
+            [footerHeight]="50"
+            [scrollbarH]="true"
+            [sorts]="[{ prop: 'agentName', dir: 'desc' }]"
+          >
+            <ngx-datatable-column [width]="250" name="AgentName" prop="agentName">
+              <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                <div>
+                  {{ value }}
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="<5 Mins" prop="lessThan5Min">
+              <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                <div class="long--text">
+                  {{ value }}
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="5-10 Mins" prop="between5MinAnd10Min">
+              <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                <div class="long--text">
+                  {{ value }}
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="10-30 Mins" prop="between10MinAnd30Min">
+              <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                <div class="long--text">
+                  {{ value }}
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="30-60 Mins" prop="between30MinAnd60Min">
+              <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                <div class="long--text">
+                  {{ value }}
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name=">60 Mins" prop="greaterThan60Min">
+              <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                <div class="long--text">
+                  {{ value }}
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+          </ngx-datatable>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

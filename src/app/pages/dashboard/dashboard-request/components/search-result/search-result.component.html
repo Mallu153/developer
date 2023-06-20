@@ -1,0 +1,206 @@
+<section>
+  <div class="row">
+    <div class="col-lg-12 col-md-12 col-12">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title">
+            Contact List
+            <button class="btn btn-link float-right shadow-none" [routerLink]="['/dashboard/request/pax-search']">
+              Back
+            </button>
+          </h4>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive table">
+            <table class="table m-0">
+              <thead>
+                <tr class="refresh">
+                  <th scope="col">#</th>
+                  <th scope="col">Business</th>
+                  <th scope="col">Type</th>
+                  <th scope="col">First Name</th>
+                  <th scope="col">Last Name</th>
+                  <th scope="col">Primary Email</th>
+                  <th scope="col">Primary Phone Number</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let j of object; let i = index; trackBy: trackByFn">
+                  <td scope="row">
+                    <ul class="list-unstyled mb-0">
+                      <li class="d-inline-block mr-2 mb-2">
+                        <div class="checkbox checkbox-primary">
+                          <input
+                            type="checkbox"
+                            [checked]="j.checked"
+                            name="_checkbox"
+                            [(ngModel)]="j.checked"
+                            (change)="onProfileCheckboxChange($event, j, i)"
+                            id="{{ 'color-checkbox-1' + i }}"
+                          />
+                          <label for="{{ 'color-checkbox-1' + i }}"> </label>
+                        </div>
+                      </li>
+                    </ul>
+                  </td>
+                  <td scope="row">{{ j.customerName }}</td>
+                  <td scope="row">{{ j.customerCategoryName }}</td>
+                  <td scope="row">{{ j.firstName }}</td>
+                  <td scope="row">{{ j.lastName }}</td>
+                  <td scope="row">{{ j.primaryEmail }}</td>
+                  <td scope="row">{{ j.primaryPhoneNumber }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div>
+            <button
+              type="submit"
+              (click)="redirectToBooking()"
+              *ngIf="keys?.includes(amendmentButtonKey)"
+              class="btn btn-primary mr-2 mb-1"
+            >
+              <i class="ft-git-pull- mr-1"></i>
+              <span class="d-none d-sm-inline-block"> Amendments</span>
+            </button>
+            <button
+              type="submit"
+              *ngIf="hideonSubmitButton && keys?.includes(amendmentButtonKey)"
+              [appButtonAccess]="flightButtonKey"
+              (click)="onSubmit('flight')"
+              class="btn btn-primary mr-2 mb-1"
+            >
+              <i class="icon-plane mr-1"></i>
+              <span class="d-none d-sm-inline-block"> Flight </span>
+            </button>
+            <button
+              type="submit"
+              *ngIf="hideonSubmitButton && keys?.includes(hotelButtonKey)"
+              (click)="onSubmit('hotel')"
+              class="btn btn-primary mr-2 mb-1"
+            >
+              <i class="fa fa-bed mr-1"></i>
+              <span class="d-none d-sm-inline-block"> Hotel </span>
+            </button>
+            <button
+              type="submit"
+              *ngIf="hideonSubmitButton && keys?.includes(ancillaryButtonKey)"
+              (click)="ancillarySelect()"
+              class="btn btn-primary mr-2 mb-1"
+            >
+              <i class="fa fa-car mr-1"></i>
+              <span class="d-none d-sm-inline-block"> Ancillary </span>
+            </button>
+            <button
+              type="submit"
+              *ngIf="hideonSubmitButton && keys?.includes(packageButtonKey)"
+              (click)="onSubmit('holidays')"
+              class="btn btn-primary mr-2 mb-1"
+            >
+              <i class="icon-bulb mr-1"></i>
+              <span class="d-none d-sm-inline-block"> Holiday Packages </span>
+            </button>
+            <button
+              type="submit"
+              *ngIf="hideonSubmitButton && keys?.includes(packageButtonKey)"
+              (click)="onSubmit('holidays', '', 'dmc')"
+              class="btn btn-primary mr-2 mb-1"
+            >
+              <i class="icon-bulb mr-1"></i>
+              <span class="d-none d-sm-inline-block"> DMC </span>
+            </button>
+            <button
+              type="submit"
+              *ngIf="hideonSubmitButton && keys?.includes(activityButtonKey)"
+              (click)="onSubmit('activities')"
+              class="btn btn-primary mr-2 mb-1"
+            >
+              <i class="ft-map-pin mr-1"></i>
+              <span class="d-none d-sm-inline-block"> Activities</span>
+            </button>
+            <button
+              type="submit"
+              *ngIf="hideonSubmitButton && keys?.includes(importButtonKey)"
+              (click)="onSubmit('import')"
+              class="btn btn-primary mr-2 mb-1"
+            >
+              <i class="ft-download"></i>
+              <span class="d-none d-sm-inline-block" (click)="showImport = true"> Import</span>
+            </button>
+            <button
+              type="submit"
+              (click)="onCheckedbox('flight')"
+              class="btn btn-primary mr-2 mb-1"
+              *ngIf="showOnCheckedButton && keys?.includes(flightButtonKey)"
+            >
+              <i class="icon-plane mr-1"></i>
+              <span class="d-none d-sm-inline-block"> Flight </span>
+            </button>
+            <button
+              type="submit"
+              *ngIf="showOnCheckedButton && keys?.includes(hotelButtonKey)"
+              (click)="onCheckedbox('hotel')"
+              class="btn btn-primary mr-2 mb-1"
+            >
+              <i class="fa fa-bed mr-1"></i>
+              <span class="d-none d-sm-inline-block"> Hotel </span>
+            </button>
+            <button
+              type="submit"
+              *ngIf="showOnCheckedButton && keys?.includes(ancillaryButtonKey)"
+              (click)="ancillarySelect()"
+              class="btn btn-primary mr-2 mb-1"
+            >
+              <i class="fa fa-car mr-1"></i>
+              <span class="d-none d-sm-inline-block"> Ancillary </span>
+            </button>
+            <button
+              type="submit"
+              (click)="onCheckedbox('holidays')"
+              *ngIf="showOnCheckedButton && keys?.includes(packageButtonKey)"
+              class="btn btn-primary mr-2 mb-1"
+            >
+              <i class="icon-bulb mr-1"></i>
+              <span class="d-none d-sm-inline-block"> Holiday Packages </span>
+            </button>
+            <button
+              type="submit"
+              (click)="onCheckedbox('holidays', 'dmc')"
+              *ngIf="showOnCheckedButton && keys?.includes(packageButtonKey)"
+              class="btn btn-primary mr-2 mb-1"
+            >
+              <i class="icon-bulb mr-1"></i>
+              <span class="d-none d-sm-inline-block"> DMC </span>
+            </button>
+            <button
+              type="submit"
+              *ngIf="showOnCheckedButton && keys?.includes(activityButtonKey)"
+              (click)="onCheckedbox('activities')"
+              class="btn btn-primary mr-2 mb-1"
+            >
+              <i class="ft-map-pin"></i>
+              <span class="d-none d-sm-inline-block"> Activities</span>
+            </button>
+            <button
+              *ngIf="showOnCheckedButton && keys?.includes(importButtonKey)"
+              type="submit"
+              class="btn btn-primary mr-2 mb-1"
+            >
+              <i class="ft-download"></i>
+              <span class="d-none d-sm-inline-block" (click)="showImport = true" (click)="onCheckedbox('import')"
+                >Import</span
+              >
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<app-imports *ngIf="showImport" [parentData]="searchData"></app-imports>
+
+<app-booking-report
+  [ReportsData]="bookingData"
+  [customerAndContactDeatils]="selectCustomerDeatils"
+  *ngIf="bookingData && bookingData.length > 0"
+></app-booking-report>

@@ -1,0 +1,28 @@
+
+.first-letter-text{
+  text-transform: capitalize;
+}
+/* /input type=number increment hiddeen css/ */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  /* display: none; <- Crashes Chrome on hover */
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+input[type='number']:hover {
+  appearance: textfield; /* Firefox */
+  -moz-appearance: textfield; /* Firefox */
+}
+:host ::ng-deep .ng-select .ng-select-container {
+  border-radius: 1px !important;
+
+}
+.ng-select.custom .ng-select-container  {
+  border-radius: 1px !important;
+}
+/* :host ::ng-deep .ngx-datatable :host ::ng-deep.datatable-body :host ::ng-deep.datatable-row-detail {
+  overflow-y: hidden;
+
+} */
+

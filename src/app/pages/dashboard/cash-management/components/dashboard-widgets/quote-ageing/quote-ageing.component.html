@@ -1,0 +1,62 @@
+<div  class="card shopping-cart">
+  <div  class="card-header pb-2">
+    <h4  class="card-title mb-1">Quotes
+
+      <i class="ft-external-link  pull-right more-btn " (click)="navigatedToOpenQuotes()"></i>
+      <i class="ft-refresh-cw  pull-right more-btn mr-2 " (click)="getQuoteAgingReport()"></i>
+    </h4>
+  </div>
+  <div  class="card-content">
+    <div  class="card-body p-0 fixed-height">
+
+      <div class="text-center no-data-message" *ngIf="loading">
+        <i class="fas fa-spin fa-spinner fa-2x"></i> <br />
+        Loading ...
+      </div>
+      <div  class="table-responsive">
+        <table  class="table  table-hover  m-0">
+          <tbody *ngIf="quoteAgeingList&&quoteAgeingList.length>0">
+            <tr  class="shadow-sm tr-hover" *ngFor="let item of quoteAgeingList ; index as i;trackBy: trackByFn">
+              <td >
+
+                <span [ngSwitch]="item.product" class="text-primary">
+                  <span *ngSwitchCase="'Flight'"><i class="icon-plane"></i> </span>
+                  <span *ngSwitchCase="'Hotel'"><i class="fa fa-bed"></i></span>
+                  <span *ngSwitchCase="'Ancillary'"><i class="fa fa-car"></i></span>
+                  <span *ngSwitchCase="'Attractions'"><i class="ft-map-pin"></i></span>
+                </span>
+                <span class="text-primary cursor-pointer" (click)="redirectToQuote(item.serviceRequest)">
+                  {{item.serviceRequest}} -{{item.serviceRequestLine}}
+                </span>
+                 <br/>
+                {{item.businessName}}
+               </td>
+
+              <td >
+                {{item.contactFirstName+" "+ item.contactLastName}} <br/>
+                {{item.contactEmail}}
+              </td>
+              <td >
+                <span class="text-warning text-bold-600">{{item.days}}   </span> D
+                <span class="text-info text-bold-600"> {{item.hours}}   </span> H
+                <span class="text-success text-bold-600">{{item.minutes}}   </span> M
+
+                <br/>
+                {{item.statusName}}
+              </td>
+             <!--  <td >{{item.statusName}}</td> -->
+              <!-- <td >{{item.contactMobile}}</td> -->
+              <td ></td>
+            </tr>
+          </tbody>
+          <div class="text-center no-data-message" *ngIf="quoteAgeingList&&quoteAgeingList?.length==0&& !loading">
+
+                <span>No data found</span>
+          </div>
+
+        </table>
+
+      </div>
+    </div>
+  </div>
+</div>

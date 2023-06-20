@@ -1,0 +1,315 @@
+<section>
+  <app-customer-details></app-customer-details>
+  <div class="card">
+    <div class="card-content">
+      <div class="card-body">
+        <form [formGroup]="activitiesForm">
+          <div class="form-container position-relative">
+            <div class="form-body">
+              <div formArrayName="activites">
+                <div *ngFor="let act of activites.controls; let i = index; trackBy: trackByFn" [formGroupName]="i">
+                  <div class="row m-0">
+                    <div class="form-row-city align-items-top shadow-sm mb-3 srchbar position-relative">
+                      <div class="col-4 citygroup mb-0 pr-4">
+                        <label for="activitiesSearch">Location</label>
+                        <div class="position-relative has-icon-left">
+                          <input
+                            id="activitieslocationSearch"
+                            name="activitieslocationSearch"
+                            type="search"
+                            placeholder="Activities, Tours or Destination"
+                            #typeaheadInstance="ngbTypeahead"
+                            formControlName="attractionLineLocation"
+                            class="trav_inputField pl-3"
+                            style="border: none"
+                            (keydown)="typeaheadKeydown($event)"
+                            (selectItem)="bindValueOfLocationControl($event, i, 'attractionLineLocation')"
+                            (input)="onChangeActivites($event, i)"
+                            [resultTemplate]="searchActiviesResultTemplate"
+                            [inputFormatter]="formatter"
+                            title="{{ act.value.attractionLineLocation?.name }}"
+                            [ngbTypeahead]="onSearchLocation"
+                            [ngClass]="{
+                              'is-invalid':
+                                activites.controls[i].get('attractionLineLocation').errors &&
+                                ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                  activites.controls[i].get('attractionLineLocation').touched)
+                            }"
+                          />
+
+                          <ng-template #searchActiviesResultTemplate let-r="result" let-t="term">
+                            <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+                          </ng-template>
+                          <div class="form-control-position" style="top: 3px; left: -12px">
+                            <i class="ft-map-pin" style="font-size: 24px"></i>
+                          </div>
+
+                          <div
+                            class="invalid-feedback"
+                            *ngIf="
+                              activites.controls[i].get('attractionLineLocation').errors?.required &&
+                              ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                activites.controls[i].get('attractionLineLocation').touched)
+                            "
+                          >
+                            required
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-4 citygroup mb-0 pr-4">
+                        <label for="activitiesName">Activies</label>
+                        <div>
+                          <ng-select
+                            [items]="attractionsData[i]"
+                            [selectableGroup]="true"
+                            [selectableGroupAsModel]="false"
+                            bindLabel="activityName"
+                            placeholder="Select"
+                            [multiple]="false"
+                            class="custom"
+                            [closeOnSelect]="true"
+                            formControlName="attractionLineName"
+                            [ngClass]="{
+                              'is-invalid':
+                                activites.controls[i].get('attractionLineName').errors &&
+                                ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                  activites.controls[i].get('attractionLineName').touched)
+                            }"
+                          >
+                          </ng-select>
+
+                          <div
+                            class="invalid-feedback"
+                            *ngIf="
+                              activites.controls[i].get('attractionLineName').errors?.required &&
+                              ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                activites.controls[i].get('attractionLineName').touched)
+                            "
+                          >
+                            required
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="trav-dates position-relative">
+                        <div class="form-group citygroup">
+                          <label>Date</label>
+                          <input
+                            type="date"
+                            class="form-control form-control-sm square border-0"
+                            id="activiesdate"
+                            name="activiesdate"
+                            formControlName="attractionLineDate"
+                            [ngClass]="{
+                              'is-invalid':
+                                activites.controls[i].get('attractionLineDate').errors &&
+                                ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                  activites.controls[i].get('attractionLineDate').touched)
+                            }"
+                          />
+                          <div
+                            class="invalid-feedback"
+                            *ngIf="
+                              activites.controls[i].get('attractionLineDate').errors?.required &&
+                              ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                activites.controls[i].get('attractionLineDate').touched)
+                            "
+                          >
+                            required
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="add-activities-right px-1" *ngIf="!isEdit">
+                        <a (click)="addActivities(i)" type="button" class="text-primary">
+                          <i class="ft-plus-circle mr-2"></i>
+                        </a>
+                        <a (click)="deleteActivities(i)" type="button" class="text-primary">
+                          <i class="ft-trash-2"></i>
+                        </a>
+                      </div>
+                    </div>
+
+                    <div class="activitiesPaxCount">
+                      <div class="form-group mb-2">
+                        <label for="paxCount">Pax Count</label>
+                        <input
+                          type="number"
+                          id="paxCount"
+                          name="paxCount"
+                          class="form-control form-control-sm square"
+                          formControlName="attractionLinePaxCount"
+                        />
+                      </div>
+                    </div>
+                    <div class="form-group mb-0">
+                      <button
+                        class="btn btn-sm btn-icon mx-2 mt-2 text-primary font-weight-bold"
+                        *ngIf="activites.at(i).value.activitiesPax && activites.at(i).value.activitiesPax?.length > 0"
+                        (click)="showActivitiesPaxInfo(i)"
+                      >
+                        +Pax Info ({{ activites.at(i).value.activitiesPax?.length }})
+                      </button>
+                    </div>
+
+                    <div
+                      class="col-12 col-lg-12 col-md-12 px-0"
+                      id="actPaxcollapse"
+                      [hidden]="!activitiesPaxHide[i]"
+                      *ngIf="activites.at(i).value.activitiesPax && activites.at(i).value.activitiesPax?.length > 0"
+                    >
+                      <h4 class="card-title text-left">Added Persons</h4>
+                      <div class="table-responsive table">
+                        <table class="table m-0">
+                          <thead>
+                            <tr class="refresh">
+                              <th scope="col">S NO</th>
+                              <th scope="col">Pax Type</th>
+                              <th scope="col">Gender</th>
+                              <th scope="col">First Name</th>
+                              <th scope="col">Last Name</th>
+                              <th scope="col">Email</th>
+                              <th scope="col">Mobile Number</th>
+                              <th scope="col">Dob</th>
+                              <th scope="col" *ngIf="!isEdit">Action</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let actPax of activites.at(i).value.activitiesPax; index as actPaxListIndex;trackBy: trackByFn">
+                              <td scope="row" class="pt-3 wrap-text">
+                                {{ (page - 1) * pageSize + actPaxListIndex + 1 }}
+                              </td>
+                              <td scope="row" class="pt-3 wrap-text">{{ actPax?.attractionLinePassengerType }}</td>
+                              <td scope="row" class="pt-3 wrap-text">{{ actPax?.attractionLinePassengerGender }}</td>
+                              <td scope="row" class="pt-3 wrap-text">
+                                {{ actPax?.attractionLinePassengerFristName }}
+                              </td>
+                              <td scope="row" class="pt-3 wrap-text">
+                                {{ actPax?.attractionLinePassengerLastName }}
+                              </td>
+                              <td scope="row" class="pt-3 wrap-text">{{ actPax?.attractionLinePassengerEmail }}</td>
+                              <td scope="row" class="pt-3 wrap-text">{{ actPax?.attractionLinePassengerPhone }}</td>
+                              <td scope="row" class="pt-3 wrap-text">
+                                {{ actPax?.attractionLinePassengerDob | date: 'dd-MMM-yyyy' }}
+                              </td>
+                              <td scope="row" class="pt-3 wrap-text" *ngIf="!isEdit">
+                                <i class="ft-trash-2 pointer" (click)="deleteActivitiesPax(i, actPaxListIndex)"></i>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-row">
+            <button type="button" (click)="getSupplierDetailes()" class="btn btn-primary mr-2 mb-2">
+              <i class="icon-users mr-1"></i>
+              Get Supplier
+            </button>
+          </div>
+        </form>
+
+        <div class="row" *ngIf="supplierDeatils && supplierDeatils.length >0">
+          <div class="col-12">
+            <div >
+              <div >
+                <div >
+                  <fieldset class="form-group">
+                    <label>Show
+                      <select name="users-list-select" [(ngModel)]="pageSize"  class="form-control form-control-sm d-inline-block width-100 p-right-25 ">
+                        <option [ngValue]="10">10</option>
+                        <option [ngValue]="15">15</option>
+                        <option [ngValue]="25">25</option>
+                        <option [ngValue]="50">50</option>
+                        <option [ngValue]="100">100</option>
+                      </select>
+                      entries</label>
+                    <label for="ngx-filter-ref" class="float-right">Search:
+                      <input id="ngx-filter-ref" class="form-control form-control-sm d-inline-block width-200"
+                        type="text"
+                         id="search"
+                         [(ngModel)]="searchText"
+                         placeholder="Search" />
+                    </label>
+                  </fieldset>
+                  <div class="table-responsive">
+                    <table class="table table-bordered m-0">
+                      <thead>
+                        <tr class="refresh pointer">
+                          <th scope="col">#</th>
+                          <th scope="col" class="highlight_text"[appSort]="supplierDeatils" data-order="desc" data-name="businessName">
+                            Supplier
+                          </th>
+                          <th scope="col" class="highlight_text"[appSort]="supplierDeatils" data-order="desc" data-name="primaryConatct">
+                            Contact
+                          </th>
+                          <th scope="col" class="highlight_text"[appSort]="supplierDeatils" data-order="desc" data-name="primaryEmail">
+                            Email
+                          </th>
+                          <th scope="col" class="highlight_text"[appSort]="supplierDeatils" data-order="desc" data-name="primaryPhoneNumber">
+                           Phone Number
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let supplier of supplierDeatils | filter:searchText | slice: (page-1) * pageSize : page * pageSize; index as i;
+                        ">
+                          <td scope="row">
+                            <ul class="list-unstyled mb-0">
+                              <li class="d-inline-block mr-2 mb-2">
+                                <div class="checkbox">
+                                  <input
+                                  type="checkbox"
+                                  (change)="isAllSelected()"
+                                   id="{{'color-checkbox-5' + i}}"
+                                   [(ngModel)]="supplier.isSelected"
+                                   [ngModelOptions]="{standalone: true}"
+                                   value="{{supplier}}"
+                                    >
+                                  <label for="{{'color-checkbox-5' + i}}"></label>
+                                </div>
+                              </li>
+                            </ul>
+                          </td>
+                          <td scope="row">{{supplier?.businessName}}</td>
+                          <td scope="row">{{supplier?.primaryConatct}}</td>
+                          <td scope="row">{{supplier?.primaryEmail}}</td>
+                          <td scope="row">{{supplier?.primaryPhoneNumber}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+
+                    <div class="d-flex justify-content-between p-2" *ngIf="supplierDeatils?.length >0" >
+                      <p>Showing 1 to {{pageSize}} of {{supplierDeatils?.length}} entries</p>
+                      <ngb-pagination [collectionSize]="supplierDeatils?.length" [(page)]="page" [maxSize]="10"
+                        [boundaryLinks]="true" [pageSize]="pageSize"  class="d-flex justify-content-center">
+                      </ngb-pagination>
+                    </div>
+                  </div>
+                  <div>
+                    <button type="button"  (click)="onUpdateRfq()" class=" btn  btn-primary mr-2">
+                      SEND
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#fff" type="ball-clip-rotate-multiple"
+  [fullScreen]="true" *ngIf="requestCreationLoading">
+  <p style="color: white"> Loading... </p>
+</ngx-spinner>

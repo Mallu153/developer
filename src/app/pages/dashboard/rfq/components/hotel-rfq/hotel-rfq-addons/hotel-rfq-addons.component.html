@@ -1,0 +1,176 @@
+<form [formGroup]="addonsForm">
+  <div formArrayName="addonsLine">
+    <div *ngFor="let a  of addonsLine().controls; let i = index" [formGroupName]="i">
+
+      <div class="form-row">
+        <div class="col-md-2 col-12">
+          <div class="form-group mb-2">
+            <label for="addons">Add-Ons</label>
+            <!-- <input id="addons" type="text" class="form-control form-control-sm  square"
+              placeholder="Add-Ons" [resultTemplate]="searchResultTemplate" [inputFormatter]="formatter"
+              [ngbTypeahead]="searchAddons" formControlName="addonTitle" />
+            <ng-template #searchResultTemplate let-r="result" let-t="term">
+              <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+            </ng-template> -->
+            <ng-select
+                      [items]="searchAddons$ | async"
+                      bindLabel="name"
+                      [minTermLength]="minLengthSearchAddonsTerm"
+                      placeholder="Enter Addons Name"
+                      [loading]="searchAddonsLoading"
+                      typeToSearchText="Please enter {{
+                        minLengthSearchAddonsTerm
+                      }} or more characters"
+                      [typeahead]="searchAddonsInput$"
+                      formControlName="addonTitle"
+                    >
+                    </ng-select>
+          </div>
+        </div>
+        <div class="d-flex">
+          <ul class="list-unstyled mb-0 mt-4">
+            <li class="d-inline-block mr-2 mb-2">
+              <div class="checkbox checkbox-primary">
+                <input type="checkbox" id="{{'checkbox1' + i}}"
+                  (change)="toggleVisibilityBooking($event, i)" formControlName="addonWithBooking">
+                <label for="{{'checkbox1' + i}}"><span>Booking</span></label>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="col-md-1 col-12 ">
+          <div class="form-group mb-2">
+            <label for="Rooms">Rooms</label>
+            <ng-select [searchable]="true" (change)="roomDependsOnPax($event,i)" [items]="roomsData"
+              bindValue="id" bindLabel="roomNumber" [multiple]="true" placeholder="Search"
+              formControlName="addonRoomId" appendTo="body">
+              <ng-template ng-header-tmp>
+                <div class="d-flex">
+                  <button class="btn btn-link btn-sm p-0 "
+                    (click)="onSelectRoomAll(i)">Select&nbsp;All</button>
+                  <button class="btn btn-link btn-sm p-0 " style="margin-left: auto;"
+                    (click)="onClearRoomAll(i)">Clear</button>
+                </div>
+              </ng-template>
+              <ng-template ng-multi-label-tmp let-items="items">
+                <div class="ng-value" *ngFor="let item of items | slice:0:0">
+                  <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                </div>
+                <div class="ng-value" *ngIf="items?.length > 0">
+                  <span class="ng-value-label">{{items?.length}} selected</span>
+                </div>
+              </ng-template>
+            </ng-select>
+          </div>
+        </div>
+        <div class="col-12 col-md-1 ">
+          <div class="form-group mb-2">
+            <label for="Nights">Nights</label>
+            <ng-select [searchable]="true" [items]="nights" bindValue="id" bindLabel="name"
+              [multiple]="true" placeholder="Search" formControlName="addonNights" appendTo="body">
+              <ng-template ng-header-tmp>
+                <div class="d-flex">
+                  <button class="btn btn-link btn-sm p-0 "
+                    (click)="onSelectNightsAll(i)">Select&nbsp;All</button>
+                  <button class="btn btn-link btn-sm p-0 " style="margin-left: auto;"
+                    (click)="onClearNightsAll(i)">Clear
+                  </button>
+                </div>
+              </ng-template>
+              <ng-template ng-multi-label-tmp let-items="items">
+                <div class="ng-value" *ngFor="let item of items | slice:0:0">
+                  <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                </div>
+                <div class="ng-value" *ngIf="items?.length > 0">
+                  <span class="ng-value-label">{{items.length}} selected</span>
+                </div>
+              </ng-template>
+            </ng-select>
+          </div>
+        </div>
+        <div class="col-md-1 col-12  ">
+          <div class="form-group mb-2">
+            <label for="Pax">Pax</label>
+            <ng-select [searchable]="true" [items]="roomWithoutCount[i]" bindValue="labelName"
+              bindLabel="labelName" [multiple]="true" placeholder="Search" formControlName="addonPassengers"
+              appendTo="body">
+              <ng-template ng-header-tmp>
+                <div class="d-flex">
+                  <button class="btn btn-link btn-sm p-0" (click)="onSelectRoomsWithoutPaxAll(i)">Select
+                    All</button>
+                  <button class="btn btn-link btn-sm p-0" style="margin-left: auto;"
+                    (click)="onClearRoomsWithoutPaxAll(i)">Clear
+                    </button>
+                </div>
+              </ng-template>
+              <ng-template ng-multi-label-tmp let-items="items">
+                <div class="ng-value" *ngFor="let item of items | slice:0:0">
+                  <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                </div>
+                <div class="ng-value" *ngIf="items?.length > 0">
+                  <span class="ng-value-label">{{items.length}} selected</span>
+                </div>
+              </ng-template>
+            </ng-select>
+          </div>
+        </div>
+        <div class="col-md-1 col-12 ">
+          <div class="form-group mb-2">
+            <label for="Count">Count</label>
+            <input type="number" placeholder="Count" id="Count" class="form-control form-control-sm  square"
+              name="Count" formControlName="addonCount">
+          </div>
+        </div>
+        <div class="col-md-3 col-12">
+          <div class="form-group mb-2">
+            <label for="remarks">Remarks</label>
+            <textarea id="remarks" placeholder="Remarks" rows="2"
+              class="form-control form-control-sm  square description-box" name="remarks"
+              formControlName="addonRemarks"></textarea>
+          </div>
+        </div>
+        <div class="d-flex mt-4">
+          <ul class="list-unstyled mb-0">
+            <li class="d-inline-block mr-2 mb-2">
+              <div class="checkbox checkbox-primary">
+                <input type="checkbox" id="{{'checkbox2' + i}}" formControlName="addonRequired">
+                <label for="{{'checkbox2' + i}}" placement="bottom"
+                  ngbTooltip="Required"><span>Req</span></label>
+              </div>
+            </li>
+            <li class="d-inline-block mr-2 mb-2">
+              <div class="checkbox checkbox-primary">
+                <input type="checkbox" id="{{'checkbox3' + i}}" formControlName="addonExtraCost">
+                <label for="{{'checkbox3' + i}}"><span>E.Cost</span></label>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="d-flex mt-2 markup-highlight ">
+          <button (click)="add(i)" type="button" class="btn mt-1 p-0 ">
+            <i class="ft-plus-circle" aria-hidden="true" style="font-size: 28px;"></i>
+          </button>
+          <button (click)="delete(i)" *ngIf="!isEdit" type="button" class="btn p-0 ml-2 mt-1">
+            <i class="ft-minus-circle" aria-hidden="true" style="font-size: 28px;"></i>
+          </button>
+          <button (click)="editdelete(i,a.value.id)" *ngIf="isEdit" type="button" class="btn p-0 ml-2 mt-1">
+            <i class="ft-minus-circle" aria-hidden="true" style="font-size: 28px;"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+<!-- <div class="d-flex justify-content-start mb-1">
+    <button type="button" class="btn btn-save btn-sm mr-2">Save</button>
+</div> -->
+<!-- <div class="d-flex justify-content-end">
+  <button type="button" *ngIf="!isEdit" (click)="onSubmitAddonsForm()" class="btn btn-primary mr-2">
+    <i class="ft-check-square mr-1"></i>
+    Save
+  </button>
+  <button type="button" (click)="onEditSubmitAddonsForm()" *ngIf="isEdit" class="btn btn-primary mr-2">
+    <i class="ft-check-square mr-1"></i>
+    Update
+  </button>
+</div> -->

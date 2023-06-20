@@ -1,0 +1,217 @@
+.table-head{
+  background-color: #D5F1FD !important;
+  background-image: none !important;
+  color: #226CC5 !important;
+}
+
+.assignment{
+  color:#226CC5;
+  font-weight:600;
+}
+
+table th{
+  font-weight: normal;
+  font-size:13px;
+  white-space: nowrap;
+}
+
+.table-1 thead tr th:nth-child(2){
+  width:10%;
+}
+
+.table-1 tbody tr td:nth-child(2) input{
+  width:60%;
+}
+
+.edit-icon{
+  color: #226CC5;
+}
+
+.save-icon{
+  color: #0c3b87;
+}
+
+.table-1-card{
+  margin: 15px 0;
+  box-shadow: -8px 8px 14px 0 rgba(25, 42, 70, 0.11);
+}
+
+.click-to-expand-div{
+  color: #226CC5 !important;
+  white-space: nowrap;
+}
+
+.badge {
+  letter-spacing: 0.3px;
+  background-color: #D5F1FD!important;
+  color: #226CC5!important;
+}
+
+.vip-line{
+  position: relative;
+}
+
+.vip-line::before {
+  content: "";
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: gold; /* Choose the desired color */
+}
+
+.heading-div{
+  color:#000000;
+  font-weight:500;
+}
+
+.show-div-2 table thead{
+  background: #e9f3f7 !important;
+}
+
+.show-div-1{
+  overflow: auto;
+}
+
+.table-1 thead tr th{
+  padding:0;
+  padding:4px;
+  text-align: left;
+  font-weight:500;
+}
+
+.table-1 tbody tr td{
+  padding:0;
+  padding:4px;
+  text-align: left;
+}
+// -----------------------------------------------
+.table-2 thead tr th{
+  padding:0;
+  padding:4px;
+  text-align: left;
+  font-weight:500;
+}
+
+.table-2 tbody tr td{
+  padding:0;
+  padding:4px;
+  text-align: left;
+}
+// ---------------------------------------------------
+.table-3 thead tr th{
+  padding:0;
+  padding:4px;
+  text-align: left;
+  font-weight:500;
+}
+
+.table-3 tbody tr td{
+  padding:0;
+  padding:4px;
+  text-align: left;
+}
+
+.bg-white{
+  background-color: #ffffff !important;
+}
+
+.bg-disabled{
+  background-color: #dddde3 !important;
+}
+
+.table-3 tbody tr td input{
+  width:100%;
+  border:none;
+      opacity: 1;
+      border-radius:5px;
+      padding:2px 10px;
+      border:1px solid #dddde3;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.font-8{
+  font-size:8px;
+}
+
+.font-9{
+  font-size:9px;
+}
+
+.font-10{
+  font-size:10px;
+}
+
+.font-11{
+  font-size:11px;
+}
+
+.font-12{
+  font-size:12px;
+}
+
+.font-13{
+  font-size:13px;
+}
+
+.font-14{
+  font-size:14px;
+}
+
+.font-15{
+  font-size:15px;
+}
+
+.font-16{
+  font-size:16px;
+}
+
+
+.font-17{
+  font-size:17px;
+}
+
+.font-18{
+  font-size:18px;
+}
+
+.font-19{
+  font-size:19px;
+}
+
+.font-20{
+  font-size:20px;
+}
+
+.font-21{
+  font-size:21px;
+}
+
+.font-22{
+  font-size:22px;
+}
+
+.font-23{
+  font-size:23px;
+}
+
+.font-24{
+  font-size:24px;
+}

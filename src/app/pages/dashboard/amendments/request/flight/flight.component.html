@@ -1,0 +1,500 @@
+
+<app-request-details></app-request-details>
+
+<section id="navs" *ngIf="pnr_data">
+  <div class="row text-left">
+    <div class="col-md-12 col-lg-12">
+      <div class="card">
+        <div class="card-content">
+          <div class="card-body">
+            <ul ngbNav #cusnav="ngbNav" [activeId]="1" class="nav nav-tabs nav-200">
+              <li [ngbNavItem]="1">
+                <a ngbNavLink>Modify</a>
+                <ng-template ngbNavContent>
+                  <div class="table-responsive">
+                    <form [formGroup]="pnrForm">
+                    <table class="table m-0">
+                      <thead formArrayName="pnr_pax_data">
+                        <tr>
+                          <th>Passenger</th>
+                            <th  class="border-right text-center" *ngFor="let passengers of pax_data().controls; let paxInfoIndex = index;trackBy: trackByFn" [formGroupName]="paxInfoIndex" [attr.colspan]="passengers.value?.segment_count">
+                              {{ passengers.value.first_name+' '+passengers.value.surname+' '+'('+ passengers.value.pax_type+')'}}
+                              <button type="button" class="btn all-btn" (click)="applyAllPaxInfo()">Apply All</button>
+                            </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr formArrayName="pnr_segment_numbers">
+                          <th>Segments</th>
+                              <td *ngFor="let pnrsegments_number of pnr_segment_numbers().controls; let segmentInfoNumberIndex = index;trackBy: trackByFn" [formGroupName]="segmentInfoNumberIndex"
+                              [ngClass]="{
+                                'border-right': pnrsegments_number.value.last_leg === true
+                              }">
+                              S{{pnrsegments_number.value.segmentNo}}
+
+                            </td>
+                        </tr>
+                        <tr formArrayName="pnr_segment_dates">
+                          <th>Date</th>
+                              <td *ngFor="let pnrsegments of pnr_dates().controls; let segmentInfoIndex = index;trackBy: trackByFn" [formGroupName]="segmentInfoIndex"
+                              [ngClass]="{
+                                'border-right': pnrsegments.value.last_leg === true
+                              }">
+                              <input
+                              type="date"
+                              id="segmentDate_{{ segmentInfoIndex }}"
+                              name="segmentDate[{{pnrsegments.value.passenger_type}}-{{pnrsegments.value.passenger_number}}][{{ segmentInfoIndex }}]"
+                              class="form-control form-control-sm square flight__input__width"
+
+                              formControlName="depart_date"
+                            />
+
+                            </td>
+                        </tr>
+                        <tr formArrayName="pnr_segment_board_points">
+                          <th>From</th>
+                          <td *ngFor="let from of pnr_board_points().controls; let segmentFromIndex = index;trackBy: trackByFn" [formGroupName]="segmentFromIndex"
+                          [ngClass]="{
+                            'border-right': from.value.last_leg === true
+                          }">
+                              <input
+                              type="search"
+                              #typeaheadInstance="ngbTypeahead"
+                              id="boardingPoint_{{ segmentFromIndex }}"
+                              name="boardingPoint_{{ segmentFromIndex }}"
+                              (keydown)="typeaheadKeydown($event)"
+                              [resultTemplate]="searchResultTemplateFrom"
+                              [inputFormatter]="formatter"
+                              [ngbTypeahead]="onSearchLocation"
+                              class="form-control form-control-sm square flight__input__width"
+                              placeholder="Enter From"
+                              formControlName="board_point"
+                            />
+                            <ng-template #searchResultTemplateFrom let-r="result" let-t="term">
+                              <div class="row">
+                                <div class="col-md-8">
+                                  <div class="font-small-3">{{ r.city }}, {{ r.country }}</div>
+                                  <div class="text-muted font-small-2 text-bold-600">{{ r.name }}</div>
+                                </div>
+                                <div class="col-md-3 text-right">
+                                  <span class="text-bold-600">{{ r.code }}</span>
+                                </div>
+                              </div>
+                            </ng-template>
+                          </td>
+                        </tr>
+                        <tr formArrayName="pnr_segment_off_points">
+                          <th>To</th>
+                          <td *ngFor="let segmentTo of pnr_off_points().controls; let segmentToIndex = index;trackBy: trackByFn" [formGroupName]="segmentToIndex"
+                          [ngClass]="{
+                            'border-right': segmentTo.value.last_leg === true
+                          }">
+                              <input
+                              type="search"
+                              #typeaheadInstance="ngbTypeahead"
+                              id="boardingPoint_{{ segmentToIndex }}"
+                              name="boardingPoint_{{ segmentToIndex }}"
+                              (keydown)="typeaheadKeydown($event)"
+                              [resultTemplate]="searchResultTemplateTo"
+                              [inputFormatter]="formatter"
+                              [ngbTypeahead]="onSearchLocation"
+                              class="form-control form-control-sm square flight__input__width"
+                              placeholder="Enter To"
+                              formControlName="off_point"
+                            />
+                            <ng-template #searchResultTemplateTo let-r="result" let-t="term">
+                              <div class="row">
+                                <div class="col-md-8">
+                                  <div class="font-small-3">{{ r.city }}, {{ r.country }}</div>
+                                  <div class="text-muted font-small-2 text-bold-600">{{ r.name }}</div>
+                                </div>
+                                <div class="col-md-3 text-right">
+                                  <span class="text-bold-600">{{ r.code }}</span>
+                                </div>
+                              </div>
+                            </ng-template>
+                          </td>
+                        </tr>
+                        <tr formArrayName="pnr_segment_seats">
+                          <th>Seat</th>
+                          <td *ngFor="let segment_seat of pnr_seats().controls; let segmentSeatsIndex = index;trackBy: trackByFn" [formGroupName]="segmentSeatsIndex"
+                          [ngClass]="{
+                            'border-right': segment_seat.value.last_leg === true
+                          }">
+
+                          <select
+                                id="seat_{{ segmentSeatsIndex }}"
+                                name="seat_{{ segmentSeatsIndex }}"
+                                class="form-control form-control-sm square d-inline-block mt-1 flight__input__width"
+                                formControlName="seat"
+                              >
+                                <option value="">Choose</option>
+                                <option value="Free">Free</option>
+                                <option value="Paid">Paid</option>
+                              </select>
+                             <!--  <ul class="list-unstyled mb-0 flight__input__width">
+                                <li class="d-inline-block mr-2">
+                                  <div class="radio">
+                                    <input type="radio" formControlName="seat" value="free" name="seat" id="freeType_radio1_{{segmentSeatsIndex }}" />
+                                    <label for="freeType_radio1_{{segmentSeatsIndex}}">Free</label>
+                                  </div>
+                                </li>
+                                <li class="d-inline-block mr-2">
+                                  <div class="radio">
+                                    <input type="radio" formControlName="seat"  value="paid" name="seat" id="paidType_radio2_{{segmentSeatsIndex }}"  />
+                                    <label for="paidType_radio2_{{segmentSeatsIndex}}">Paid</label>
+                                  </div>
+                                </li>
+                              </ul> -->
+
+                          </td>
+                        </tr>
+
+                        <tr formArrayName="pnr_segment_baggage">
+                          <th   (click)="collapse.toggle()"
+                          [attr.aria-expanded]="!isCollapsed"
+                          aria-controls="collapseExample">
+                          Baggage <br>
+                          <span  class="cursor-pointer all-btn1">{{ !isCollapsed ? 'Less' : 'More' }} <i class="ft-chevron-down"></i></span>
+                          </th>
+                          <td  *ngFor="let segment_baggage of pnr_baggage().controls; let segmentBaggageIndex = index;trackBy: trackByFn" [formGroupName]="segmentBaggageIndex"
+                          [ngClass]="{
+                            'border-right': segment_baggage.value.last_leg === true
+                          }">
+                              <select
+                                id="baggage_{{ segmentBaggageIndex }}"
+                                name="baggage_{{ segmentBaggageIndex }}"
+                                class="form-control form-control-sm square d-inline-block mt-1 flight__input__width"
+                                formControlName="baggage"
+                              >
+                                <option value="">Choose</option>
+                                <option value="35Kg">35KG</option>
+                                <option value="1P">1P</option>
+                                <option value="40Kg">40KG</option>
+                              </select>
+                          </td>
+                        </tr>
+                        <tr formArrayName="pnr_segment_ssr" #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
+                          <th>SSR</th>
+                          <td *ngFor="let segment_ssr of pnr_ssr().controls; let segmentssrIndex = index;trackBy: trackByFn" [formGroupName]="segmentssrIndex"
+                          [ngClass]="{
+                            'border-right': segment_ssr.value.last_leg === true
+                          }">
+                              <select
+                              id="ssr_{{ segmentssrIndex }}"
+                              name="ssr_{{ segmentssrIndex }}"
+                              class="form-control form-control-sm square d-inline-block mt-1 flight__input__width"
+                              formControlName="ssr"
+                            >
+                              <option value="">Choose</option>
+                              <option value="Passport">Passport</option>
+                              <option value="Aadhar">Aadhar</option>
+                              <option value="DrivingLicence">Driving Licence</option>
+                            </select>
+                          </td>
+                        </tr>
+                        <tr formArrayName="pnr_segment_meals" #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
+                          <th>Meal</th>
+                          <td *ngFor="let segment_meal of pnr_meals().controls; let segmentmealIndex = index;trackBy: trackByFn" [formGroupName]="segmentmealIndex"
+                          [ngClass]="{
+                            'border-right': segment_meal.value.last_leg === true
+                          }">
+                              <select
+                              id="meal_{{ segmentmealIndex }}"
+                              name="meal_{{ segmentmealIndex }}"
+                              class="form-control form-control-sm square d-inline-block mt-1 flight__input__width"
+                              formControlName="meal"
+                            >
+                            <option value="">Choose</option>
+                            <option *ngFor="let meal of masterMealsList" [value]="meal.code">
+                              {{ meal.name }}
+                            </option>
+                            </select>
+                          </td>
+                        </tr>
+                        <tr formArrayName="pnr_segment_bassinet" #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
+                          <th>Bassinet</th>
+                          <td *ngFor="let segment_bassinet of pnr_bassinet().controls; let segmentBassinetIndex = index;trackBy: trackByFn" [formGroupName]="segmentBassinetIndex"
+                          [ngClass]="{
+                            'border-right': segment_bassinet.value.last_leg === true
+                          }">
+                              <div class="checkbox mb-1 flight__input__width">
+                                <input type="checkbox" id="bassinet_{{ segmentBassinetIndex }}" formControlName="bassinet" />
+                                <label for="bassinet_{{ segmentBassinetIndex }}"><span></span></label>
+                              </div>
+                          </td>
+                        </tr>
+                        <tr formArrayName="pnr_segment_classes" #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
+                          <th>Class</th>
+                          <td *ngFor="let segment_class of pnr_class().controls; let segmentClassIndex = index;trackBy: trackByFn" [formGroupName]="segmentClassIndex"
+                          [ngClass]="{
+                            'border-right': segment_class.value.last_leg === true
+                          }">
+                              <select
+                              id="class_{{ segmentClassIndex }}"
+                              name="class_{{ segmentClassIndex }}"
+                              class="form-control form-control-sm square flight__input__width"
+                              formControlName="class"
+                            >
+                              <option value="">Choose</option>
+                              <option *ngFor="let class of masterClassList" [value]="class.code">
+                                {{ class.name }}
+                              </option>
+                            </select>
+                          </td>
+                        </tr>
+                        <tr formArrayName="pnr_segment_airlines" #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
+                          <th>AirLine</th>
+                          <td *ngFor="let segment_airline of pnr_airlines().controls; let segmentAirLineIndex = index;trackBy: trackByFn" [formGroupName]="segmentAirLineIndex"
+                          [ngClass]="{
+                            'border-right': segment_airline.value.last_leg === true
+                          }">
+                              <input
+                            type="search"
+                            id="airline_{{ segmentAirLineIndex }}"
+                            name="airline_{{ segmentAirLineIndex }}"
+                            class="form-control form-control-sm square flight__input__width"
+                            placeholder="Enter AirLine"
+                            #airLineTypeaHeadInstance="ngbTypeahead"
+                            (keydown)="typeaheadKeydown($event)"
+                            [resultTemplate]="searchResultTemplateAirLine"
+                            [inputFormatter]="formatterAirline"
+                            [ngbTypeahead]="onSearchPoint"
+                            formControlName="airLine"
+
+                          />
+                          <ng-template #searchResultTemplateAirLine let-r="result" let-t="term">
+                            <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+                          </ng-template>
+                          </td>
+                        </tr>
+
+                        <tr formArrayName="pnr_pax_data" #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
+                          <th>DOB</th>
+                          <td
+                           class="border-right"  *ngFor="let passengers of pax_data().controls; let paxInfoIndex = index;trackBy: trackByFn" [formGroupName]="paxInfoIndex"
+                          [attr.colspan]="passengers.value?.segment_count"
+                          >
+                              <input
+                              type="date"
+                              id="dob_{{ paxInfoIndex }}"
+                              name="dob_{{ paxInfoIndex }}"
+                              class="form-control form-control-sm square cls-segment-city flight__input__width"
+                              formControlName="dob"
+                            />
+
+                          </td>
+                        </tr>
+                        <tr formArrayName="pnr_pax_data" #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
+                          <th>Name</th>
+                          <td
+                           class="border-right"  *ngFor="let passengers of pax_data().controls; let paxInfoIndex = index;trackBy: trackByFn" [formGroupName]="paxInfoIndex"
+                          [attr.colspan]="passengers.value?.segment_count"
+                          >
+                          <div class="d-flex">
+                            <input
+                            type="text"
+                            id="firstName_{{ paxInfoIndex }}"
+                            name="firstName_{{ paxInfoIndex }}"
+                            class="form-control form-control-sm square cls-segment-city flight__input__width"
+                            formControlName="first_name"
+                          />
+                          <input
+                          type="text"
+                          id="lastname_{{ paxInfoIndex }}"
+                          name="lastname_{{ paxInfoIndex }}"
+                          class="form-control form-control-sm square cls-segment-city flight__input__width"
+                          formControlName="surname"
+                        />
+                          </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </form>
+
+                  </div>
+                  <div class="pull-left d-flex mb-2 mt-2" >
+                    <button
+
+                      type="button"
+                      (click)="onSubmitPnrForm('Modify')"
+                      [disabled]="!modifyButtonDisabled"
+                      class="btn btn-primary mr-2"
+                    >
+                      <i class="ft-bookmark mr-1"></i>
+                      Save
+                    </button>
+
+                    <button
+                    type="button"
+                    (click)="reloadComponent()"
+                    class="btn  mr-2"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    *ngIf="generateCheckListButton"
+                    (click)="getCheckListData(requestId,amendment_request_id)"
+                  >
+                    <i class="ft-file-text mr-1"></i>
+                    Generate Check List
+                  </button>
+                  </div>
+                </ng-template>
+              </li>
+              <li [ngbNavItem]="2">
+                <a ngbNavLink>Cancel</a>
+                <ng-template ngbNavContent>
+                  <form >
+                    <div>
+                      <div>
+                        <div class="pax-ticket-block">
+                          <div class="pax-ticket-item my-2">
+
+                            <ul class="list-unstyled mb-0" >
+                              <li class="d-inline-block mr-2 mb-2" >
+
+                                <div class="checkbox">
+                                  <input
+                                  type="checkbox"
+                                   name="selectAll"
+                                   id="cancel_all_checkList_checkbox"
+                                   value="selectAll"
+                                   [(ngModel)]="isMasterSelected"
+                                   (change)="isAllTicketsSelect('all')"
+                                   [ngModelOptions]="{standalone: true}"
+                                   >
+                                  <label for="cancel_all_checkList_checkbox">
+                                    <span>Select All</span>
+                                </label>
+                                </div>
+                              </li>
+                            </ul>
+
+                           <div *ngFor="let paxinfo of pnr_data?.passengers;  let passengerIndex = index;trackBy: trackByFn">
+                               <div *ngFor="let ticketData of paxinfo?.ticket_info;  let ticketIndex = index;trackBy: trackByFn">
+                                  <div *ngFor="let ticketsubData of ticketData;  let ticketsubIndex = index;trackBy: trackByFn">
+
+                                    <ul class="list-unstyled mb-0" >
+                                      <li class="d-inline-block mr-2 mb-2" >
+                                        <div class="checkbox">
+                                       <!--    (change)="isAllCancelSelected(ticketsubData.isticketSelected,passengerIndex)" -->
+                                        <!--   (change)="isAllCancelSelected(ticketsubData.isticketSelected,passengerIndex)" -->
+                                          <input type="checkbox"
+                                          (change)="isAllTicketsSelect('single')"
+                                           [(ngModel)]="ticketsubData.isticketSelected"
+                                           name="ticketNumber"
+                                           [ngModelOptions]="{standalone: true}"
+                                           id="cancel_checkbox1-{{passengerIndex}}-{{ticketIndex}}-{{ticketsubIndex}}"
+                                           >
+                                          <label for="cancel_checkbox1-{{passengerIndex}}-{{ticketIndex}}-{{ticketsubIndex}}">
+                                            <span>
+                                              {{ticketsubData.ticket_number  }} /{{paxinfo.first_name}} {{paxinfo.surname}}
+                                              {{ '(' + paxinfo.pax_type + ')' }}
+                                          </span>
+                                        </label>
+                                        </div>
+                                      </li>
+                                      </ul>
+                                      <div class="form-group mb-2" id="ticketRemarks_{{passengerIndex}}" *ngIf="ticketsubData.isticketSelected">
+                                        <label for="remarks">Remarks</label>
+                                        <!-- (ngModelChange)="isRemarksAllCancelSelected()"
+                                        [ngModelOptions]="{standalone: true}" -->
+                                        <textarea id="remarks"
+                                        [(ngModel)]="ticketsubData.remarks"
+
+                                        placeholder="Enter Remarks" rows="3" class="form-control square" name="remarks"></textarea>
+                                      </div>
+
+
+                                  </div>
+                               </div>
+                           </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                  <div class="pull-left d-flex mb-2 mt-2" >
+                    <button
+                      type="button"
+                      *ngIf="cancelFormButton"
+                      (click)="onSubmitPnrForm('Cancel')"
+                      [disabled]="!modifyButtonDisabled"
+                      class="btn btn-primary mr-2"
+                    >
+                      <i class="ft-bookmark mr-1"></i>
+                      Save
+                    </button>
+
+                    <button
+                    type="button"
+                    (click)="reloadComponent()"
+                    class="btn  mr-2"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    *ngIf="generateCheckListButton"
+                    (click)="getCheckListData(requestId,amendment_request_id)"
+                  >
+                    <i class="ft-file-text mr-1"></i>
+                    Generate Check List
+                  </button>
+                  </div>
+                </ng-template>
+              </li>
+
+            </ul>
+
+            <div [ngbNavOutlet]="cusnav" class="mt-2"></div>
+          <!--   <div class="pull-left d-flex mb-2 mt-2" >
+              <button
+
+                type="button"
+                (click)="onSubmitPnrForm()"
+                [disabled]="!modifyButtonDisabled"
+                class="btn btn-primary mr-2"
+              >
+                <i class="ft-bookmark mr-1"></i>
+                Save
+              </button>
+
+              <button
+              type="button"
+              (click)="reloadComponent()"
+              class="btn  mr-2"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              *ngIf="generateCheckListButton"
+              (click)="getCheckListData(requestId,amendment_request_id)"
+            >
+              <i class="ft-file-text mr-1"></i>
+              Generate Check List
+            </button>
+            </div> -->
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<app-generate-check-list
+[generated_check_list]="flightCheckList"
+[check_list_action_type]="flight"
+*ngIf="flightCheckList &&flightCheckList.length>0"
+ >
+</app-generate-check-list>

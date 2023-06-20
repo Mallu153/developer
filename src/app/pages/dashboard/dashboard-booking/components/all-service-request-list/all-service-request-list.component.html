@@ -1,0 +1,200 @@
+<div class="card">
+  <div class="card-content">
+    <div class="card-body p-1">
+      <div class="row " *ngFor="let j of allServiceRequestshowsList; index as i; trackBy: trackByFn"  [ngClass]="{ 'package product-show': j.product === 'Package'  , 'product-hide': j.product !== 'Package' && expectPackageIsHidden }" >
+        <ng-template #tipCityContent>
+          <div *ngFor="let city of j.originDestinationLocation.split(','); let i = index; trackBy: trackByFn">
+            <span *ngIf="i > 0"> {{ city }}</span>
+          </div>
+        </ng-template>
+
+        <ng-template #tipDateContent>
+          <div *ngFor="let dateVal of j.dateOfJourneyCheckIn.split(','); let d = index; trackBy: trackByFn">
+            <span *ngIf="d > 0"> {{ dateVal | date: 'mediumDate' }}</span>
+          </div>
+        </ng-template>
+
+        <ng-template #tipClassContent>
+          <div *ngFor="let classVal of j.classDays.split(','); let c = index; trackBy: trackByFn">
+            <span *ngIf="c > 0"> {{ classVal }}</span>
+          </div>
+        </ng-template>
+
+        <div class="col-md-12 "
+        >
+          <div class="request-info-line p-2 mt-1 border rounded"
+            [ngClass]="{ active: j.serviceRequestLine === paramasSrLineId }">
+            <div class="row no-gutters align-items-center">
+              <div class="col-md-2 d-flex mr-3">
+                <div class="request-date-class mr-2">
+                  <div class="request-product-date" [ngSwitch]="j.product">
+                    <span *ngSwitchCase="'Flight'"> <img src="/assets/img/flight.svg" width="22" alt="flight" /></span>
+                    <span *ngSwitchCase="'Hotel'"> <img src="/assets/img/hotel.svg" width="22" alt="hotel" /></span>
+                    <span *ngSwitchCase="'Ancillary'">
+                      <img src="/assets/img/car.svg" width="22" alt="ancillary" /></span>
+                    <span *ngSwitchCase="'Package'">
+                      <img src="/assets/img/holiday.svg" width="22" alt="holiday" /></span>
+                    <span *ngSwitchCase="'Attractions'"> <i class="fa fa-map-marker" alt="attractions"></i></span>
+                  </div>
+                </div>
+
+                <div>
+                  <a [ngClass]="{ isDisabled: j.serviceRequestLine === paramasSrLineId }" class="d-block">
+                    <span class="text-bold-600 text-primary">{{ j.serviceRequestNumber }} - {{ j.serviceRequestLine }}
+                    </span>
+                    <i class="fa fa-edit ml-2 cursor-pointer" *ngIf="keys?.includes(editRequestDetailskey)"
+                      (click)="getLinesBySrRequest(j)" placement="top" ngbTooltip="edit"></i></a>
+                  <span class="font-small-2 clr-9c">{{ j.serviceRequestDate | date: 'mediumDate' }} </span>
+                  <span class="font-small-2 clr-9c">{{ j.serviceRequestDate | date: 'shortTime' }}</span>
+                </div>
+              </div>
+
+              <div class="col-md-3 mr-3" *ngIf="j.product == 'Flight' || j.product == 'Package'">
+                <span class="text-bold-600 ">{{ j.product }}</span>
+                <span [ngSwitch]="j.typeId" class="font-small-2">
+                  <span *ngSwitchCase="1"> (Oneway)</span>
+                  <span *ngSwitchCase="11"> (Multicity)</span>
+                  <span *ngSwitchCase="69"> (Round)</span>
+                </span>
+                <br />
+
+                <span class="font-small-3 clr-9c truncate" *ngIf="j.originDestinationLocation "
+                  title="{{ j.originDestinationLocation }}">{{
+                  j.originDestinationLocation.split(',')[0]
+                  }}</span>
+                <!-- <span
+                  *ngIf="j.originDestinationLocation?.split(',').length > 1"
+                  placement="top"
+                  [ngbTooltip]="tipCityContent"
+                  class="font-small-3 clr-9c"
+                >
+                  + {{ j.originDestinationLocation?.split(',').length - 1 }} more</span
+                > -->
+              </div>
+
+
+              <div class="col-md-3 mr-3" *ngIf="
+                  j.product == 'Hotel' ||
+                  j.product == 'Ancillary' ||
+                  j.product == 'Attractions' ||
+                  j.product === 'Attraction'
+                ">
+                <span class="text-bold-600">{{ j.product }}</span> <br />
+                <span class="font-small-3 clr-9c truncate" title="{{ j.originDestinationLocation }}">{{
+                  j.originDestinationLocation
+                  }}</span>
+              </div>
+
+              <div class="col-md-2 col-6" *ngIf="j.dateOfJourneyCheckIn !== null">
+                <span class="text-bold-600"><i class="fa fa-calendar" aria-hidden="true"></i>
+                  {{ j.dateOfJourneyCheckIn?.split(',')[0] | date: 'mediumDate' }}</span>
+                <span *ngIf="j.dateOfJourneyCheckIn?.split(',').length > 1" placement="top"
+                  [ngbTooltip]="tipDateContent" class="font-small-3">
+                  + {{ j.dateOfJourneyCheckIn?.split(',').length - 1 }} more</span>
+                <br /><span class="font-small-3 clr-9c"><i class="fa fa-user-circle-o" aria-hidden="true"></i> {{
+                  j.paxCount }}</span>
+              </div>
+              <div class="col-md-2 col-6" *ngIf="j.dateOfJourneyCheckIn === null">
+                <span class="text-bold-600"><i class="fa fa-calendar" aria-hidden="true"></i> NA</span>
+
+                <br /><span class="font-small-3 clr-9c"><i class="fa fa-user-circle-o" aria-hidden="true"></i> {{
+                  j.paxCount }}</span>
+              </div>
+
+              <div class="col-6 col-md-1">
+                <span *ngIf="j.product !== 'Attractions'" title="{{ j.classDays }}">
+                  {{ j.classDays?.split(',')[0] }}
+                  <!-- <span
+                    *ngIf="j.classDays?.split(',').length > 1"
+                    placement="top"
+                    [ngbTooltip]="tipClassContent"
+                    class="font-small-3"
+                  >
+                    + {{ j.classDays?.split(',').length - 1 }} more</span
+                  > -->
+                  <span *ngIf="j.product === 'Hotel'" class="font-small-2">Nights</span>
+                  <span *ngIf="j.product === 'Package'" class="font-small-2" >Day(s)</span>
+                </span>
+                <span *ngIf="j.product === 'Attractions'" class="d-block">
+                  {{ j.classDays?.split(',').length }} Attraction
+                </span>
+                <span class="text-capitalize mt-1 d-block {{ j.cssClass }}">{{ j.currentStatus }}</span>
+              </div>
+              <div class="col-md-3 socialm margin-left-auto mobile-none" ngbDropdown>
+                <a *ngIf="
+                    keys?.includes(searchkey) &&
+                    j.product !== 'Package' &&
+                    j.product !== 'Ancillary' &&
+                    j.product !== 'Attractions'
+                  " href="javascript:;" class="btn btn-sm btn-outline-info round mr-1 mt-1" placement="top"
+                  ngbDropdownToggle>
+                  <i class="ft-search dropdown-toggle"></i>
+                  <div ngbDropdownMenu class="dropdown-menu" role="menu">
+                    <a class="dropdown-item" (click)="Online(j.serviceRequestNumber, j.serviceRequestLine, j.product)"
+                      *ngIf="j.product !== 'Package' && j.product !== 'Ancillary'">
+                      {{ j.product === 'Flight' ? ' Pro' : 'Online' }}
+                    </a>
+
+                    <a class="dropdown-item" (click)="offline(j.serviceRequestNumber, j.serviceRequestLine, j.product)"
+                      *ngIf="j.product !== 'Package'">
+                      Offline
+                    </a>
+
+                    <a class="dropdown-item" (click)="mptb(j.serviceRequestNumber, j.serviceRequestLine, j.product)"
+                      *ngIf="j.product !== 'Package' && j.product !== 'Ancillary' && j.product !== 'Hotel'">
+                      Auto
+                    </a>
+                  </div>
+                </a>
+                <a *ngIf="keys?.includes(searchkey) && j.product === 'Package'"
+                  [ngClass]="{ isDisabled: j.serviceRequestLine === paramasSrLineId }"
+                  (click)="redirectToItinerary(j.serviceRequestNumber, j.serviceRequestLine, j.contactId)"
+                  href="javascript:;" class="btn btn-sm btn-outline-info round mr-1 mt-1" placement="top"
+                  ngbTooltip="preview">
+                  <i class="ft-codepen "></i>
+                </a>
+                <a *ngIf="keys?.includes(searchkey) && j.product === 'Ancillary'"
+                  (click)="offline(j.serviceRequestNumber, j.serviceRequestLine, j.product)" href="javascript:;"
+                  class="btn btn-sm btn-outline-info round mr-1 mt-1" placement="top" ngbTooltip="offline">
+                  <i class="ft-search"></i>
+                </a>
+                <a *ngIf="(keys?.includes(searchkey) && j.product === 'Attractions') || j.product === 'Attraction'"
+                  (click)="offline(j.serviceRequestNumber, j.serviceRequestLine, j.product)" href="javascript:;"
+                  class="btn btn-sm btn-outline-info round mr-1 mt-1" placement="top" ngbTooltip="offline">
+                  <i class="ft-search"></i>
+                </a>
+
+                <a *ngIf="keys?.includes(chatkey)" (click)="openChat(j)" href="javascript:;"
+                  class="btn btn-sm btn-outline-info round mr-1 mt-1" placement="top" ngbTooltip="chat">
+                  <i class="ft-message-square"></i>
+                </a>
+                <a *ngIf="keys?.includes(phoneCallkey)" href="tel:{{ j.createdUserPhone }}"
+                  class="btn btn-sm btn-outline-info round mr-1 mt-1" placement="top"
+                  ngbTooltip="{{ j.createdUserPhone }}">
+                  <i class="fa fa-phone"></i>
+                </a>
+                <a *ngIf="keys?.includes(emailkey)" href="mailto:{{ j.createdUserEmail }}"
+                  class="btn btn-sm btn-outline-info round mr-1 mt-1" placement="top"
+                  ngbTooltip="{{ j.createdUserEmail }}">
+                  <i class="fa fa-envelope"></i>
+                </a>
+                <a *ngIf="keys?.includes(PersonNamekey)" class="btn btn-sm btn-outline-info round mr-1 mt-1"
+                  placement="top" ngbTooltip="{{ j.createdUserName }}">
+                  <i class="icon-user"></i>
+                </a>
+                <!-- <a  *ngIf="j.product === 'Package' && expectPackageIsHidden"  (click)="toggleVisibility()"  class="btn btn-sm btn-outline-info round mr-1 mt-1"
+                placement="top" ngbTooltip="more requests">
+                  <i  class="ft-more-horizontal-"></i>
+                </a> -->
+                <!--  <span class="font-small-3">{{ j.createdUserName }}</span> -->
+
+                <button type="button" *ngIf="j.product === 'Package' && expectPackageIsHidden"  (click)="toggleVisibility()"   class="btn btn-link shadow-none">more</button>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

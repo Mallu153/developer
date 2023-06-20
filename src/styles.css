@@ -1,0 +1,299 @@
+/* You can add global styles to this file, and also import other style files */
+
+/* @import "~@ng-select/ng-select/themes/default.theme.css"; */
+body {
+  color: #000000 !important;
+}
+.refresh {
+  background-image: linear-gradient(to right, #d5f1fd 0%, #d5f1fd 51%, #d5f1fd 100%);
+  color: #226cc5;
+  letter-spacing: 1;
+}
+.refresh1 {
+  background: #efdeff;
+  color: #226cc5;
+  letter-spacing: 1;
+}
+
+.text-info-blue {
+  color: #101760;
+}
+.pcursor {
+  font-size: 18px;
+  margin: 0 3px;
+}
+.dep-bar {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  font-size: 25px;
+  font-weight: 600;
+  color: #0c3b87;
+  line-height: 28px;
+}
+.travel_det {
+  background: #f9f6fc;
+  color: #226cc5;
+  text-align: center;
+}
+
+.btn-grad {
+  background-image: linear-gradient(to right, #d1913c 0%, #ffd194 51%, #d1913c 100%);
+}
+.btn-grad {
+  padding: 4px 10px;
+  text-align: center;
+  transition: 0.5s;
+  background-size: 200% auto;
+  color: rgb(255, 255, 255);
+  box-shadow: 0 0 20px #eee;
+  border-radius: 5px;
+  font-weight: 500;
+  font-size: 12px;
+}
+
+.btn-grad:hover {
+  background-position: right center; /* change the direction of the change here */
+  color: #fff;
+  text-decoration: none;
+}
+
+.btn-save {
+  background-image: linear-gradient(to right, #7474bf 0%, #348ac7 51%, #7474bf 100%);
+}
+.btn-save {
+  padding: 4px 10px;
+  text-align: center;
+  transition: 0.5s;
+  background-size: 200% auto;
+  color: rgb(255, 255, 255);
+  box-shadow: 0 0 20px #eee;
+  border-radius: 5px;
+  font-weight: 500;
+  font-size: 12px;
+}
+
+.btn-save:hover {
+  background-position: right center;
+  color: #fff;
+  text-decoration: none;
+}
+.nxtline {
+  position: absolute;
+  bottom: -18px;
+  left: 10px;
+  font-size: 11px;
+  color: #333333;
+}
+
+.btn-submit-q {
+  background-image: linear-gradient(to right, #56ccf2 0%, #2f80ed 51%, #56ccf2 100%);
+}
+.btn-submit-q {
+  padding: 4px 10px;
+  text-align: center;
+  transition: 0.5s;
+  background-size: 200% auto;
+  color: rgb(255, 255, 255);
+  box-shadow: 0 0 20px #eee;
+  border-radius: 5px;
+  font-weight: 500;
+  font-size: 12px;
+}
+
+.btn-submit-q:hover {
+  background-position: right center; /* change the direction of the change here */
+  color: #fff;
+  text-decoration: none;
+}
+
+.btn-s-quote {
+  background-image: linear-gradient(to right, #a770ef 0%, #cf8bf3 51%, #a770ef 100%);
+}
+.btn-s-quote {
+  margin: 10px;
+  text-align: center;
+  transition: 0.5s;
+  background-size: 200% auto;
+  color: white;
+  box-shadow: 0 0 20px #eee;
+  border-radius: 5px;
+  display: block;
+  font-weight: 500;
+}
+
+.btn-s-quote:hover {
+  background-position: right center;
+  color: #fff;
+  text-decoration: none;
+}
+
+.checkbox label:after,
+.checkbox label:before {
+  border: 1px solid #aeaeae;
+}
+
+.ttl2.collapsed:before {
+  content: '\e844';
+  font-family: 'feather';
+  font-size: 1.2rem;
+  display: inline-block;
+
+  -webkit-transform: rotate(0deg);
+  -moz-transform: rotate(0deg);
+  -ms-transform: rotate(0deg);
+  -o-transform: rotate(0deg);
+  transform: rotate(0deg);
+  transition: all 200ms linear;
+}
+.ttl2:before {
+  content: '\e844';
+  font-family: 'feather';
+  font-size: 1.2rem;
+  display: inline-block;
+
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  -o-transform: rotate(90deg);
+  transform: rotate(90deg);
+  transition: all 200ms linear;
+}
+
+.bg-light-success-g {
+  background-image: linear-gradient(to right, #e0fbda 0%, #e0fbda 51%, #bbf2ae 100%);
+  color: #40c057 !important;
+  border-color: #e0fbda;
+}
+
+.badge-pill.bg-light-success-g {
+  background-image: linear-gradient(to right, #e0fbda 0%, #e0fbda 51%, #bbf2ae 100%);
+  color: #0c3b87 !important;
+  border-color: #e0fbda;
+  font-size: 12px !important;
+  float: right;
+  text-align: right;
+  margin-left: auto !important;
+  margin-right: 70px;
+  border-radius: 4px;
+}
+.nor-line {
+  border-bottom: 3px solid green;
+}
+.vip-line {
+  border-bottom: 3px solid orange;
+}
+.vvip-line {
+  border-bottom: 3px solid red;
+}
+
+.explore-btn {
+  border-radius: 50%;
+  line-height: 30px;
+  width: 36px;
+  height: 34px;
+  opacity: 0.6;
+}
+form label,
+.form-group label {
+  text-transform: capitalize;
+}
+.adtinput input {
+  width: 50px;
+}
+.my-class .modal-dialog {
+  width: 70%;
+}
+.table .refresh th {
+  color: #226cc5;
+}
+.table .refresh th,
+.table td {
+  padding: 0.5rem 1rem !important;
+  vertical-align: top;
+  border-top: 1px solid #f5f5f5;
+  vertical-align: middle;
+  font-weight: 500;
+  font-size: 13px !important;
+}
+
+.table thead th {
+  vertical-align: bottom;
+  border-bottom: none !important;
+  /* border-bottom: 2px solid #e0e0e0; */
+}
+.ft-zap.text-info {
+  font-size: 16px;
+}
+#class .ng-select-container {
+  border: none;
+  margin-left: -10px;
+}
+
+.addons-cl .ng-value-container {
+  padding-top: 3px;
+  padding-left: 7px;
+  height: 27px;
+}
+@media only screen and (min-width: 320px) and (max-width: 1024px) {
+  #wa-drp-notification {
+    margin-top: 10px !important;
+  }
+  #wa-drp-notification img {
+    width: 25px;
+    height: 25px;
+  }
+  #wa-drp-notification .custom-wip-notification {
+    right: 53px !important;
+  }
+}
+
+/* //#D5F1FD */
+
+.cal-month-view .cal-cell {
+  float: left;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  border: 1px solid #e1e1e1;
+  border-radius: 5px;
+  margin: 2px;
+}
+.cal-month-view .cal-days .cal-cell-row,
+.cal-month-view .cal-days {
+  border: none !important;
+}
+.cal-month-view .cal-day-cell.cal-today {
+  background-color: #deedff !important;
+}
+.cal-month-view .cal-day-cell.cal-today .cal-day-number {
+  font-size: 1.3em;
+  font-weight: 600;
+  color: #1c5aac;
+  line-height: 20px;
+}
+.cal-month-view .cal-header .cal-cell {
+  padding: 5px 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  white-space: nowrap;
+  background: #ededf7;
+  font-size: 14px;
+  font-weight: 500;
+}
+.cal-month-view .cal-day-number {
+  opacity: 1;
+}
+.cal-month-view .cal-event {
+  width: 100% !important;
+  padding: 5px;
+  border-radius: 5px !important;
+  background-color: #f6f8fb !important;
+  border: 1px solid #deedff;
+}
+.form-control {
+  color: #000000 !important;
+}

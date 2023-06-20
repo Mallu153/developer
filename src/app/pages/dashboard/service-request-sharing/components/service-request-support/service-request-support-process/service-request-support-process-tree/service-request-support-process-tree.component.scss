@@ -1,0 +1,37 @@
+.tree-menu-1st-example ul {
+  padding-left: 0px;
+}
+
+.tree-menu-1st-example ul li {
+  list-style-type: none;
+  padding-left: 30px;
+  position: relative;
+  line-height: 2em;
+}
+
+.tree-menu-1st-example ul li:before {
+  content: '';
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  border-right: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  border-radius: 0 0 0 0px;
+  height: 100%;
+}
+
+.tree-menu-1st-example ul li:after {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 1em;
+  left: 0px;
+  border-top: 1px solid #ccc;
+  border-radius: 0px 0 0 0;
+  width: 20px;
+  height: 100%;
+}
+
+.tree-menu-1st-example ul li:last-of-type:before {
+  height: 1em;
+}

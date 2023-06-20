@@ -1,0 +1,49 @@
+/* /input type=number increment hiddeen css/ */
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  /* display: none; <- Crashes Chrome on hover */
+  -webkit-appearance: none;
+  margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+input[type='number']:hover {
+  -moz-appearance: textfield; /* Firefox */
+}
+textarea.description-box {
+  min-width: 30px;
+  height: 30px;
+}
+
+/* :host ::ng-deep .ng-select .ng-select-container {
+  border-radius: 0 !important;
+} */
+
+/* :host ::ng-deep.dropdown-list[_ngcontent-wrm-c154] {
+
+  padding-top: 6px;
+  width: 100%;
+  z-index: 9999;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  background: #fff;
+  margin-top: 10px;
+  box-shadow: 0 1px 5px #959595;
+} */
+
+/* :host ::ng-deep ng-select {
+  overflow: visible;
+  position: absolute;
+} */
+
+/* :host ::ng-deep .ng-value .ng-value-label > .card {
+  overflow: visible;
+} */
+.form-row {
+  align-items: center;
+}
+.btn-xs {
+  font-size: 9px;
+}
+/* :host ::ng-deep .ng-select .ng-clear-wrapper {
+  display: none;
+} */

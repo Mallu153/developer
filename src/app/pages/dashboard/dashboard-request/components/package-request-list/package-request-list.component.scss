@@ -1,0 +1,21 @@
+/* /input type=number increment hiddeen css/ */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  /* display: none; <- Crashes Chrome on hover */
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+input[type='number']:hover {
+  -moz-appearance: textfield; /* Firefox */
+  appearance: textfield; /* Firefox */
+}
+:host ::ng-deep .ng-select .ng-select-container {
+  border-radius: 1px !important;
+
+}
+
+ .ng-select.custom .ng-select-container  {
+  border-radius: 1px !important;
+}
+

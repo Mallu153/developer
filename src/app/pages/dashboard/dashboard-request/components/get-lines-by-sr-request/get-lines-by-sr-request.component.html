@@ -1,0 +1,84 @@
+<div class="container-fluid">
+  <div class="card">
+    <div class="card-header">
+      <h4 class="card-title text-center">Service Lines List</h4>
+    </div>
+    <div class="card-body">
+      <fieldset class="form-group" *ngIf="SrRequestLineApiResponse && SrRequestLineApiResponse.length >0">
+        <label>Show
+          <select name="users-list-select"[(ngModel)]="pageSize"(ngModelChange)="onApplySerachForm()" class="form-control form-control-sm d-inline-block width-100 p-right-25 ">
+            <option [ngValue]="10">10</option>
+            <option [ngValue]="15">15</option>
+            <option [ngValue]="25">25</option>
+            <option [ngValue]="50">50</option>
+            <option [ngValue]="100">100</option>
+          </select>
+          entries</label>
+        <label for="ngx-filter-ref" class="float-right">Search:
+          <input id="ngx-filter-ref" class="form-control form-control-sm d-inline-block width-200 "type="text" [(ngModel)]="searchText" id="search" placeholder="Search"/>
+        </label>
+      </fieldset>
+      <div class="table-responsive table">
+        <div class="outer">
+          <div class="inner">
+            <table class="table m-0">
+              <thead>
+                <tr class="refresh">
+                  <th scope="col">S.No</th>
+                  <th scope="col" [appSort]="SrRequestLineApiResponse" data-order="desc" data-name="requestId"
+                    class=" pointer">RequestId</th>
+                  <th scope="col" class="pointer" [appSort]="SrRequestLineApiResponse" data-order="desc"
+                    data-name="requestLineId">
+                    Request LineId</th>
+                  <th scope="col" class="pointer" [appSort]="SrRequestLineApiResponse" data-order="desc"
+                    data-name="tripTypeId">Trip
+                    Type</th>
+                  <th scope="col" class="pointer" [appSort]="SrRequestLineApiResponse" data-order="desc"
+                    data-name="typeOfFlight">Type Of
+                    Flight</th>
+                  <th scope="col" class="pointer">Created By</th>
+                  <th scope="col" class="pointer" [appSort]="SrRequestLineApiResponse" data-order="desc"
+                    data-name="createdDate">
+                    CreatedDate</th>
+                  <th scope="col" class="pointer" [appSort]="SrRequestLineApiResponse" data-order="desc"
+                    data-name="updatedDate">
+                    UpdatedDate</th>
+                  <th scope="col" class="pointer">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="let j of SrRequestLineApiResponse | filter:searchText | slice: (page - 1) * pageSize:page * pageSize; index as i">
+                  <td scope="row">{{ (page -1) * pageSize + i + 1 }}</td>
+                  <td class="pt-3 wrap-text">{{ j.requestId }}</td>
+                  <td class="pt-3 wrap-text" (click)="findByRequestId(j)">
+                    <a>
+                      {{ j.requestLineId }}
+                    </a>
+                  </td>
+                  <td class="pt-3 wrap-text">
+                    {{j.tripTypeId}}
+                  </td>
+                  <td class="pt-3 wrap-text">{{ j.typeOfFlight }}</td>
+                  <td class="pt-3 wrap-text">Admin</td>
+                  <td class="pt-3 wrap-text">{{ j.createdDate | date: 'dd-MMM-yyyy' }}</td>
+                  <td class="pt-3 wrap-text">{{ j.updatedDate | date: 'dd-MMM-yyyy' }}</td>
+                  <td class="pointer"><i class="ft-edit font-medium-3 mr-2" (click)="findByRequestId(j)"></i></td>
+                </tr>
+                <tr *ngIf="SrRequestLineApiResponse?.length === 0">
+                  <td class="nodatamessage">No records found.</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="d-flex justify-content-between p-2" *ngIf="SrRequestLineApiResponse?.length > 0">
+              <p>Showing 1 to {{pageSize}} of {{SrRequestLineApiResponse?.length}} entries</p>
+              <ngb-pagination [collectionSize]="SrRequestLineApiResponse?.length" [(page)]="page" [maxSize]="10"
+                [boundaryLinks]="true" [pageSize]="pageSize" class="d-flex justify-content-center">
+              </ngb-pagination>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

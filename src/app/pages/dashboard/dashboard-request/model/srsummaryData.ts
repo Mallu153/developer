@@ -1,0 +1,37 @@
+export interface SrSummary {
+  attribute1?: string;
+  attribute2?: string;
+  attribute3?: string;
+  attribute4?: string;
+  attribute5?: string;
+  cancelledTicketOrRoomCount?: number;
+  cancelledTicketOrRoomTotal?: number;
+  classOrHotel?: string;
+  contactEmail: string;
+  contactId: number;
+  contactName: string;
+  contactPhone: string;
+  deviceInfo: string;
+  invoiceCount?: number;
+  invoiceTotal?: number;
+  ipAddress?: string;
+  issuedTicketOrRoomCount?: number;
+  issuedTicketOrRoomTotal?: number;
+  loggedInUserId: number;
+  passengerCount: number;
+  paymentCount?: number;
+  paymentTotal?: number;
+  pnrOrBookingCount?: number;
+  pnrOrBookingPassengerCount?: number;
+  productId: number;
+  purchaseOrderCount?: number;
+  purchaseOrderTotal?: number;
+  quoteCount?: number;
+  receiptCount?: number;
+  receiptTotal?: number;
+  requestForQuoteCount?: number;
+  routeOrCity?: string;
+  serviceRequestId: number;
+  serviceRequestLineId: number;
+  travelDateOrCheckInDate: string;
+}

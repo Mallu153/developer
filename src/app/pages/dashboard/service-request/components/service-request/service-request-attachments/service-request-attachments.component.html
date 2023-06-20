@@ -1,0 +1,58 @@
+<section id="attachments-section">
+  <form [formGroup]="attachmentForm">
+    <div formArrayName="attachments">
+      <div class="card-header">
+        <h4 class="card-title">Attachments</h4>
+      </div>
+      <div class="table-responsive">
+        <table class="table m-0">
+          <thead>
+            <tr>
+              <th>File Name</th>
+              <th>Type</th>
+              <th>Upload</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let attachment of attachments().controls; let attachmentIndex = index">
+              <td>{{ attachment.value.name }}</td>
+              <td>{{ attachment.value.fileType }}</td>
+              <td>
+                <input
+                  type="file"
+                  (change)="fileUpload($event, attachmentIndex)"
+                  class="form-control-file"
+                  id="file+{{ attachmentIndex + 1 }}"
+                />
+              </td>
+              <td>
+                <div class="badge badge-pill">
+                  <a (click)="viewFile(attachment.value.url)" *ngIf="attachment.value.url"> Download </a>
+                </div>
+                <!--   <div class="badge badge-pill" *ngIf="attachment.value.id && !isUpload[attachmentIndex]"
+                    [ngClass]="attachment.value.url ? 'bg-light-success': ''">
+                    {{attachment.value.url ? "Uploaded" : ''}}
+                </div> -->
+                <div
+                  class="badge badge-pill"
+                  *ngIf="isUpload[attachmentIndex]"
+                  [ngClass]="attachment.value.url ? 'bg-light-success' : ''"
+                >
+                  <i class="fa fa-spinner fa-spin"></i> Uploading..
+                </div>
+                <div
+                  class="badge badge-pill bg-light-danger"
+                  (click)="removeImage(attachmentIndex)"
+                  *ngIf="attachment.value.id && !isUpload[attachmentIndex]"
+                >
+                  <i class="ft-x-circle"></i>Remove
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </form>
+</section>

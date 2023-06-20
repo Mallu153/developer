@@ -1,0 +1,514 @@
+<section id="flightSearch">
+  <form [formGroup]="filterForm">
+    <div class="form-row">
+      <div class="col-md-3 col-12" *ngIf="airPortList && airPortList.length > 0">
+        <div class="form-group">
+          <label for="airLine">Airports</label>
+          <ng-select
+            [items]="airPortList"
+            id="airports"
+            name="airports"
+            class="custom"
+            bindValue="Code"
+            bindLabel="Name"
+            placeholder="All Airports"
+            [multiple]="true"
+            [closeOnSelect]="false"
+            formControlName="airport"
+            (change)="onChangeFilters()"
+          >
+            <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+              <input
+                id="item-{{ index }}"
+                type="checkbox"
+                name="item-{{ index }}"
+                [ngModel]="item$?.selected"
+                [ngModelOptions]="{ standalone: true }"
+              />
+              {{ item.Code }} - {{ item.Name }} <br />
+              <small> {{ item.Country }}</small>
+            </ng-template>
+
+            <ng-template ng-multi-label-tmp let-items="items">
+              <div class="ng-value" *ngFor="let item of items | slice: 0:0">
+                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+              </div>
+
+              <div class="ng-value" *ngIf="items?.length > 0">
+                <span class="ng-value-label">
+                  {{ items?.length === airPortList?.length ? 'All' : items?.length }}
+                  selected
+                </span>
+              </div>
+            </ng-template>
+          </ng-select>
+        </div>
+      </div>
+      <div class="col-md-3 col-12" *ngIf="airLineList && airLineList.length > 0">
+        <div class="form-group">
+          <label for="airLine">Airlines</label>
+          <ng-select
+            [items]="airLineList"
+            id="airLine"
+            name="airLines"
+            class="custom"
+            bindValue="code"
+            bindLabel="name"
+            placeholder="All Airlines"
+            [multiple]="true"
+            [closeOnSelect]="false"
+            formControlName="airLine"
+            (change)="onChangeFilters()"
+          >
+            <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+              <input
+                id="item-{{ index }}"
+                type="checkbox"
+                name="item-{{ index }}"
+                [ngModel]="item$?.selected"
+                [ngModelOptions]="{ standalone: true }"
+              />
+              {{ item.name }}
+            </ng-template>
+
+            <ng-template ng-multi-label-tmp let-items="items">
+              <div class="ng-value" *ngFor="let item of items | slice: 0:0">
+                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+              </div>
+
+              <div class="ng-value" *ngIf="items?.length > 0">
+                <span class="ng-value-label">
+                  {{ items?.length === airLineList?.length ? 'All' : items?.length }}
+                  selected
+                </span>
+              </div>
+            </ng-template>
+          </ng-select>
+        </div>
+      </div>
+      <div class="col-md-2 col-12">
+        <div class="form-group">
+          <label for="stops">Stops</label>
+          <ng-select
+            [items]="stopsList"
+            id="stops"
+            name="stops"
+            class="custom"
+            bindValue="value"
+            bindLabel="name"
+            placeholder="0,1,2 +3 Stops"
+            [multiple]="true"
+            [closeOnSelect]="false"
+            formControlName="stops"
+            (change)="onChangeFilters()"
+          >
+            <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+              <input
+                id="item-{{ index }}"
+                type="checkbox"
+                name="item-{{ index }}"
+                [ngModel]="item$?.selected"
+                [ngModelOptions]="{ standalone: true }"
+              />
+              {{ item.name }}
+            </ng-template>
+
+            <ng-template ng-multi-label-tmp let-items="items">
+              <div class="ng-value" *ngFor="let item of items | slice: 0:0">
+                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+              </div>
+
+              <div class="ng-value" *ngIf="items?.length > 0">
+                <span class="ng-value-label">
+                  {{ items?.length === stopsList?.length ? 'All' : items?.length }}
+                  selected
+                </span>
+              </div>
+            </ng-template>
+          </ng-select>
+        </div>
+      </div>
+      <div class="col-md-2 col-12">
+        <div class="form-group">
+          <label for="times">Times</label>
+          <ng-select
+            [multiple]="true"
+            [items]="timesList"
+            class="custom"
+            groupBy="text"
+            name="time"
+            bindValue="value"
+            bindLabel="name"
+            placeholder="All"
+            [closeOnSelect]="false"
+            formControlName="time"
+          >
+            <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+              <span class="edit-ng-select-readonly">{{ item.text }}</span>
+            </ng-template>
+            <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+              <input
+                id="item-{{ index }}"
+                type="checkbox"
+                name="item-{{ index }}"
+                [ngModel]="item$?.selected"
+                [ngModelOptions]="{ standalone: true }"
+              />
+              {{ item.name }}
+            </ng-template>
+
+            <ng-template ng-multi-label-tmp let-items="items">
+              <div class="ng-value" *ngFor="let item of items | slice: 0:0">
+                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+              </div>
+              <div class="ng-value" *ngIf="items?.length > 0">
+                <span class="ng-value-label">
+                  {{ items?.length === timesList?.length ? 'All' : items?.length }} selected</span
+                >
+              </div>
+            </ng-template>
+          </ng-select>
+        </div>
+      </div>
+      <div class="col-md-2 col-12" *ngIf="baggageList && baggageList.length > 0">
+        <div class="form-group">
+          <label for="baggage">Baggages</label>
+          <ng-select
+            [items]="baggageList"
+            id="baggage"
+            name="baggage"
+            class="custom"
+            bindValue="value"
+            bindLabel="name"
+            placeholder="All"
+            [multiple]="true"
+            [closeOnSelect]="false"
+            formControlName="baggage"
+            (change)="onChangeFilters()"
+          >
+            <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+              <input
+                id="item-{{ index }}"
+                type="checkbox"
+                name="item-{{ index }}"
+                [ngModel]="item$?.selected"
+                [ngModelOptions]="{ standalone: true }"
+              />
+              {{ item.name }}
+            </ng-template>
+
+            <ng-template ng-multi-label-tmp let-items="items">
+              <div class="ng-value" *ngFor="let item of items | slice: 0:0">
+                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+              </div>
+
+              <div class="ng-value" *ngIf="items?.length > 0">
+                <span class="ng-value-label">
+                  {{ items?.length === baggageList?.length ? 'All' : items?.length }}
+                  selected
+                </span>
+              </div>
+            </ng-template>
+          </ng-select>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <div class="row" >
+    <div class="col-md-2" *ngIf="flightOfferList && flightOfferList.length > 0">
+      <p class="font-small-2 text-bold-700 filter-count mb-1">{{ flightOfferList.length }} Flights</p>
+    </div>
+    <!--  <div class="col-md-2">
+      <button type="button" class="btn "(click)="sortByAirline()">Airline </button>
+    </div> -->
+
+    <div class="col-xl-12 col-lg-12 col-md-12 col-12">
+      <div
+        class="flight-details-info"
+        *ngFor="let flight_offer_data of flightOfferList; trackBy: trackByFn; let mainIndex = index"
+      >
+        <div class="card">
+          <div class="card-content">
+            <div class="card-body">
+              <div
+                *ngFor="
+                  let flight_offer_data_itineraries of flight_offer_data.itineraries;
+                  let itinerariesIndex = index
+                "
+              >
+                <!-- //*ngFor="let segments of flight_offer_data_itineraries.segments" -->
+
+                <div class="row no-gutters align-items-center">
+                  <div class="col-md-9">
+                    <div class="flight-details-info">
+                      <div class="row no-gutters align-items-center">
+                        <div class="col-md-3">
+                          <div class="d-flex flex-row">
+                            <div class="p-1">
+                              <div class="mb-1">
+                                <img
+                                  src="{{ airLineImageUrl }}tt-pub/airline-logos/v1/airline_logo/{{
+                                    flight_offer_data?.validatingAirlineCodes[0]
+                                  }}.gif"
+                                  alt="avatar"
+                                  class="airline-image rounded mr-1"
+                                  width="70"
+                                  height="30"
+                                />
+                              </div>
+                            </div>
+                            <div class="p-1">
+                              <div class="color-003333 text-bold-600 text-capitalize">
+                                {{ airLineNamesList[flight_offer_data?.validatingAirlineCodes[0]] }}
+                              </div>
+                              <div class="color-9999cc font-small-2">
+                                <span class="flight-number-aircraft">
+                                  {{
+                                  flight_offer_data_itineraries.segments[0].carrierCode +
+                                    '-' +
+                                    flight_offer_data_itineraries.segments[0].number
+                                }}
+                                {{
+                                  flight_offer_data_itineraries.segments[flight_offer_data_itineraries.segments?.length - 1].carrierCode +
+                                    '-' +
+                                    flight_offer_data_itineraries.segments[flight_offer_data_itineraries.segments?.length - 1].number
+                                }}
+                              </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-2">
+                          <div class="p-1 text-right">
+                            <div>
+                              <!--  <i class="fas fa-moon icon-night color-ffcc33"></i> -->
+                              <span class="color-003333 text-bold-600">{{
+                                flight_offer_data_itineraries.segments[0]?.deptTime
+                              }}</span>
+                            </div>
+                            <div class="color-9999cc font-small-3">
+                              {{ flight_offer_data_itineraries.segments[0]?.departure.at | date: 'EEE,  d MMM, yy' }}
+                            </div>
+                            <div>
+                              <span
+                                class="js-airport-tooltip cursor-pointer"
+                                data-toggle="tooltip"
+                                data-placement="left"
+                                data-custom-class="tooltip-primary"
+                                title="{{
+                                  airportsMaster[flight_offer_data_itineraries.segments[0]?.departure?.iataCode]?.City
+                                }}"
+                                ><i class="fas fa-plane-departure color-ffcc33"></i>
+                                <span class="color-9999cc text-bold-600">{{
+                                  flight_offer_data_itineraries.segments[0]?.departure?.iataCode
+                                }}</span></span
+                              >
+                            </div>
+                            <div class="color-9999cc font-small-3">&nbsp;</div>
+                          </div>
+                        </div>
+                        <div class="col-md-3">
+                          <div class="p-1">
+                            <div class="color-9999cc font-small-3 text-center">
+                              {{ flight_offer_data_itineraries.duration?.split('PT')[1] }}
+                              <span class="color-003333 text-bold-600 font-small-3">
+                                {{ flight_offer_data_itineraries.segments?.length - 1 }} Stop
+                                </span
+                              >
+                            </div>
+                            <ul class="stopscontainer">
+                              <!--   class="link" -->
+                              <li [ngClass]="{ link: flight_offer_data_itineraries.segments?.length - 1 !== 0 }">
+                                <a
+                                  href="javascript:;"
+                                  class="js-airport-tooltip cursor-pointer"
+                                  data-toggle="tooltip"
+                                  data-placement="bottom"
+                                  data-custom-class="tooltip-primary"
+                                  data-html="true"
+                                  title="{{
+                                    airportsMaster[flight_offer_data_itineraries.segments[0]?.arrival?.iataCode]?.City
+                                  }}"
+                                  >{{ flight_offer_data_itineraries.segments[0]?.arrival?.iataCode }}</a
+                                >
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                        <div class="col-md-2">
+                          <div class="p-1">
+                            <div>
+                              <span class="color-003333 text-bold-600">{{
+                                flight_offer_data_itineraries.segments[
+                                  flight_offer_data_itineraries.segments?.length - 1
+                                ]?.arrivalTime
+                              }}</span>
+                              <!-- <i class="fas fa-sun icon-early-morning color-ffcc33"></i> -->
+                            </div>
+                            <div class="color-9999cc font-small-3">
+                              {{
+                                flight_offer_data_itineraries.segments[
+                                  flight_offer_data_itineraries.segments?.length - 1
+                                ]?.arrival?.at | date: 'EEE,  d MMM, yy'
+                              }}
+                            </div>
+                            <div>
+                              <span
+                                class="js-airport-tooltip cursor-pointer"
+                                data-toggle="tooltip"
+                                data-placement="right"
+                                data-custom-class="tooltip-primary"
+                                title="{{
+                                  airportsMaster[
+                                    flight_offer_data_itineraries.segments[
+                                      flight_offer_data_itineraries.segments?.length - 1
+                                    ]?.arrival?.iataCode
+                                  ]?.City
+                                }}"
+                                ><span class="color-9999cc text-bold-600">
+                                  {{
+                                    flight_offer_data_itineraries.segments[
+                                      flight_offer_data_itineraries.segments?.length - 1
+                                    ]?.arrival?.iataCode
+                                  }}
+                                </span>
+                                <i class="fas fa-plane-arrival color-ffcc33"></i
+                              ></span>
+                            </div>
+                            <div class="color-9999cc font-small-3">
+                              Terminal
+                              {{
+                                flight_offer_data_itineraries.segments[
+                                  flight_offer_data_itineraries.segments?.length - 1
+                                ]?.arrival?.terminal
+                              }}
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-2">
+                          <div class="p-1">
+                            <div class="color-003333 text-bold-600 font-small-3">
+                              V(<a href="javascript:;" class="btn-flight-offers-fare-rules">VHR4I1SO</a>)
+                            </div>
+                            <div class="color-9999cc">
+                              <span class="text-capitalize d-block">
+                                {{ flight_offer_data.firstDeptbaggage.cabin }}
+                              </span>
+                              <span class="d-block font-small-1"> ECONVENIEN </span> <i class="fas fa-suitcase"></i>
+                              <span
+                                class="text-bold-600"
+                                *ngIf="
+                                  flight_offer_data.firstDeptbaggage.includedCheckedBags.weight;
+                                  else quantityResults
+                                "
+                              >
+                                {{ flight_offer_data.firstDeptbaggage.includedCheckedBags.weight }}
+                                {{ flight_offer_data.firstDeptbaggage.includedCheckedBags.weightUnit }}
+                              </span>
+                              <ng-template #quantityResults>
+                                <span class="text-bold-600">
+                                  {{ flight_offer_data.firstDeptbaggage.includedCheckedBags.quantity }} P
+                                </span>
+                              </ng-template>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!--  *ngIf="itinerariesIndex ===0" -->
+                  <div class="col-md-3">
+                    <div class="flight-details-more border rounded p-2">
+                      <div class="row">
+                        <div class="col-md-12">
+                          <div class="font-medium-2 text-bold-600 color-003333 mb-1">
+                            AED
+                            <div class="price-box d-inline-block" id="price_box_6401853a0a5dbb0e6806055f">
+                              <span>2851.32</span>
+                            </div>
+                          </div>
+                          <div class="color-ffcc33 signin" data-content="Non-Refundable">Non-Refundable</div>
+                          <div class="color-003333 text-bold-600 font-small-3">Included Check-in Bags Only</div>
+                          <div class="mb-2">
+                            <span class="color-003333 text-bold-600"
+                              >{{ flight_offer_data.numberOfBookableSeats }} Seat
+                            </span>
+                            <span class="color-9999cc">available</span>
+                            <a
+                              class="btn btn-link btn-booking-class-change"
+                              id="a_change_class_6401853a0a5dbb0e6806055f"
+                              href="javascript:void(0);"
+                              >Change Class</a
+                            >
+                            <div class="checkbox checkbox-ff-select d-inline-block pull-right">
+                              <input
+                                type="checkbox"
+                                name="price_checkbox[]"
+                                class="price-checkbox"
+                                id="price_checkbox_6401853a0a5dbb0e6806055f"
+                                value="6401853a0a5dbb0e6806055f"
+                              />
+                              <label for="price_checkbox_6401853a0a5dbb0e6806055f"></label>
+                            </div>
+                          </div>
+
+                          <div class="row">
+                            <div class="col-md-7">
+                              <button
+                                type="button"
+                                class="btn btn-outline-primary btn-block btn-flight-details"
+                                id="btn_flight_deails_6401853a0a5dbb0e6806055f"
+                                data-toggle="collapse"
+                                data-target="#collapse_6401853a0a5dbb0e6806055f"
+                                aria-expanded="false"
+                                aria-controls="collapse_6401853a0a5dbb0e6806055f"
+                              >
+                                Flight Details <i class="fas fa-chevron-down"></i>
+                              </button>
+                            </div>
+                            <div class="col-md-5">
+                              <button
+                                type="button"
+                                class="btn btn-primary btn-block btn-book"
+                                id="btn_book_6401853a0a5dbb0e6806055f"
+                              >
+                                Book
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="nodatafound" class="no-results-found" *ngIf="flightOfferList && flightOfferList.length === 0">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-content">
+          <div class="card-body">
+            <div class="right">
+              <h3>
+                <span>No Results Found!</span>
+                Please try a different filtering combination.
+              </h3>
+              <a class="reset" (click)="reset()">Reset all filters</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+

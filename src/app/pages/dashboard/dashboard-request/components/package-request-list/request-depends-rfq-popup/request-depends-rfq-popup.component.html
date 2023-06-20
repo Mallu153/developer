@@ -1,0 +1,106 @@
+
+<div class="my-class model-border">
+  <div class="modal-header py-1">
+    <h4 class="modal-title " >Rfq List</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <h4 class="text-center"> {{ loading ? 'loading please wait...' : '' }}</h4>
+    <div class="container-fluid tbl-container" *ngIf="supplierData && supplierData?.length > 0">
+      <div class="row tbl-fixed">
+    <div class=" table table-condensed" >
+      <div class="outer">
+        <div class="inner">
+          <table class="table m-0">
+            <thead>
+              <tr class="refresh pointer">
+                <th scope="col">S.No</th>
+                <th scope="col" [appSort]="supplierData" data-order="desc" data-name="productId">Product</th>
+                <th scope="col" [appSort]="supplierData" data-order="desc" data-name="requestId">
+                  SR-SRLINE-RFQ-S
+                </th>
+                <th scope="col" [appSort]="supplierData" data-order="desc" data-name="supplierId">Supplier</th>
+                <th scope="col" [appSort]="supplierData" data-order="desc" data-name="supplierContact">
+                  Supplier Contact
+                </th>
+                <th scope="col" [appSort]="supplierData" data-order="desc" data-name="customerName">
+                  Customer
+                </th>
+                <th scope="col" [appSort]="supplierData" data-order="desc" data-name="contactName">
+                  Customer Contact
+                </th>
+                <th scope="col" [appSort]="supplierData" data-order="desc" data-name="phoneNo">Phone Number</th>
+                <th scope="col" [appSort]="supplierData" data-order="desc" data-name="primaryEmail">Email</th>
+
+                <th scope="col" [appSort]="supplierData" data-order="desc" data-name="userName">Created By</th>
+                <th scope="col" [appSort]="supplierData" data-order="desc" data-name="createdDate">
+                  Created Date
+                </th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <tr
+                *ngFor="
+                  let j of supplierData ;
+                  index as i; trackBy: trackByFn
+                "
+              >
+                <td >{{  i + 1 }}</td>
+                <td > {{ j.productName }}</td>
+                <td >
+                  <span class="text-primary cursor-pointer" (click)="openServiceRequest(j)"> {{ j.requestId }} - {{ j.requestLineId }} </span>
+                  -
+                  <span class="text-primary cursor-pointer" (click)="openPricePopupRFQId(j)">
+                    {{ j.rfqId }}
+                  </span>
+                  -
+                  <span class="text-primary ">
+                    {{ j.supplierId }}
+                  </span>
+                </td>
+
+                <td class="pt-3 wrap-text text-primary " >
+                   {{ j.supplier }}
+                  <span (click)="openPricePopupAllParamas(j)" class="cursor-pointer">{{ '(' + j.countRfqInfo + ')' }}</span>
+                </td>
+                <td class="pt-3 wrap-text">{{ j.supplierContact }}</td>
+                <td class="pt-3 wrap-text">{{ j.customerName }}</td>
+                <td class="pt-3 wrap-text">{{ j.contactName }}</td>
+                <td class="pt-3 wrap-text">
+                  <a class="text-primary cursor-pointer" href="tel:{{ j.phoneNo }}">
+                    <i class="ft-phone-call" *ngIf="j.phoneNo"></i>
+                    {{ j.phoneNo }}
+                  </a>
+                </td>
+                <td class="pt-3 wrap-text">
+                  <a class="text-primary cursor-pointer" *ngIf="j.primaryEmail" (click)="openEmailForm(j.requestId,j.primaryEmail)">
+                    <i class="fa fa-envelope-o" ></i>
+                    {{ j.primaryEmail }}
+                  </a>
+                </td>
+                <td class="pt-3 wrap-text">{{ j.userName }}</td>
+                <td class="pt-3 wrap-text">{{ j.creationDate }}</td>
+                <td>
+                  <button type="button" (click)="addPrice(j)" class="btn btn-primary bg-light-primary mr-1 btn-sm">
+                    Add Price
+                  </button>
+                  <button type="button"  (click)="onEditProducts(j)" class="btn btn-sm edit_button">Edit</button>
+                  <button type="button" class="btn btn-sm" (click)="openOtherContacts(j.supplierId)"  >Other Contacts</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    </div>
+    </div>
+  </div>
+  <div class="modal-footer py-1">
+    <button type="button" class="btn btn-light" (click)="activeModal.close('Close click')">Close</button>
+  </div>
+</div>

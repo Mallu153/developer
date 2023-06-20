@@ -1,0 +1,46 @@
+
+<div class="d-flex align-items-center bg-white py-1 px-2 rounded shadow-sm" *ngIf="serviceRequestData">
+  <h5 class="card-title mb-0">
+    <span class="text-sm"  style="font-size: 14px !important">
+      Amendments
+      {{ serviceRequestData?.channel }}
+      <span *ngIf="serviceRequestData.product_id==='1'">Flight</span>
+      <span *ngIf="serviceRequestData.product_id==='2'">Hotel</span>
+      SR#:
+      <span class="text-info-blue">
+        {{ serviceRequestData?.requestId }}
+        Pnr#:{{ serviceRequestData?.supplier_reference }}
+      </span>
+
+     </span>
+    <span class="vip-line" >
+      <img src="assets/img/company-icon.svg" width="27" class="mb-2" />  {{ serviceRequestData?.customerName }}
+    </span>
+    <ng-template #popContent>
+      <span class="text-sm" style="font-size: 14px !important">
+         {{ serviceRequestData?.contactNumber }}
+      </span>
+    </ng-template>
+<!--     cursor-pointer -->
+    <span class="text-info-blue " placement="bottom" [ngbPopover]="popContent">
+      <img src="assets/img/company-contact1.svg" width="30" class="mb-2"  />
+      {{ serviceRequestData?.contact}}
+    </span>
+
+    </h5>
+    <div class="text-info-blue" style="margin-left: auto">
+      <ul ngbNav class="nav-justified">
+      <li class="nav-item" placement="left" ngbTooltip="Calendar"><a  class="nav-link"><i class="ft-calendar" style="font-size:20px;"></i></a></li>
+      <li class="nav-item" placement="left" ngbTooltip="Call"><a  class="nav-link"><i class="ft-phone-call text-light" style="font-size:20px;"></i></a></li>
+      <li class="nav-item" placement="left" ngbTooltip="Mail"><a (click)="openGetSrMailBox()" class="nav-link"><i class="ft-mail text-light" style="font-size:20px;"></i></a></li>
+      <li class="nav-item" placement="left" ngbTooltip="Chat"><a  (click)="openChat()" class="nav-link"><i class="ft-message-square text-light " style="font-size:20px;"></i></a></li>
+      <li class="nav-item" placement="left" ngbTooltip="Video Call"><a  class="nav-link"><i class="ft-video text-light" style="font-size:20px;"></i></a></li>
+      <li class="nav-item" placement="left" ngbTooltip="Whatsapp"><a  class="nav-link" style="margin-top: -2px;"><img src="assets/img/whatsapp-icon.png"> </a></li>
+      <li class="nav-item " placement="left" ngbTooltip="Timeline"><a  class="nav-link"><img src="assets/img/timeline-icon.png"> </a></li>
+
+    </ul>
+    </div>
+</div>
+
+
+

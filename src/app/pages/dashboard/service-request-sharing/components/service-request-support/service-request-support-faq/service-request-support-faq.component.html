@@ -1,0 +1,39 @@
+<div class="row match-height">
+  <!--Custom content Starts-->
+  <div class="col-12 col-md-12">
+    <div class="card">
+      <!--  <div class="card-content">
+        <div class="card-body">
+
+          <ul class="list-group" class=" list-style: none">
+            <li *ngFor="let faq of faqs;let faqIndex = index" class=" flex-column align-items-start">
+              <div class="d-flex w-100 justify-content-between">
+                <h6 class="text-info mb-2">Qa : {{faq.question.question}}</h6>
+                <small>{{faq.createdDate | date : 'fullDate'}}</small>
+              </div>
+             <p class="mb-1"><span style="font-size: 1rem;">An .</span>{{faq.answer}}.</p>
+            </li>
+          </ul>
+        </div>
+      </div> -->
+      <div class="accordion" id="faqAccordion3">
+        <div class="card-content">
+          <div class="card-body">
+            <ngb-accordion [closeOthers]="true">
+              <ngb-panel [id]="'faq' + faq.id" *ngFor="let faq of faqs">
+                <ng-template ngbPanelTitle>
+                  <a data-toggle="collapse" aria-expanded="false" aria-controls="accordion1" class="card-title">{{
+                    faq.question.question
+                  }}</a>
+                </ng-template>
+                <ng-template ngbPanelContent>
+                  <p>{{ faq.answer }}</p>
+                </ng-template>
+              </ngb-panel>
+            </ngb-accordion>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

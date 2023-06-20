@@ -1,0 +1,88 @@
+<!-- <p>{{ serviceRequestData | json }}</p> -->
+
+<div class="card">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-2 offset-4">
+        <ng-select
+          [items]="serviceRequestData"
+          [multiple]="false"
+          [closeOnSelect]="true"
+          [searchable]="false"
+          bindLabel="showLabel"
+          [clearable]="false"
+          placeholder="Select For"
+          (change)="onSelectionChange($event)"
+        >
+          <ng-template ng-label-tmp let-item="item">
+            <span [innerHTML]="formatLabel(item.showLabel)"></span>
+          </ng-template>
+          <ng-template ng-option-tmp let-item="item">
+            <span [innerHTML]="item.showLabel"></span>
+          </ng-template>
+        </ng-select>
+      </div>
+      <div class="col-2">
+        <button (click)="addPriceLine()" class="btn btn-outline-info">Add Price Line</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<form [formGroup]="allForms">
+  <div *ngIf="formShow">
+    <!--  <h2>Flight Forms</h2> -->
+    <div
+      *ngFor="let productPriceFlightForm of productPriceFlightForms; let i = index"
+      [formGroup]="productPriceFlightForm"
+    >
+      <!-- [productDetailsInfo]="" -->
+
+      <app-product-price-flight-form
+        [flightForm]="productPriceFlightForm"
+        [supplierData]="supplierData"
+        [flightFormIndex]="i"
+        [flightFormData]="selectedValues"
+        (removeFlightForm)="removeFlightForm(i)"
+      ></app-product-price-flight-form>
+    </div>
+
+    <!-- <button (click)="addFlightForm()">Add Flight Form</button> -->
+  </div>
+
+  <!--   <h2>Hotel Forms</h2>
+  <div *ngFor="let productPriceHotelForm of productPriceHotelForms; let i = index" [formGroup]="productPriceHotelForm">
+    <app-product-price-hotel-form [hotelForm]="productPriceHotelForm"></app-product-price-hotel-form>
+  </div>
+
+  <button (click)="addHotelForm()">Add Hotel Form</button> -->
+  <!-- [disabled]="!allForms.valid" -->
+  <div class="card" *ngIf="showSubmitButton()">
+    <div class="card-body text-right">
+      <span class="text-muted font-small-3 mr-3">(* Required)</span>
+
+      <button class="btn btn-outline-info mr-2" type="button" (click)="redirectQuote(serviceRequest)">
+        View Quote
+      </button>
+
+      <button
+        class="btn btn-outline-info mr-2"
+        (click)="quotePriceLines()"
+        [disabled]="loadingQuote || !allForms.valid"
+      >
+        <span *ngIf="!loadingQuote">Add Quote</span>
+        <span *ngIf="loadingQuote">Adding...</span>
+      </button>
+
+      <button
+        class="btn btn-outline-info"
+        type="button"
+        (click)="submitAllForms()"
+        [disabled]="loadingBooking || !allForms.valid"
+      >
+        <span *ngIf="!loadingBooking">Confirm Booking</span>
+        <span *ngIf="loadingBooking">Confirming...</span>
+      </button>
+    </div>
+  </div>
+</form>

@@ -1,0 +1,284 @@
+<section class="quote-section pt-3" >
+  <div class="quote-div container">
+    <div class="heading-div text-right">
+      <i class="fa fa-quote-left mr-2 font-24"></i>
+      <span class="text-sm font-14">SR#: <span class="text-info-blue">{{this.srId}}, </span></span>
+      <span class="vip-line font-18 text-bold-600">Tesla</span>,
+      <span class="text-info-blue font-18 text-bold-600"> Tesla Elon, </span>
+
+      <span class="text-sm font-14">2005191201, <span>tesla@travtronics.com</span></span>
+
+      <i class="fa fa-quote-right ml-2 font-24"></i>
+    </div>
+    <div class="body-div card p-2" >
+      <div *ngFor="let item of srLineNumbers ; let i=index;  trackBy: trackByFn" >
+      <div  class="body-div-inside p-1 accrodion-card shadow-sm pt-2" >
+        <div class="header-div-1 d-flex justify-content-between" >
+          <div class="click-to-expand-div  cursor-pointer" (click)="OnClick1(i)">
+            <i class="fa fa-quote-left mr-2 font-20" ></i>
+            <span>1: </span>
+            <span>Mr. </span>
+            <span>Tesla Elon</span>
+            <span> - </span>
+            <span>Tesla, </span>
+            <span>Q-A-</span>
+            <span>{{this.srId}}- {{item}}</span>
+            <i class="fa fa-quote-right ml-2 font-20"></i>
+            <span class="notification font-13 badge badge-pill bg-light-success-g ml-1" >0/{{viewGroupQuoteInfo[srLineNumbers[i]]?.length}}</span>
+          </div>
+          <div >
+
+
+            <ng-container [ngSwitch]="viewGroupQuoteInfo[srLineNumbers[i]][0]?.productId">
+              <div  *ngSwitchCase="1">
+                <i class="icon-plane  mr-1 font-20"></i>
+                <span>Service Name: </span>
+                <span>{{viewGroupQuoteInfo[srLineNumbers[i]][0].options[0].quoteSegments[0].segFrom}} - {{viewGroupQuoteInfo[srLineNumbers[i]][0].options[0].quoteSegments[0].segTo}}</span>
+                Class:{{viewGroupQuoteInfo[srLineNumbers[i]][0].options[0].quoteSegments[0].cabinClass}},
+                Dept:{{viewGroupQuoteInfo[srLineNumbers[i]][0].options[0].quoteSegments[0].depDate}}
+              </div>
+              <!-- [viewGroupQuoteInfo[srLineNumbers[i]]?.length-1] -->
+              <div  *ngSwitchCase="2">
+                <i class="fa fa-bed  mr-1 font-20"></i>
+                <span>Service Name: {{viewGroupQuoteInfo[srLineNumbers[i]][0]?.options[0]?.quoteSegments[0]?.city}}</span>
+                <span>,Check In: {{viewGroupQuoteInfo[srLineNumbers[i]][0]?.options[0]?.quoteSegments[0]?.depDate}}</span>
+              </div>
+              <div  *ngSwitchCase="3">
+                <i class="fa fa-taxi mr-1 font-20"></i>
+                <span>Service Name: {{viewGroupQuoteInfo[srLineNumbers[i]][0]?.options[0]?.quoteSegments[0]?.roomOrServiceName}}</span>
+
+              </div>
+              <div  *ngSwitchCase="4">
+                <i class="fa fa-map-marker  mr-1 font-20"></i>
+                <span>Service Name: {{viewGroupQuoteInfo[srLineNumbers[i]][0]?.options[0]?.quoteSegments[0]?.roomOrServiceName}}</span>
+
+              </div>
+            </ng-container>
+
+          </div>
+          <div class="cursor-pointer">
+            <span class="assignment">Assignment</span>
+          </div>
+        </div>
+        <div class="show-div-1 row pt-2" [hidden]="!showdiv1[i]">
+          <div class="col-12">
+            <div class="card table-1-card">
+              <div class="card-content">
+                <div class="table-responsive">
+                  <table  class="table table-1 text-center m-0" >
+                    <thead class="table-head">
+                      <tr>
+                        <th class="pl-2">#</th>
+                        <th>Seq ID</th>
+                        <th>Product</th>
+                        <th>Type</th>
+                        <th>Booking RefNo.</th>
+                        <th>Service Details</th>
+                        <th>Price</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody >
+                      <tr *ngFor="let subItem of  viewGroupQuoteInfo[srLineNumbers[i]]; let j=index;  trackBy: trackByFn">
+                        <td class="pl-2">
+                          <div class="checkbox">
+                            <input type="checkbox" id="item1">
+                            <label for="item1"></label>
+                          </div>
+                        </td>
+                         <!--  <input type="text" class="form-control form-control-sm seq-input-cls" value="4"> -->
+                         <td class="td-width">
+                           {{viewGroupQuoteInfo[srLineNumbers[i]][0].seqNo }}
+                        </td>
+                        <td class="td-width">
+                          {{viewGroupQuoteInfo[srLineNumbers[i]][0].productId }}
+                          </td>
+                        <!-- <td>Offline</td> -->
+                        <td class="td-width">
+                          {{viewGroupQuoteInfo[srLineNumbers[i]][0].channel }}
+                        </td>
+                        <td class="td-width">
+                          <!-- <span class="notification badge badge-pill bg-light-info-g ml-1 font-13"> N/A
+                          </span> -->
+                          {{viewGroupQuoteInfo[srLineNumbers[i]][0].bookingRefNo }}
+                        </td>
+                        <td class="text-truncate">
+                          <span class="font-small-2 text-info">{{viewGroupQuoteInfo[srLineNumbers[i]][0].options[0].quoteSegments[0].roomOrServiceName }}</span>
+                        </td>
+                        <td>
+                          <span>{{viewGroupQuoteInfo[srLineNumbers[i]][0].options[0].quotePrice[0].totalPrice }}</span>
+                        </td>
+                        <td (click)="OnClick2(viewGroupQuoteInfo[srLineNumbers[i]]?.length-1+i)">
+                          <i class="ft-chevron-right"></i>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="show-div-2 col-12"  id="{{viewGroupQuoteInfo[srLineNumbers[i]]?.length-1+i}}" [hidden]="!showdiv2[viewGroupQuoteInfo[srLineNumbers[i]]?.length-1+i]">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-content">
+                  <div class="table-responsive">
+                    <table class="table table-2 text-center m-0">
+                      <thead class="table-head">
+                        <tr>
+                          <th class="pl-1">Service Name:</th>
+                          <th>Service Type:</th>
+                          <th>City:</th>
+                          <th>Address:</th>
+                          <th>From Date:</th>
+                          <th>To Date:</th>
+                          <th>ADT Count:</th>
+                          <th>CHD Count:</th>
+                          <th>INF Count:</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td class="pl-1">Car Rental</td>
+                          <td>269</td>
+                          <td></td>
+                          <td>N/A</td>
+                          <td></td>
+                          <td></td>
+                          <td>2</td>
+                          <td>1</td>
+                          <td>1</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="inside-table-div">
+              <div class="col-12">
+                <div class="card mb-0">
+                  <div class="card-content">
+                    <div class="table-responsive">
+                      <table class="table table-3 text-center m-0">
+                        <thead class="table-head">
+                          <tr>
+                            <th class="pl-1">Service Type</th>
+                            <th>Base Fare</th>
+                            <th>Tax</th>
+                            <th>Markup(M1)</th>
+                            <th>M2</th>
+                            <th>D1</th>
+                            <th>D2</th>
+                            <th>Count</th>
+                            <th>Total Fare</th>
+                            <th>Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td class="pl-1">Car Rental</td>
+                            <td>
+                              <input type="text" value="15000" [disabled]="disabledProperty" class="disabled-input-1 form-control form-control-sm" [ngClass]="{'bg-disabled':disabledProperty}"
+                              >
+                            </td>
+                            <td>
+                              <input type="text" class="disabled-input-1 form-control form-control-sm" value="2000" [disabled]="disabledProperty" [ngClass]="{'bg-disabled':disabledProperty}">
+                            </td>
+                            <td>
+                              <input type="text" class="disabled-input-1 form-control form-control-sm" value="435345" [disabled]="disabledProperty" [ngClass]="{'bg-disabled':disabledProperty}">
+                            </td>
+                            <td>
+                              <input type="text" class="disabled-input-1 form-control form-control-sm" value="0.00" [disabled]="disabledProperty" [ngClass]="{'bg-disabled':disabledProperty}">
+                            </td>
+                            <td>
+                              <input type="text" class="disabled-input-1 form-control form-control-sm" value="1" [disabled]="disabledProperty" [ngClass]="{'bg-disabled':disabledProperty}">
+                            </td>
+                            <td>
+                              <input type="text" class="disabled-input-1 form-control form-control-sm" value="0.00" [disabled]="disabledProperty" [ngClass]="{'bg-disabled':disabledProperty}">
+                            </td>
+                            <td>1</td>
+                            <td>452343</td>
+                            <td>
+                              <i class="edit-icon fas fa-edit mr-2 cursor-pointer"
+                                 (click)="disenmethod()"></i>
+                              <i class="save-icon fas fa-save cursor-pointer"></i>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td colspan="9" class="text-right">Total :
+                              <span>452343</span>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row px-3 w-100">
+              <div class="card col-md-4 mt-0">
+                <div class="card-content">
+                  <div class="card-body p-0">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="form-group">
+                          <label for="quoteremarks">Remarks</label>
+                          <textarea class="form-control" rows="2"></textarea>
+                        </div>
+                      </div>
+                      <div class="col-md-12">
+                        <button class="btn btn-info btn-sm">Submit</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card col-md-4 mt-0">
+                <div class="card-content">
+                  <div class="card-body p-0">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="form-group">
+                          <label for=""> Cancellation Policies</label>
+                          <textarea class="form-control" rows="2"></textarea>
+                        </div>
+                      </div>
+                      <div class="col-md-12">
+                        <button class="btn btn-info btn-sm">Add Or Update</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card col-md-4 mt-0">
+                <div class="card-content">
+                  <div class="card-body p-0">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="form-group">
+                          <label for="">Internal Cancellation Policy</label>
+                          <textarea class="form-control" rows="2"></textarea>
+                        </div>
+                      </div>
+                      <div class="col-md-12">
+                        <button class="btn btn-info btn-sm"
+                        >Add Or Update</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+      <div class="send-quote-div col-md-6 col-6 text-right pr-0 pl-0">
+        <button class="btn btn-info btn-sm mb-1 mt-3 mr-0">Send Quote</button>
+      </div>
+    </div>
+
+  </div>
+</section>

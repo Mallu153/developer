@@ -1,0 +1,64 @@
+<section id="basic-hidden-label-form-layouts">
+  <div class="row match-height">
+    <div class="col-lg-12 col-12">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title">{{ loading === true ? ' Loading Please wait ...' : 'MPTB' }}</h4>
+        </div>
+        <div class="card-content">
+          <div class="card-body">
+           <div *ngFor="let main of flightMPTB?.mptb_results;let i=index">
+            <!-- *ngIf="i===0" -->
+            <div *ngIf="i===0">
+              <div *ngFor="let flightData of main?.flightInfo">
+                <div class="row">
+                  <div class="col-md-4">
+                    <span>
+                      {{flightMPTB?.airlines[flightData?.groupFlightProposalInfo?.MCX].Name}}
+                      <span class="inline-block">
+                        {{flightData.airlines}}
+                       </span>
+                    </span>
+                  </div>
+                  <div class="col-md-2">
+                    <span>
+                      {{flightData?.flightList[0]?.timeOfDepartureFull}}
+                    </span>
+                    <span>
+                      {{flightMPTB?.airports[flightData?.flightList[0]?.cityOfDeparture].Name}}
+                    </span>
+                    <!-- {{flightData?.flightList[0]?.cityOfDeparture}} , -->
+
+                  </div>
+                 <div class="col-md-2">
+                  <span>
+                    {{flightData?.elapseFlyingTime?.hours}}:{{flightData?.elapseFlyingTime?.minutes}}
+                  </span>
+
+                  <span class="ml-2">
+                    {{flightData?.flightList?.length-1}}  Stop(s)
+                    <span>
+                      {{flightData.route}}
+                    </span>
+
+                  </span>
+                 </div>
+                <span class="col-md-3">
+                  <span>
+                    {{flightData?.flightList[flightData?.flightList?.length-1]?.timeOfArrivalFull}}
+                  </span>
+                  <span>
+                    {{flightMPTB?.airports[flightData?.flightList[flightData?.flightList?.length-1]?.cityOfArrival].Name}}
+                  </span>
+                  <!-- {{flightData?.flightList[flightData?.flightList?.length-1]?.cityOfArrival}} -->
+                </span>
+                </div>
+                </div>
+            </div>
+           </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,86 @@
+:host ::ng-deep .cal-month-view .cal-event {
+  background-color: initial;
+  width: auto;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  margin: 0px;
+  /* text-align: center; */
+  justify-content: center;
+  align-content: center;
+  font-size: 13px;
+  margin-bottom: 5px;
+}
+
+:host ::ng-deep .cal-month-view .cal-events {
+  justify-content: space-between;
+}
+
+.cal-img {
+  color: #fff;
+  background-color: #2f8be6;
+  border-color: #2f8be6;
+  border-radius: 50px;
+  text-align: center;
+  display: inline-block;
+  padding: 2px;
+  width: 30px;
+  height: 29px;
+  margin-bottom: 10px;
+}
+
+.notIssuedVoucheredCount {
+  background-color: #2f8be6 !important;
+  color: #fff;
+}
+.refresh-btn-shadow {
+  box-shadow: none !important;
+}
+
+.cal-month-view .cal-cell {
+  float: left;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  border: 1px solid #e1e1e1;
+  border-radius: 5px;
+  margin: 2px;
+}
+.fa-plane1 {
+  background: url(../../../../../../assets/img/book-flight.png) no-repeat left center;
+  background-size: 17px;
+  width: 17px;
+  height: 17px;
+}
+.fa-plane2 {
+  background: url(../../../../../../assets/img/flight-takeoff.png) no-repeat left center;
+  background-size: 20px;
+  width: 20px;
+  height: 16px;
+}
+
+.fa-hotel1 {
+  background: url(../../../../../../assets/img/hotel-booking.png) no-repeat left center;
+  background-size: 17px;
+  width: 17px;
+  height: 17px;
+}
+.fa-hotel2 {
+  background: url(../../../../../../assets/img/hotel-checkin.png) no-repeat left center;
+  background-size: 15px;
+  width: 17px;
+  height: 16px;
+}
+.fa-map-marker1 {
+  background: url(../../../../../../assets/img/activity-booking.png) no-repeat left center;
+  background-size: 17px;
+  width: 17px;
+  height: 17px;
+}
+.fa-map-marker2 {
+  background: url(../../../../../../assets/img/activity.png) no-repeat left center;
+  background-size: 15px;
+  width: 17px;
+  height: 16px;
+}

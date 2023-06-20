@@ -1,0 +1,85 @@
+/* /input type=number increment hiddeen css/ */
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  /* display: none; <- Crashes Chrome on hover */
+  appearance: none;
+  -webkit-appearance: none;
+  margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+input[type='number']:hover {
+  -moz-appearance: textfield; /* Firefox */
+  appearance: textfield; /* Firefox */
+}
+textarea.description-box {
+  min-width: 50px;
+  height: 40px;
+}
+
+/* :host ::ng-deep .ng-select .ng-select-container {
+  border-radius: 0 !important;
+} */
+/* :host ::ng-deep .ng-select .ng-select-container {
+  border-radius: 1px;
+} */
+/* :host ::ng-deep.dropdown-list[_ngcontent-wrm-c154] {
+
+  padding-top: 6px;
+  width: 100%;
+  z-index: 9999;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  background: #fff;
+  margin-top: 10px;
+  box-shadow: 0 1px 5px #959595;
+} */
+
+/* :host ::ng-deep ng-select {
+  overflow: visible;
+  position: absolute;
+} */
+
+/* :host ::ng-deep .ng-value .ng-value-label > .card {
+  overflow: visible;
+} */
+.form-row {
+  align-items: center;
+}
+.btn-xs {
+  font-size: 9px;
+}
+/* :host ::ng-deep .ng-select .ng-clear-wrapper {
+  display: none;
+} */
+/* :host ::ng-deep.ng-value-container:hover .ng-value:hover .ng-value-icon.left:hover {
+  border-color: #975aff !important;
+  border-radius: 50px !important;
+  background-color: #975aff;
+  color: #fff;
+}
+
+:host ::ng-deep .ng-dropdown-panel .ng-dropdown-panel-items .ng-optgroup.ng-option-selected, .ng-dropdown-panel .ng-dropdown-panel-items .ng-optgroup.ng-option-selected.ng-option-marked {
+  background-color: #975aff !important;
+  color: #fff !important;
+  font-weight: 600;
+}
+:host ::ng-deep  .ng-optgroup .ng-star-inserted:hover {
+  background-color: #975aff !important;
+  color: #fff !important;
+
+}
+
+
+:host ::ng-deep .ng-select .ng-select-container {
+  border-radius: 1px;
+}
+
+
+:host ::ng-deep .ng-dropdown-panel .ng-dropdown-panel-items .ng-optgroup.ng-option-marked {
+  background-color: #975aff !important;
+  color: #fff !important;
+
+} */
+.ng-select.custom .ng-select-container  {
+  border-radius: 1px !important;
+}

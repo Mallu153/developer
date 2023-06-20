@@ -1,0 +1,34 @@
+<section id="extended">
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title">Attachments</h4>
+        </div>
+        <div class="card-content">
+          <div class="card-body table-responsive">
+            <table class="table text-center m-0">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>File Type</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let price of attachments">
+                  <td>{{ price.name }}</td>
+                  <td>{{ price.fileType }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row" *ngIf="attachments && attachments?.length === 0">
+    <div class="col-md-12">
+      <p>No attachments found</p>
+    </div>
+  </div>
+</section>

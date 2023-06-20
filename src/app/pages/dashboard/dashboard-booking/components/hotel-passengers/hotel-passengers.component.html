@@ -1,0 +1,711 @@
+<section id="basic-hidden-label-form-layouts">
+  <div class="row match-height">
+    <div class="col-lg-12 col-md-12 col-12">
+      <div class="card1">
+        <div class="card-content">
+          <div class="card-body">
+            <form [formGroup]="fourFieldsForm" class="form">
+              <div class="form-row">
+                <div class="col-12 col-md-2">
+                  <label for="firstName">First Name</label>
+                  <input
+                    type="text"
+                    class="form-control form-control-sm square"
+                    id="firstName"
+                    placeholder="First Name"
+                    formControlName="firstName"
+                  />
+                </div>
+                <div class="col-12 col-md-2">
+                  <label for="lastName">Last Name</label>
+                  <input
+                    type="text"
+                    class="form-control form-control-sm square"
+                    id="lastName"
+                    placeholder="Last Name"
+                    formControlName="lastName"
+                  />
+                </div>
+                <div class="col-12 col-md-3">
+                  <label for="primaryEmail">Email</label>
+                  <input
+                    type="email"
+                    class="form-control form-control-sm square"
+                    id="primaryEmail"
+                    placeholder=" Email"
+                    formControlName="primaryEmail"
+                    [ngClass]="{ 'is-invalid': (submitted || d.primaryEmail.touched) && d.primaryEmail.errors }"
+                  />
+                  <div *ngIf="(submitted || d.primaryEmail.touched) && d.primaryEmail.errors" class="invalid-feedback">
+                    <div *ngIf="d.primaryEmail.errors.pattern">Email must be a valid email address</div>
+                  </div>
+                </div>
+                <div class="col-12 col-md-3">
+                  <label for="primaryEmail"> Phone Number</label>
+                  <input
+                    type="tel"
+                    maxlength="10"
+                    class="form-control form-control-sm square"
+                    (keypress)="numberOnly($event)"
+                    id="primaryPhoneNumber"
+                    placeholder=" Phone Number"
+                    formControlName="primaryPhoneNumber"
+                    [ngClass]="{
+                      'is-invalid': (submitted || d.primaryPhoneNumber.touched) && d.primaryPhoneNumber.errors
+                    }"
+                  />
+                  <div
+                    *ngIf="(submitted || d.primaryPhoneNumber.touched) && d.primaryPhoneNumber.errors"
+                    class="invalid-feedback"
+                  >
+                    <div *ngIf="d.primaryPhoneNumber.errors?.pattern">Phone number must be 10 digits only!</div>
+                  </div>
+                </div>
+                <div class="col-12 col-md-2 mt-3">
+                  <button type="button" (click)="onSubmitPaxSearch()" class="btn btn-primary round">
+                    <i class="fa ft-search mr-1"></i>
+                    <span> Search </span>
+                  </button>
+                  <span class="ml-1 pointer" (click)="reset()">Clear</span>
+                </div>
+              </div>
+            </form>
+            <div class="text-center" *ngIf="createnewContact">
+              <ngb-alert type="light-info" class="mb-2" [dismissible]="false">
+                <span class="mb-0">No Data Found We Can </span>
+                <a (click)="goEmptyFormOpen()" class="font-weight-bold text-info">Create</a>
+              </ngb-alert>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--   search result responses table -->
+  <div class="card1" *ngIf="resultShow">
+    <div class="card-content">
+      <div class="card-body">
+        <div class="container-fluid tbl-container">
+          <div class="row tbl-fixed">
+            <div class="table table-condensed">
+              <form [formGroup]="searchpaxForm" class="form form-retail mb-2">
+                <div class="outer">
+                  <div class="inner">
+                    <table class="table m-0">
+                      <thead>
+                        <tr class="refresh">
+                          <th scope="col">#</th>
+                          <th scope="col">Prefix</th>
+                          <th scope="col">Pax Type</th>
+                          <th scope="col">First Name</th>
+                          <th scope="col">Last Name</th>
+                          <th scope="col">Email</th>
+                          <th scope="col">Dob</th>
+                          <th scope="col">Phone Number</th>
+                          <th scope="col">Nationality</th>
+                          <th scope="col">Country</th>
+                          <!--    <th scope="col" class="listtr">Dob</th>
+                      <th scope="col" class="listtr">Passport</th>
+                      <th scope="col" class="listtr">passportIssueDate</th>
+                      <th scope="col" class="listtr">passportExpiredDate</th> -->
+
+                          <!-- <th scope="col" class="listtr">Actions</th> -->
+                        </tr>
+                      </thead>
+
+                      <tbody formArrayName="searchArrayData">
+                        <tr *ngFor="let search of searchArrayData.controls; let j = index" [formGroupName]="j">
+                          <td scope="row">
+                           <!--  [disabled]="!searchArrayData.at(j).get('passengerType')?.value"
+                                    (change)="onProfileCheckboxChage($event, searchArrayData.at(j).value, j)" -->
+                            <ul class="list-unstyled mb-0 ml-1">
+                              <li class="d-inline-block mr-2 mb-2">
+                                <div class="checkbox-primary">
+                                  <input
+                                    type="checkbox"
+                                    id="{{ 'color-checkbox-5' + j }}"
+
+                                    formControlName="isSelected"
+
+                                  />
+                                  <label for="{{ 'color-checkbox-5' + j }}"></label>
+                                </div>
+                              </li>
+                            </ul>
+                          </td>
+                          <td scope="row">
+                            <select
+                              id="prefix"
+                              class="form-control form-control-sm square input-width-prefix"
+                              formControlName="passengerTitle"
+                              [ngClass]="{
+                                'is-invalid':
+                                  searchArrayData.controls[j].get('passengerTitle').errors &&
+                                  ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                    searchArrayData.controls[j].get('passengerTitle').touched)
+                              }"
+                            >
+                              <option value="">Choose</option>
+                              <option [value]="t.id" *ngFor="let t of titleListlov">
+                                {{ t.name }}
+                              </option>
+                            </select>
+                            <div
+                              class="invalid-feedback"
+                              *ngIf="
+                                searchArrayData.controls[j].get('passengerTitle').errors?.required &&
+                                ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                  searchArrayData.controls[j].get('passengerTitle').touched)
+                              "
+                            >
+                              required
+                            </div>
+                          </td>
+
+                          <td scope="row">
+                            <select
+                              id="passengerType"
+                              placeholder="Passenger Type"
+                              class="form-control form-control-sm square input-width-paxtype"
+                              formControlName="passengerType"
+                              (change)="onSelectPaxType(j, $event.target.value)"
+                              [ngClass]="{
+                                'is-invalid':
+                                  searchArrayData.controls[j].get('passengerType').errors &&
+                                  ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                    searchArrayData.controls[j].get('passengerType').touched)
+                              }"
+                            >
+                              <option value="">Choose</option>
+                              <option [value]="paxtype.id" *ngFor="let paxtype of masterPaxTypeList">
+                                {{ paxtype.name }}
+                              </option>
+                            </select>
+                            <div
+                              class="invalid-feedback"
+                              *ngIf="
+                                searchArrayData.controls[j].get('passengerType').errors?.required &&
+                                ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                  searchArrayData.controls[j].get('passengerType').touched)
+                              "
+                            >
+                              required
+                            </div>
+                          </td>
+                          <td scope="row">
+                            <input
+                              type="text"
+                              class="form-control form-control-sm square"
+                              id="firstName"
+                              placeholder="First Name"
+                              formControlName="passengerFirstName"
+                              [ngClass]="{
+                                'is-invalid':
+                                  searchArrayData.controls[j].get('passengerFirstName').errors &&
+                                  ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                    searchArrayData.controls[j].get('passengerFirstName').touched)
+                              }"
+                            />
+                            <div
+                              class="invalid-feedback"
+                              *ngIf="
+                                searchArrayData.controls[j].get('passengerFirstName').errors?.required &&
+                                ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                  searchArrayData.controls[j].get('passengerFirstName').touched)
+                              "
+                            >
+                              required
+                            </div>
+                          </td>
+                          <td scope="row">
+                            <input
+                              type="text"
+                              class="form-control form-control-sm square"
+                              id="lastName"
+                              placeholder="Last Name"
+                              formControlName="passengerLastName"
+                              [ngClass]="{
+                                'is-invalid':
+                                  searchArrayData.controls[j].get('passengerLastName').errors &&
+                                  ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                    searchArrayData.controls[j].get('passengerLastName').touched)
+                              }"
+                            />
+                            <div
+                              class="invalid-feedback"
+                              *ngIf="
+                                searchArrayData.controls[j].get('passengerLastName').errors?.required &&
+                                ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                  searchArrayData.controls[j].get('passengerLastName').touched)
+                              "
+                            >
+                              required
+                            </div>
+                          </td>
+                          <td scope="row">
+                            <input
+                              type="email"
+                              class="form-control form-control-sm square"
+                              id="primaryEmail"
+                              placeholder="Primary Email"
+                              formControlName="passengerEmail"
+                              [ngClass]="{
+                                'is-invalid':
+                                  searchArrayData.controls[j].get('passengerEmail').errors &&
+                                  ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                    searchArrayData.controls[j].get('passengerEmail').touched)
+                              }"
+                            />
+                            <div
+                              class="invalid-feedback"
+                              *ngIf="
+                                searchArrayData.controls[j].get('passengerEmail').errors?.required &&
+                                ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                  searchArrayData.controls[j].get('passengerEmail').touched)
+                              "
+                            >
+                              required
+                            </div>
+                            <div
+                              class="invalid-feedback"
+                              *ngIf="
+                                searchArrayData.controls[j].get('passengerEmail').errors?.email &&
+                                ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                  searchArrayData.controls[j].get('passengerEmail').touched)
+                              "
+                            >
+                              Invalid email
+                            </div>
+                          </td>
+                          <td scope="row">
+                            <input
+                              type="date"
+                              class="form-control form-control-sm"
+                              [max]="maxDate"
+                              id="dob"
+                              formControlName="passengerDob"
+                              [ngClass]="{
+                                'is-invalid':
+                                  searchArrayData.controls[j].get('passengerDob').errors &&
+                                  ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                    searchArrayData.controls[j].get('passengerDob').touched)
+                              }"
+                            />
+                            <div
+                              class="invalid-feedback"
+                              *ngIf="
+                                searchArrayData.controls[j].get('passengerDob').errors?.required &&
+                                ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                  searchArrayData.controls[j].get('passengerDob').touched)
+                              "
+                            >
+                              required
+                            </div>
+                          </td>
+                          <td scope="row">
+                            <input
+                              type="tel"
+                              maxlength="10"
+                              class="form-control form-control-sm square"
+                              id="primaryPhoneNumber"
+                              placeholder="Primary Phone Number"
+                              formControlName="passengerPhone"
+                              [ngClass]="{
+                                'is-invalid':
+                                  searchArrayData.controls[j].get('passengerPhone').errors &&
+                                  ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                    searchArrayData.controls[j].get('passengerPhone').touched)
+                              }"
+                            />
+                            <div
+                              class="invalid-feedback"
+                              *ngIf="
+                                searchArrayData.controls[j].get('passengerPhone').errors?.required &&
+                                ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                  searchArrayData.controls[j].get('passengerPhone').touched)
+                              "
+                            >
+                              required
+                            </div>
+                          </td>
+                          <td scope="row">
+                            <select
+                              id="nationality"
+                              class="form-control form-control-sm square"
+                              formControlName="passengerNationality"
+                            >
+                              <option value="">Choose</option>
+                              <option [value]="n.id" *ngFor="let n of nationalityListLov">
+                                {{ n.name }}
+                              </option>
+                              <!--  <option [value]="n" *ngFor="let n of nationalityListLov">
+                            {{n.name}}
+                          </option> -->
+                            </select>
+                          </td>
+
+                          <td scope="row">
+                            <select
+                              id="issuedCountry"
+                              class="form-control form-control-sm square"
+                              formControlName="passengerCoutry"
+                            >
+                              <option value="">Choose</option>
+                              <option [value]="c.id" *ngFor="let c of countryListLov">
+                                {{ c.name }}
+                              </option>
+                              <!--  <option [value]="c" *ngFor="let c of countryListLov">
+                            {{c.name}}
+                          </option> -->
+                            </select>
+                          </td>
+                          <!--  <td scope="row">
+                        <input type="text" class="form-control form-control-sm input-width" id="passport"
+                          placeholder="Passport" formControlName="passport" />
+                      </td> -->
+                          <!--  <td scope="row">
+                        <input type="date" class="form-control form-control-sm " id="primaryPhoneNumber"
+                          formControlName="passportIssueDate" />
+                      </td> -->
+                          <!--  <td scope="row">
+                        <input type="date" class="form-control form-control-sm " id="primary5PhoneNumber"
+                          formControlName="passportExpiredDate" />
+                      </td> -->
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <!--  <div class="form-row">
+              <div class="col-md-12">
+                <div class="text-right">
+                  <button type="button" (click)="onSubmitSelectList()" class="btn btn-primary">
+                    <div class="btn-wrapper d-flex align-items-center">
+                      Go <i class="fa ft-arrow-right-circle ml-1"></i>
+                    </div>
+                  </button>
+                </div>
+              </div>
+            </div> -->
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="form-row mt-2">
+          <div class="col-md-12">
+            <div class="text-right">
+              <button type="button" (click)="onSubmitSelectList()" class="btn btn-primary">
+                <div class="btn-wrapper d-flex align-items-center">
+                  Go <i class="fa ft-arrow-right-circle ml-1"></i>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <!-- No Pax Found We can Create createnewContact-->
+  <div *ngIf="newPerson">
+    <div class="card-content">
+      <div class="card-body">
+        <form [formGroup]="editresultForm" class="form form-retail mb-2">
+          <div formArrayName="editArrayData">
+            <div *ngFor="let p of editArrayData.controls; let i = index" [formGroupName]="i">
+              <div class="row">
+                <!--  <div class="form-group col-12 col-md-1">
+                  <label for="id">Id</label>
+                  <input type="text" class="form-control round" id="formid" formControlName="id" readonly />
+                </div> -->
+                <div class="form-group col-12 col-md-2">
+                  <label for="prefix">Prefix</label>
+                  <select
+                    id="prefix"
+                    class="form-control form-control-sm square"
+                    formControlName="passengerTitle"
+                    [ngClass]="{
+                      'is-invalid':
+                        editArrayData.controls[i].get('passengerTitle').errors &&
+                        ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                          editArrayData.controls[i].get('passengerTitle').touched)
+                    }"
+                  >
+                    <option value="">Choose</option>
+                    <option [value]="t.id" *ngFor="let t of titleListlov">
+                      {{ t.name }}
+                    </option>
+                  </select>
+                  <div
+                    class="invalid-feedback"
+                    *ngIf="
+                      editArrayData.controls[i].get('passengerTitle').errors?.required &&
+                      ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                        editArrayData.controls[i].get('passengerTitle').touched)
+                    "
+                  >
+                    required
+                  </div>
+                </div>
+                <div class="form-group col-12 col-md-3">
+                  <label for="fname">first Name</label>
+                  <input
+                    type="text"
+                    class="form-control form-control-sm square"
+                    id="firstName"
+                    placeholder="First Name"
+                    formControlName="passengerFirstName"
+                    [ngClass]="{
+                      'is-invalid':
+                        editArrayData.controls[i].get('passengerFirstName').errors &&
+                        ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                          editArrayData.controls[i].get('passengerFirstName').touched)
+                    }"
+                  />
+                  <div
+                    class="invalid-feedback"
+                    *ngIf="
+                      editArrayData.controls[i].get('passengerFirstName').errors?.required &&
+                      ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                        editArrayData.controls[i].get('passengerFirstName').touched)
+                    "
+                  >
+                    required
+                  </div>
+                </div>
+                <div class="col-12 col-md-2">
+                  <label for="lname">last Name</label>
+                  <input
+                    type="text"
+                    class="form-control form-control-sm square"
+                    id="lastName"
+                    placeholder="Last Name"
+                    formControlName="passengerLastName"
+                    [ngClass]="{
+                      'is-invalid':
+                        editArrayData.controls[i].get('passengerLastName').errors &&
+                        ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                          editArrayData.controls[i].get('passengerLastName').touched)
+                    }"
+                  />
+                  <div
+                    class="invalid-feedback"
+                    *ngIf="
+                      editArrayData.controls[i].get('passengerLastName').errors?.required &&
+                      ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                        editArrayData.controls[i].get('passengerLastName').touched)
+                    "
+                  >
+                    required
+                  </div>
+                </div>
+                <div class="col-12 col-md-2">
+                  <label for="pemail">Email</label>
+                  <input
+                    type="email"
+                    class="form-control form-control-sm square"
+                    id="primaryEmail"
+                    placeholder=" Email"
+                    formControlName="passengerEmail"
+                    [ngClass]="{
+                      'is-invalid':
+                        editArrayData.controls[i].get('passengerEmail').errors &&
+                        ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                          editArrayData.controls[i].get('passengerEmail').touched)
+                    }"
+                  />
+                  <div
+                    class="invalid-feedback"
+                    *ngIf="
+                      editArrayData.controls[i].get('passengerEmail').errors?.email &&
+                      ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                        editArrayData.controls[i].get('passengerEmail').touched)
+                    "
+                  >
+                    Email must be a valid email address
+                  </div>
+                  <div
+                    class="invalid-feedback"
+                    *ngIf="
+                      editArrayData.controls[i].get('passengerEmail').errors?.required &&
+                      ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                        editArrayData.controls[i].get('passengerEmail').touched)
+                    "
+                  >
+                    required
+                  </div>
+                </div>
+                <div class="col-12 col-md-3">
+                  <label for="ppnumber">Phone Number</label>
+                  <input
+                    type="tel"
+                    maxlength="10"
+                    (keypress)="numberOnly($event)"
+                    class="form-control form-control-sm square"
+                    id="primaryPhoneNumber"
+                    placeholder="Phone Number"
+                    formControlName="passengerPhone"
+                    [ngClass]="{
+                      'is-invalid':
+                        editArrayData.controls[i].get('passengerPhone').errors &&
+                        ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                          editArrayData.controls[i].get('passengerPhone').touched)
+                    }"
+                  />
+                  <div
+                    class="invalid-feedback"
+                    *ngIf="
+                      editArrayData.controls[i].get('passengerPhone').errors?.required &&
+                      ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                        editArrayData.controls[i].get('passengerPhone').touched)
+                    "
+                  >
+                    required
+                  </div>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="col-12 col-md-3">
+                  <label for="db">Dob</label>
+                  <input
+                    type="date"
+                    [max]="maxDate"
+                    class="form-control form-control-sm square"
+                    id="dob"
+                    formControlName="passengerDob"
+                    [ngClass]="{
+                      'is-invalid':
+                        editArrayData.controls[i].get('passengerDob').errors &&
+                        ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                          editArrayData.controls[i].get('passengerDob').touched)
+                    }"
+                  />
+                  <div
+                    class="invalid-feedback"
+                    *ngIf="
+                      editArrayData.controls[i].get('passengerDob').errors?.required &&
+                      ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                        editArrayData.controls[i].get('passengerDob').touched)
+                    "
+                  >
+                    required
+                  </div>
+                </div>
+                <div class="col-12 col-md-3">
+                  <label for="Nationality">Nationality</label>
+                  <select
+                    id="nationality"
+                    class="form-control form-control-sm square"
+                    formControlName="passengerNationality"
+                  >
+                    <option value="">Choose</option>
+                    <option [value]="c.id" *ngFor="let c of nationalityListLov">{{ c.name }}</option>
+                    <!--  <option [ngValue]="c" *ngFor="let c of nationalityListLov">{{c.name}}
+                    </option> -->
+                  </select>
+                </div>
+                <!-- <div class="col-12 col-md-3">
+                  <label for="passport">Passport</label>
+                  <input type="text" placeholder="Passport" class="form-control square" id="passport"
+                    formControlName="passport" />
+                </div>
+                <div class="col-12 col-md-3">
+                  <label for="passportIssueDate">Passport IssueDate</label>
+                  <input type="date" class="form-control square" id="passportIssueDate"
+                    formControlName="passportIssueDate" />
+                </div>
+                <div class="col-12 col-md-3 mt-1">
+                  <label for="passportExpiredDate">Passport ExpiredDate</label>
+                  <input type="date" class="form-control square" id="passportExpiredDate"
+                    formControlName="passportExpiredDate" />
+                </div>
+
+                <div class="col-12 col-md-2 mt-1">
+                  <label for="issuedCountry">IssuedCountry</label>
+                  <select id="issuedCountry" class="form-control square " formControlName="passengerCoutry">
+                    <option value="">Choose</option>
+                    <option [value]="c.id" *ngFor="let c of countryListLov">{{c.name}}
+                    </option>
+                     <option [ngValue]="c" *ngFor="let c of countryListLov">{{c.name}}
+                    </option>
+                  </select>
+                </div> -->
+                <div class="col-12 col-md-3">
+                  <label for="issuedCountry">Passenger Type</label>
+                  <select
+                    id="issuedCountry"
+                    class="form-control form-control-sm square"
+                    formControlName="passengerType"
+                    (change)="onSelectEditPaxType(i, $event.target.value)"
+                    [ngClass]="{
+                      'is-invalid':
+                        editArrayData.controls[i].get('passengerType').errors &&
+                        ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                          editArrayData.controls[i].get('passengerType').touched)
+                    }"
+                  >
+                    <option value="">Choose</option>
+                    <option [value]="pt.id" *ngFor="let pt of masterPaxTypeList">{{ pt.name }}</option>
+                  </select>
+                  <div
+                    class="invalid-feedback"
+                    *ngIf="
+                      editArrayData.controls[i].get('passengerType').errors?.required &&
+                      ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                        editArrayData.controls[i].get('passengerType').touched)
+                    "
+                  >
+                    required
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-1 justify-content-end mt-1 pull-right">
+                <div class="form-group">
+                  <button
+                    (click)="NoPaxFoundonProfileCheckboxChage(editArrayData.at(i).value)"
+                    type="button"
+                    class="btn btn-primary"
+                  >
+                    <div class="btn-wrapper d-flex align-items-center">
+                      Add <i class="fa ft-arrow-right-circle ml-1"></i>
+                    </div>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- //added persons show list -->
+
+<section *ngIf="addedPersonList && addedPersonList?.length > 0">
+
+  <table class="table ">
+    <thead>
+      <tr class="refresh">
+        <!-- <th scope="col" class="col1">Id</th> -->
+        <th scope="col" class="">First Name</th>
+        <th scope="col" class="">Last Name</th>
+        <th scope="col" class="">Email</th>
+        <th scope="col" class="">Mobile No</th>
+        <th scope="col" class="">Dob</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let addedperson of addedPersonList; index as a">
+        <!-- <td scope="row" class="pt-3 wrap-text col1">{{ addedperson?.passengerPaxId }}</td> -->
+        <td scope="row" class="pt-3 wrap-text">{{ addedperson?.passengerFirstName }}</td>
+        <td scope="row" class="pt-3 wrap-text">{{ addedperson?.passengerLastName }}</td>
+        <td scope="row" class="pt-3 wrap-text">{{ addedperson?.passengerEmail }}</td>
+        <td scope="row" class="pt-3 wrap-text">{{ addedperson?.passengerPhone }}</td>
+        <td scope="row" class="pt-3 wrap-text">{{ addedperson?.passengerDob | date: 'dd-MMM-yyyy' }}</td>
+      </tr>
+    </tbody>
+  </table>
+</section>

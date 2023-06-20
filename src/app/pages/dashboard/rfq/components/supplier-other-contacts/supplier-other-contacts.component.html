@@ -1,0 +1,59 @@
+
+<div  *ngIf="supplierContactsData && supplierContactsData.length >0">
+  <div class="modal-header">
+    <h4 class="modal-title py-1">Contacts</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <fieldset class="form-group" *ngIf="supplierContactsData && supplierContactsData.length >0">
+      <label>Show
+        <select name="users-list-select"[(ngModel)]="pageSize" class="form-control form-control-sm d-inline-block width-100 p-right-25 ">
+          <option [ngValue]="10">10</option>
+          <option [ngValue]="15">15</option>
+          <option [ngValue]="25">25</option>
+          <option [ngValue]="50">50</option>
+          <option [ngValue]="100">100</option>
+        </select>
+        entries</label>
+      <label for="ngx-filter-ref" class="float-right">Search:
+        <input id="ngx-filter-ref" class="form-control form-control-sm d-inline-block width-200 "type="search" [(ngModel)]="searchText" id="search" placeholder="Search"/>
+      </label>
+    </fieldset>
+    <div class="table-responsive">
+      <table class="table m-0">
+        <thead>
+          <tr class="refresh">
+            <th scope="col">Name</th>
+            <th scope="col">Designation</th>
+            <th scope="col">Phone Number</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let contact of supplierContactsData | filter:searchText | slice: (page-1) * pageSize : page * pageSize; index as i;trackBy: trackByFn ">
+            <td class="firstLetter">{{contact.firstName}} {{contact.lastName}}</td>
+            <td class="firstLetter">{{contact.designationName}}</td>
+            <td>{{contact.primaryPhoneNumber}}</td>
+            <td >
+              <a href="tel:{{contact.primaryPhoneNumber}}" *ngIf="contact.primaryPhoneNumber" >
+                <i class="ft-phone-call" ></i>
+                Call now
+               </a>
+              </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="d-flex justify-content-between p-2" *ngIf="supplierContactsData?.length >0">
+        <p>Showing 1 to {{pageSize}} of {{supplierContactsData?.length}} entries</p>
+        <ngb-pagination [collectionSize]="supplierContactsData?.length" [(page)]="page" [maxSize]="10" [boundaryLinks]="true"
+          [pageSize]="pageSize" size="sm" class="d-flex justify-content-center">
+        </ngb-pagination>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light" (click)="activeModal.close('Close click')">Close</button>
+  </div>
+</div>

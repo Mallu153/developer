@@ -1,0 +1,444 @@
+<section id="package-holiday-list-view" *ngIf="previewPackageList">
+  <div class="row">
+    <div class="col-lg-8 col-md-8 col-sm-8 col-12 offset-md-2">
+      <div class="card">
+        <div class="card-header">
+          <app-package-segment-details
+            [flightDetailsList]="flightDetailsList"
+            *ngIf="flightDetailsList?.length > 0"
+          ></app-package-segment-details>
+        </div>
+
+        <div class="card-content">
+          <div class="card-body">
+            <div class="mb-2 border-bottom pi-2 shadow">
+              <button
+                type="button"
+                class="btn btn-b1"
+                (click)="getDataAttribute('all')"
+                [ngClass]="{ ' btn-outline-primary1 round': isAllSelected, 'btn-link shadow-none': !isAllSelected }"
+              >
+                <strong>{{ previewPackageList?.packageHeader?.totalNoOfDays }}</strong> Day Plan
+              </button>
+              <button
+                type="button"
+                class="btn btn-b1 shadow-none"
+                *ngIf="previewPackageList?.packageHeader?.totalNoOfFlights"
+                [ngClass]="{
+                  ' btn-outline-primary1 round': !isAllSelected && isFlightSelected,
+                  'btn-link ': !isFlightSelected
+                }"
+                (click)="getDataAttribute('flight')"
+              >
+                <strong>{{ previewPackageList?.packageHeader?.totalNoOfFlights }}</strong> Flights
+              </button>
+              <button
+                type="button"
+                class="btn btn-b1 shadow-none"
+                *ngIf="previewPackageList?.packageHeader?.totalNoOfHotels"
+                [ngClass]="{
+                  ' btn-outline-primary1 round': !isAllSelected && isHotelSelected,
+                  'btn-link ': !isHotelSelected
+                }"
+                (click)="getDataAttribute('hotel')"
+              >
+                <strong>{{ previewPackageList?.packageHeader?.totalNoOfHotels }}</strong> Hotels
+              </button>
+              <button
+                type="button"
+                class="btn btn-b1 shadow-none"
+                *ngIf="previewPackageList?.packageHeader?.totalNoOfAttractions"
+                [ngClass]="{
+                  ' btn-outline-primary1 round': !isAllSelected && isActivitiesSelected,
+                  'btn-link ': !isActivitiesSelected
+                }"
+                (click)="getDataAttribute('activities')"
+              >
+                <strong>{{ previewPackageList?.packageHeader?.totalNoOfAttractions }}</strong> Activities
+              </button>
+              <button
+                type="button"
+                class="btn btn-b1 shadow-none"
+                *ngIf="previewPackageList?.packageHeader?.totalNoOfAncillaries"
+                [ngClass]="{
+                  ' btn-outline-primary1 round': !isAllSelected && isAncillarySelected,
+                  'btn-link ': !isAncillarySelected
+                }"
+                (click)="getDataAttribute('ancillary')"
+              >
+                <strong>{{ previewPackageList?.packageHeader?.totalNoOfAncillaries }}</strong> Ancillary
+              </button>
+
+              <button
+                type="button"
+                (click)="navigatedToPackageEditMode('holidays')"
+                class="btn shadow-none mr-0 btn-link round pull-right"
+              >
+                Modify
+              </button>
+              <span
+                class="d-inline-block pt-1 pull-right mr-2 cursor-pointer"
+                (click)="showAndHidePassenger(0)"
+                *ngIf="flightDetailsList && flightDetailsList?.length > 0"
+              >
+                <strong>{{
+                  flightDetailsList[0]?.noofAdt + flightDetailsList[0]?.noofChd + flightDetailsList[0]?.noofInf
+                }}</strong>
+                Travellers
+              </span>
+            </div>
+
+            <app-package-pax-info
+              [hidden]="!showAndHidePassengers[0]"
+              *ngIf="previewPackageList && previewPackageList?.packagePaxDetails"
+              [addons]="[]"
+              [sourceType]="'previewPackage'"
+              [paxInfo]="previewPackageList.packagePaxDetails"
+            ></app-package-pax-info>
+
+            <!--  <button type="button" class="btn btn-outline-primary round mr-2 mb-2 border-0"
+              [ngClass]="{ ' active': daysActive[flightItem + 1], inactive: !daysActive[flightItem + 1] }"
+              *ngFor="let daycount of dayCountList; index as flightItem ; trackBy: trackByFn"
+              (click)="scrollToId('day', flightItem + 1)">
+              <span class="text-bold-600">{{ flightItem + 1 }}</span>
+              <span class="d-block font-small-1">
+                {{ previewPackageList?.packageLines[flightItem]?.date | date: "EEE, dd MMM yy" }}
+              </span>
+            </button> -->
+
+            <div class="menu-bar" *ngIf="dayCountList && isAllSelected">
+              <button class="arrow left-arrow ml-0 pl-0" (click)="dayScrollLeft()">
+                <i class="ft-chevron-left"></i>
+              </button>
+              <ul class="menu-list" #dayList>
+                <li
+                  class="menu-item btn btn-outline-primary shadow-sm m-1 border-light"
+                  (click)="scrollToId('day', flightItem + 1)"
+                  [ngClass]="{ ' active': daysActive[flightItem + 1], inactive: !daysActive[flightItem + 1] }"
+                  *ngFor="let daycount of dayCountList; index as flightItem; trackBy: trackByDayCountFn"
+                >
+                  <span class="text-bold-600 font-small-2">Day {{ flightItem + 1 }} </span>
+                  <span class="d-block">
+                    {{ previewPackageList?.packageLines[flightItem]?.date | date: 'EEE, dd MMM yy' }}
+                  </span>
+                </li>
+              </ul>
+              <button class="arrow right-arrow mr-0 pr-0" (click)="dayScrollRight()">
+                <i class="ft-chevron-right"></i>
+              </button>
+            </div>
+
+            <div class="row">
+              <div class="col-12">
+                <div class="d-flex flex-row">
+                  <div class="p-1 col-12">
+                    <div
+                      *ngFor="let item of previewPackageList?.packageLines; index as i; trackBy: trackByFn"
+                      class="mb-2"
+                      [ngClass]="{
+                        'card border rounded-0':
+                          (isFlightSelected && item?.flight?.length > 0) ||
+                          (isHotelSelected && item?.hotel?.length > 0) ||
+                          (isActivitiesSelected && item?.attraction?.length > 0) ||
+                          (isAncillarySelected && item?.ancillary?.length > 0),
+                        'shadow-lg': scrollClass == 'day_' + (i + 1)
+                      }"
+                      id="day_{{ i + 1 }}"
+                    >
+                      <div
+                        class="day__header pl-4"
+                        [ngClass]="{
+                          show_filters:
+                            (isFlightSelected &&
+                              item?.flight?.length > 0 &&
+                              !isHotelSelected &&
+                              !isActivitiesSelected &&
+                              !isAncillarySelected) ||
+                            (isHotelSelected &&
+                              item?.hotel?.length > 0 &&
+                              !isFlightSelected &&
+                              !isActivitiesSelected &&
+                              !isAncillarySelected) ||
+                            (isAncillarySelected &&
+                              item?.ancillary?.length > 0 &&
+                              !isFlightSelected &&
+                              !isHotelSelected &&
+                              !isActivitiesSelected) ||
+                            (isActivitiesSelected &&
+                              item?.attraction?.length > 0 &&
+                              !isFlightSelected &&
+                              !isHotelSelected &&
+                              !isAncillarySelected),
+                          not_filters:
+                            isAllSelected ||
+                            (isFlightSelected && item?.flight?.length == 0) ||
+                            (isHotelSelected && item?.hotel?.length == 0) ||
+                            (isActivitiesSelected && item?.attraction?.length == 0) ||
+                            (isAncillarySelected && item?.ancillary?.length == 0) ||
+                            (item?.flight?.length == 0 &&
+                              item?.hotel?.length == 0 &&
+                              item?.attraction?.length == 0 &&
+                              item?.ancillary?.length == 0)
+                        }"
+                      >
+                        <span class="mr-5">
+                          <h4 class="text-primary font-sm mb-0">{{ i + 1 | ordinal }} Day</h4>
+                          {{ previewPackageList?.packageLines[i]?.date | date: 'EEE, dd MMM yy' }}</span
+                        >
+
+                        <span *ngIf="item?.flight?.length > 0 && isAllSelected">
+                          <i class="fas fa-plane ml-2"></i>
+                          Flight: {{ item?.flight?.length }}
+                        </span>
+                        <span *ngIf="item?.hotel?.length > 0 && isAllSelected">
+                          <i class="fas fa-hotel ml-2"></i>
+                          Hotel: {{ item?.hotel?.length }}
+                        </span>
+
+                        <span *ngIf="item?.attraction?.length > 0 && isAllSelected">
+                          <i class="fas fa-hiking ml-2"></i>
+                          Activities: {{ item?.attraction?.length }}
+                        </span>
+                        <span *ngIf="item?.ancillary?.length > 0 && isAllSelected">
+                          <i class="fa fa-car ml-2"></i>
+                          Ancillary: {{ item?.ancillary?.length }}
+                        </span>
+                      </div>
+
+                      <div class="day__header" *ngIf="isAllSelected">
+                        <span class="mr-5 ml-3">
+                          <h4 class="text-primary font-sm mb-0">{{ i + 1 | ordinal }} Day</h4>
+                          {{ previewPackageList?.packageLines[i]?.date | date: 'EEE, dd MMM yy' }}</span
+                        >
+
+                        <span *ngIf="item?.flight?.length > 0 && isAllSelected" class="d-flex align-items-center">
+                          Flight
+                          <div class="rounded-10 bg-white text-primary shadow-sm">{{ item?.flight?.length }}</div>
+                        </span>
+                        <span *ngIf="item?.hotel?.length > 0 && isAllSelected" class="d-flex align-items-center">
+                          Hotel
+                          <div class="rounded-10 bg-white text-primary shadow-sm">{{ item?.hotel?.length }}</div>
+                        </span>
+
+                        <span *ngIf="item?.attraction?.length > 0 && isAllSelected" class="d-flex align-items-center">
+                          Activities
+                          <div class="rounded-10 bg-white text-primary shadow-sm">{{ item?.attraction?.length }}</div>
+                        </span>
+                        <span *ngIf="item?.ancillary?.length > 0 && isAllSelected" class="d-flex align-items-center">
+                          Ancillary
+                          <div class="rounded-10 bg-white text-primary shadow-sm">{{ item?.ancillary?.length }}</div>
+                        </span>
+                      </div>
+
+                      <div
+                        *ngIf="item?.flight?.length > 0"
+                        [ngClass]="{ show_filters: isFlightSelected, not_filters: !isFlightSelected }"
+                      >
+                        <div *ngFor="let flightItem of item?.flight; trackBy: trackByTableFn; index as flightIndex">
+                          <div class="row">
+                            <div class="col-12">
+                              <div class="card mb-1 mt-1">
+                                <div class="card-body p-1">
+                                  <div class="d-flex flex-row align-items-start">
+                                    <div class="p-1 text-center" style="min-width: 80px">
+                                      <div class="py-0"><i class="fas fa-plane fa-lg bg-blue"></i></div>
+                                    </div>
+
+                                    <div class="p-1 col-11">
+                                      <div>
+                                        <span class="text-muted mr-1">From</span>
+                                        <span>{{ flightItem.segmentBoardCityOrAirport }} </span>
+                                        <span class="text-muted mx-1">to</span>
+                                        <span>{{ flightItem.segmentArrivalCityOrAirport }}</span>
+                                      </div>
+                                      <!-- <div>
+                                    <span class="text-muted mr-1">On</span> <span class="">{{ flightItem.dateOfJourneyCheckIn | date: "EEE, dd MMM yy"}}</span>
+
+                                  </div> -->
+                                      <div>
+                                        <span class="text-muted mr-1">Class</span>
+                                        <span class="">{{ flightItem.segmentClassDesignator }}</span>
+                                      </div>
+                                    </div>
+
+                                    <div class="col-4">
+                                      <div class="d-flex" *ngIf="flightItem?.addOns?.length > 0">
+                                        <span
+                                          class="text-muted mr-1"
+                                          (click)="showAndHideFlightAddons(i + 1 + flightIndex)"
+                                        >
+                                          <span class="text-warning cursor-pointer"> Addons</span>
+                                          <i
+                                            *ngIf="!flightAddonsHide[i + 1 + flightIndex]"
+                                            class="ft-chevron-right"
+                                          ></i>
+                                          <i *ngIf="flightAddonsHide[i + 1 + flightIndex]" class="ft-chevron-down"></i>
+                                        </span>
+
+                                        <div class="p-1" [hidden]="!flightAddonsHide[i + 1 + flightIndex]">
+                                          <div *ngFor="let addon of flightItem?.addOns; trackBy: trackByTableFn">
+                                            <div class="text-info">{{ addon?.addOnDescription }}</div>
+                                            <div *ngIf="addon?.remarks">
+                                              <span class="text-bold-600 font-small-2">Remarks</span>
+                                              {{ addon?.remarks }}
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        *ngIf="item?.hotel?.length > 0"
+                        [ngClass]="{ show_filters: isHotelSelected, not_filters: !isHotelSelected }"
+                      >
+                        <div *ngFor="let hotelItem of item?.hotel; trackBy: trackByTableFn; index as hotelIndex">
+                          <div class="row">
+                            <div class="col-12">
+                              <div class="card m-0">
+                                <div class="card-body p-1">
+                                  <div class="d-flex flex-row align-items-start">
+                                    <div class="p-1 text-center" style="min-width: 80px">
+                                      <div class="p-0"><i class="fas fa-hotel fa-lg bg-orange"></i></div>
+                                    </div>
+
+                                    <div class="p-1 col-5">
+                                      <div>
+                                        <span class="text-muted mr-1">Hotel Location</span>
+                                        <span> {{ hotelItem.hotelCityName }} </span>
+                                      </div>
+                                    </div>
+
+                                    <div class="col-4">
+                                      <div class="d-flex" *ngIf="hotelItem?.addOns?.length > 0">
+                                        <div>
+                                          <span
+                                            class="text-muted mr-1"
+                                            (click)="showAndHideHotelAddons(i + 1 + hotelIndex)"
+                                          >
+                                            <span class="text-warning cursor-pointer"> Addons</span>
+                                            <i
+                                              *ngIf="!hotelAddonsHide[i + 1 + hotelIndex]"
+                                              class="ft-chevron-right"
+                                            ></i>
+                                            <i *ngIf="hotelAddonsHide[i + 1 + hotelIndex]" class="ft-chevron-down"></i>
+                                          </span>
+                                        </div>
+                                        <div class="p-1" [hidden]="!hotelAddonsHide[i + 1 + hotelIndex]">
+                                          <div *ngFor="let addon of hotelItem?.addOns; trackBy: trackByTableFn">
+                                            <div class="text-info">{{ addon.addOnDescription }}</div>
+                                            <div *ngIf="addon?.remarks">
+                                              <span class="text-bold-600 font-small-2">Remarks</span>
+                                              {{ addon?.remarks }}
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        *ngIf="item?.attraction?.length > 0"
+                        [ngClass]="{ show_filters: isActivitiesSelected, not_filters: !isActivitiesSelected }"
+                      >
+                        <div *ngFor="let attractionsItem of item?.attraction; trackBy: trackByTableFn">
+                          <div class="row">
+                            <div class="col-12">
+                              <div class="card m-0">
+                                <div class="card-body p-1">
+                                  <div class="d-flex flex-row align-items-center">
+                                    <div class="p-1 text-center" style="min-width: 80px">
+                                      <div class="p-0">
+                                        <i alt="attractions" class="fas fa-hiking bg-green fa-lg"></i>
+                                      </div>
+                                    </div>
+
+                                    <div class="p-1 col-9">
+                                      <div>
+                                        <span class="text-muted mr-1">Activities </span>
+                                        <span class=""> {{ attractionsItem.attractionName }} </span>
+                                      </div>
+                                      <div *ngIf="attractionsItem?.remarks">
+                                        <span class="text-bold-600 font-small-2">Remarks</span>
+                                        {{ attractionsItem?.remarks }}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        *ngIf="item?.ancillary?.length > 0"
+                        [ngClass]="{ show_filters: isAncillarySelected, not_filters: !isAncillarySelected }"
+                      >
+                        <div *ngFor="let ancillaryItem of item?.ancillary; trackBy: trackByTableFn">
+                          <div class="row">
+                            <div class="col-12">
+                              <div class="card mb-1 mt-1">
+                                <div class="card-body p-1">
+                                  <div class="d-flex flex-row align-items-center">
+                                    <div class="p-1 text-center" style="width: 80px">
+                                      <div class="p-0"><i class="fa fa-car fa-lg bg-ppl"></i></div>
+                                    </div>
+
+                                    <div class="p-1 col-9">
+                                      <div>
+                                        <span class="text-muted mr-1">Ancillary</span>
+                                        <span>{{ ancillaryItem.addOnName }} </span>
+                                      </div>
+
+                                      <!-- <div>
+                                        <span class="text-muted mr-1">Location</span> <span class="">{{
+                                          ancillaryItem.classDays }}</span>
+
+                                      </div> -->
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="pull-right mb-2">
+              <button type="button" (click)="onCreateServiceRequest()" class="btn btn-outline-primary mr-2">
+                <i class="ft-check-square mr-1"></i>
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<ngx-spinner
+  bdColor="rgba(0, 0, 0, 0.8)"
+  size="medium"
+  color="#fff"
+  type="ball-clip-rotate-multiple"
+  [fullScreen]="true"
+  *ngIf="requestCreationLoading"
+>
+  <p style="color: white">Loading...</p>
+</ngx-spinner>

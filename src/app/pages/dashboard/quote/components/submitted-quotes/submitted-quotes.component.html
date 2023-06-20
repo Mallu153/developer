@@ -1,0 +1,196 @@
+
+
+
+<section id="basic-hidden-label-form-layouts">
+  <div class="row match-height">
+    <div class="col-lg-12 col-md-12 col-12">
+      <div class="card">
+        <div class="card-header cursor-pointer py-1 mt-1" (click)="collapse.toggle()"
+        [attr.aria-expanded]="!isCollapsed"
+        aria-controls="collapseExample">
+          <h4 class="card-title">Sent Quotes
+            <span class="pull-right">
+              <i class="ft-chevron-down" *ngIf="isCollapsed"></i>
+              <i class="ft-chevron-up" *ngIf="!isCollapsed"></i>
+            </span>
+          </h4>
+        </div>
+        <div class="card-content" #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
+          <div class="card-body">
+            <form [formGroup]="openQuotesForm">
+              <div class="form-row">
+                <div class="col-md-2 col-12">
+                  <div class="form-group mb-2">
+                    <label for="SR-Number">SR Number</label>
+                    <input
+                      type="text"
+                      id="SR-Number"
+                      placeholder="Enter SR Number"
+                      class="form-control square"
+                      name="SR-Number"
+                      formControlName="srId"
+                    />
+                  </div>
+                </div>
+                <div class="col-md-3 col-12">
+                  <div class="form-group mb-2">
+                    <label for="Customer">Customer</label>
+                    <input
+                      type="search"
+                      id="Customer"
+                      placeholder="Enter Customer Name"
+                      class="form-control square"
+                      name="Customer"
+                      formControlName="customerId"
+                      #typeaheadInstance="ngbTypeahead"
+                      [resultTemplate]="searchResultTemplate"
+                      [inputFormatter]="formatter"
+                      [ngbTypeahead]="onSearchCustomer"
+                      (selectItem)="bindValueOfControl($event, 'customerId')"
+                      (change)="onChangeCustomer($event.target.value)"
+                    />
+                    <ng-template #searchResultTemplate let-r="result" let-t="term">
+                      <ngb-highlight [result]="r.businessName" [term]="t"></ngb-highlight>
+                    </ng-template>
+                  </div>
+                </div>
+                <div class="col-md-3 col-12">
+                  <div class="form-group mb-2">
+                    <label for="Contact">Contact</label>
+                    <select id="Contact" name="Contact" class="form-control square" formControlName="contactId">
+                      <option value="">Choose</option>
+                      <option [value]="contact.CUSTOMERCONTACTID" *ngFor="let contact of contactList">
+                        {{ contact.Requestor }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-2 col-12">
+                  <div class="form-group mb-2">
+                    <label for="sr-creation-date">SR Creation Date</label>
+                    <input
+                    type="date"
+                    id="sr-creation-date"
+                    formControlName="srCreationDate"
+                    class="form-control square"
+                    name="sr-creation-date"
+                    />
+                  </div>
+                </div>
+                <div class="col-md-2 col-12">
+                  <div class="form-group mb-2">
+                    <label for="Quote-creation-date">Quote Creation Date</label>
+                    <input
+                      type="date"
+                      id="Quote-creation-date"
+                      class="form-control square"
+                      name="Quote-creation-date"
+                      formControlName="quoteCreationDate"
+                    />
+                  </div>
+                </div>
+              </div>
+              <button type="button" (click)="onSubmittedSearchForm()" class="btn btn-primary mr-2"><i class="ft-search mr-1"></i>Search</button>
+              <button type="button" (click)="reset()" class="btn btn-secondary"><i class="ft-x mr-1"></i>Reset</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+<section id="ngx-datatable-basic" *ngIf="rows && rows.length >0 ">
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-content">
+          <div class="card-body">
+            <fieldset class="form-group">
+              <label
+                >Show
+                <select
+                  name="users-list-select"
+                  class="form-control form-control-sm d-inline-block width-100 p-right-25 pl-4 mx-1"
+                  (click)="updateLimit($event)"
+                >
+                  <option value="10">10</option>
+                  <option value="25">25</option>
+                  <option value="50">50</option>
+                  <option value="100">100</option>
+                </select>
+                entries</label
+              >
+             <!--  <label for="ngx-filter-ref" class="float-right">
+                <input
+                  id="ngx-filter-ref"
+                  placeholder="Search"
+                  class="form-control form-control-sm d-inline-block width-200 ml-1"
+                  type="search"
+                  #search
+
+                />
+              </label> -->
+            </fieldset>
+            <ngx-datatable
+            [rows]="rows"
+            #tableRowDetails
+            [rowHeight]="'auto'"
+             class="bootstrap core-bootstrap"
+             [limit]="limitRef"
+              [columnMode]="ColumnMode.force"
+              [headerHeight]="50"
+              [footerHeight]="50"
+              [scrollbarH]="true"
+              [sorts]="sorts"
+              >
+              <ngx-datatable-column name="S.No" [width]="10">
+                <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-row="row">
+                  {{rowIndex+1}}
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column [width]="10" name="SR ID" prop="sr_id">
+                <ng-template ngx-datatable-cell-template  let-row="row" let-value="value">
+                  <div class="text-primary cursor-pointer" (click)="redirectQuote(row.sr_id)">
+                    {{ value }}
+                  </div>
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column [width]="100" name="Customer Name" prop="customerName">
+                <ng-template ngx-datatable-cell-template  let-row="row" let-value="value">
+                  <div class="markup--name--extra-text--hide text-capitalize" >
+                    {{ value }}
+                  </div>
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column [width]="100" name="Contact Name" prop="contactName">
+                <ng-template ngx-datatable-cell-template  let-row="row" let-value="value">
+                  <div class="markup--name--extra-text--hide text-capitalize" >
+                    {{ value }}
+                  </div>
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Lines Count" prop="linesCount" [width]="10"></ngx-datatable-column>
+              <ngx-datatable-column [width]="100" name="Agent Name" prop="agentName">
+                <ng-template ngx-datatable-cell-template  let-row="row" let-value="value">
+                  <div class="markup--name--extra-text--hide text-capitalize" >
+                    {{ value }}
+                  </div>
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column [width]="50" name="Created Date" prop="created_date">
+                <ng-template ngx-datatable-cell-template let-value="value">
+                  {{ value | date: 'dd-MMM-yyyy'}}
+                </ng-template>
+              </ngx-datatable-column>
+            </ngx-datatable>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

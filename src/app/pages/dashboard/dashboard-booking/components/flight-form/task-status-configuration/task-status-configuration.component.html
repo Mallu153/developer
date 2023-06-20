@@ -1,0 +1,76 @@
+<section id="basic-hidden-label-form-layouts">
+  <div class="row match-height">
+    <div class="col-lg-12 col-12">
+      <div class="card ">
+        <div class="card-content">
+          <div class="card-body">
+            <form [formGroup]="teamAndMemebrsForm">
+              <div class="form-row">
+                <div class="col-md-12 col-12">
+                  <div class="form-group mb-2">
+                    <label for="basic-form-6"><img src="assets/img/team-icon.svg" width="35" /></label>
+                    <select id="basic-form-6" name="interested" class="form-control" formControlName="team">
+                      <option [value]="team.teamId" *ngFor="let team of teamList ;trackBy: trackByFn">
+                        {{ team.teamName }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-12 col-12">
+                  <div class="form-group mb-2">
+                    <label for="basic-form-7"><img src="assets/img/user-icon.svg" width="26"
+                      /></label>
+                    <select id="basic-form-7" name="budget" class="form-control" formControlName="teamLeader">
+                      <option [value]="members.memberId" *ngFor="let members of teamMembersList;trackBy: trackByFn">
+                        {{ members.memberName }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-12 col-12">
+                  <div class="form-group mb-2">
+                    <label for="Status">Status</label>
+                    <select id="Status" name="Status" class="form-control" formControlName="lineStatusId">
+                      <option [value]="status.statusId" *ngFor="let status of transitionsData;trackBy: trackByFn">
+                        {{ status.name }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <strong *ngIf="teamList" style="margin-left: auto" class="mb-2">
+                {{ teamList[0]?.templateId }} {{ teamList[0]?.templateName }}
+              </strong>
+              <button type="button" class="btn btn-primary mr-2 mt-2"> <i class="ft-bookmark mr-2"></i>Save</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- <form [formGroup]="teamAndMemebrsForm">
+  <div class="form-group row ml-0">
+    <label for="team" class="d-flex mb-0"><img src="assets/img/team-icon.svg" width="35" /></label>
+    <select class="form-control form-control-sm square shadow-sm" id="team" formControlName="team">
+      <option [value]="team.teamId" *ngFor="let team of teamList">
+        {{ team.teamName }}
+      </option>
+    </select>
+  </div>
+  <div class="form-group row ml-0">
+    <label for="resoures" class="d-flex mb-0" style="width: 35px; justify-content: center"
+      ><img src="assets/img/user-icon.svg" width="26"
+    /></label>
+    <select class="form-control form-control-sm square shadow-sm" id="resoures" formControlName="teamLeader">
+
+      <option [value]="members.memberId" *ngFor="let members of teamMembersList">
+        {{ members.memberName }}
+      </option>
+    </select>
+  </div>
+  <strong *ngIf="teamList" style="margin-left: auto">
+    {{ teamList[0]?.templateId }} {{ teamList[0]?.templateName }}
+  </strong>
+  <button type="submit" class="btn btn-primary">Sign in</button>
+</form> -->

@@ -1,0 +1,83 @@
+<section id="ngx-datatable-basic" >
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title">Price List
+            <label
+              class=" update-limit float-right"
+                >Show
+                <select
+                  name="users-list-select"
+                  class="form-control form-control-sm d-inline-block width-100 p-right-25 pl-4 mx-1"
+                  (click)="updateLimit($event)"
+                >
+                  <option value="10">10</option>
+                  <option value="25">25</option>
+                  <option value="50">50</option>
+                  <option value="100">100</option>
+                </select>
+                entries</label
+              >
+          </h4>
+
+        </div>
+        <div class="card-content">
+          <div class="card-body">
+            <h5 *ngIf="rows && rows.length === 0&&resultMessage" class="text-center">{{resultMessage}}</h5>
+            <ngx-datatable
+              [rows]="rows"
+              [rowHeight]="'auto'"
+              class="bootstrap core-bootstrap"
+              [limit]="limitRef"
+              [columnMode]="ColumnMode.force"
+              [headerHeight]="50"
+              [footerHeight]="50"
+              [scrollbarH]="true"
+              [sorts]="sorts"
+              *ngIf="rows && rows.length > 0"
+            >
+              <ngx-datatable-column name="S.No" [width]="10">
+                <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-row="row">
+                  {{ rowIndex + 1 }}
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column [width]="200" name="Itinerary Name" prop="itineraryName">
+                <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                  <div>
+                    {{ value }}
+                  </div>
+                </ng-template>
+              </ngx-datatable-column>
+
+              <ngx-datatable-column [width]="100" name="Start Date" prop="validFrom">
+                <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                  <div>
+                    {{ value | date: 'dd-MMM-yyyy' }}
+                  </div>
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column [width]="100" name="End  Date" prop="validTo">
+                <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                  <div>
+                    {{ value | date: 'dd-MMM-yyyy' }}
+                  </div>
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column [width]="100" name="Created Date" prop="createdDate">
+                <ng-template ngx-datatable-cell-template let-value="value">
+                  {{ value }}
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Actions" [width]="50">
+                <ng-template ngx-datatable-cell-template let-row="row">
+                  <a  [routerLink]="['/dashboard/packages/add-price',row.id]" ><i class="ft-edit text-primary cursor-pointer"></i></a>
+                </ng-template>
+              </ngx-datatable-column>
+            </ngx-datatable>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

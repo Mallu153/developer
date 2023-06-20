@@ -1,0 +1,299 @@
+<section id="basic-hidden-label-form-layouts">
+  <div class="row match-height">
+    <div class="col-lg-12 col-md-12 col-12 ">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title">{{PageTitle}}</h4>
+        </div>
+        <div class="card-content">
+          <div class="card-body">
+            <form [formGroup]="srForm" class="form">
+              <div class="form-row">
+                <div class="col-12 col-md-2">
+                  <label for="firstName">First Name</label>
+                  <input type="text" class="form-control form-control-sm square" id="firstName" placeholder="First Name"
+                    formControlName="firstName" />
+                </div>
+                <div class="col-12 col-md-2">
+                  <label for="lastName">Last Name</label>
+                  <input type="text" class="form-control form-control-sm square" id="lastName" placeholder="Last Name"
+                    formControlName="lastName" />
+                </div>
+                <div class="col-12 col-md-3">
+                  <label for="primaryEmail">Email</label>
+                  <input type="email" class="form-control form-control-sm square"
+                    [ngClass]="{ 'is-invalid': (submitted || f.primaryEmail.touched) && f.primaryEmail.errors }"
+                    id="primaryEmail" placeholder=" Email" formControlName="primaryEmail" />
+                  <div *ngIf="(submitted || f.primaryEmail.touched) && f.primaryEmail.errors" class="invalid-feedback">
+                    <div *ngIf="f.primaryEmail.errors.pattern">Email must be a valid email address</div>
+                  </div>
+                </div>
+                <div class="col-12 col-md-3">
+                  <label for="primaryEmail"> Phone Number</label>
+                  <input type="tel" maxlength="10"
+                    class="form-control form-control-sm square" id="primaryPhoneNumber"(keypress)="numberOnly($event)" placeholder="Phone Number"
+                    formControlName="primaryPhoneNumber"
+                    [ngClass]="{ 'is-invalid': (submitted || f.primaryPhoneNumber.touched) && f.primaryPhoneNumber.errors }" />
+                  <div *ngIf="(submitted || f.primaryPhoneNumber.touched) && f.primaryPhoneNumber.errors"
+                    class="invalid-feedback">
+                    <div *ngIf="f.primaryPhoneNumber.errors.pattern">Phone number must be 10 digits
+                      only!</div>
+
+                  </div>
+                </div>
+                 <div class="col-12 col-md-2 mt-3">
+                  <button type="button" (click)="onSubmitPaxSearch()" class="btn btn-primary ">
+                    <i class="fa ft-search mr-1"></i>
+                    <span> Search </span>
+                  </button>
+
+                </div>
+
+              </div>
+            </form>
+            <div class="text-center" *ngIf="createnewContact">
+              <ngb-alert type="light-info" class="mb-2" [dismissible]="false">
+                <span class="mb-0">No Found Pax Data We Can </span>
+                <a (click)="gotoNewPaxForm()" class="font-weight-bold text-info">Create</a>
+              </ngb-alert>
+            </div>
+            <div class="text-center" *ngIf="customerIDCheck">
+              <ngb-alert type="light-info" class="mb-2" [dismissible]="false">
+                <span class="mb-0">No data found with the given search criteria </span>
+                <a class="font-weight-bold text-info" (click)="gotoContactForm()">Click here,to create a Corporate
+                  Contact</a>
+                <span class="mb-0"> Or </span>
+                &nbsp;&nbsp;
+                <a class="font-weight-bold text-info">Proceed for Retail</a>
+              </ngb-alert>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section *ngIf="object&&object.length>0">
+  <div class="row">
+    <div class="col-lg-12 col-md-12 col-12 " *ngIf="object&&object.length>0">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title text-center">Contact List</h4>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive table">
+            <table class="table m-0">
+              <thead>
+                <tr class="refresh">
+                  <th scope="col">#</th>
+                  <th scope="col">Business</th>
+                  <th scope="col">First Name</th>
+                  <th scope="col">Last Name</th>
+                  <th scope="col">Primary Email</th>
+                  <th scope="col">Primary Phone Number</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let j of object; let i=index;trackBy: trackByFn">
+                  <td scope="row">
+                    <ul class="list-unstyled mb-0 ">
+                      <li class="d-inline-block mr-2 mb-2">
+                        <div class="checkbox checkbox-primary">
+                          <input type="checkbox" [checked]="j.checked" (change)="onProfileCheckboxChage($event, j)"
+                            id="{{'color-checkbox-1' + i}}">
+                          <label for="{{'color-checkbox-1' + i}}">
+                          </label>
+                        </div>
+                      </li>
+                    </ul>
+                  </td>
+                  <td scope="row">{{j.customerName}}</td>
+                  <td scope="row">{{j.firstName}}</td>
+                  <td scope="row">{{j.lastName}}</td>
+                  <td scope="row">{{j.primaryEmail}}</td>
+                  <td scope="row">{{j.primaryPhoneNumber}}</td>
+                </tr>
+              </tbody>
+            </table>
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<app-r-t-c-header (pnrData)="getPnrData($event)" ></app-r-t-c-header>
+<section class="invoice-template">
+  <div class="row"  *ngIf="pnrDetails().controls.length > 0">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-content p-3">
+          <div id="invoice-template" class="card-body pb-0">
+            <!-- Invoice Customer Details ends -->
+            <!-- Invoice Items Details starts -->
+            <div id="invoice-items-details">
+              <div class="row">
+                <div class="table-responsive">
+                  <form [formGroup]="form">
+                    <div formArrayName="pnrDetails">
+                      <!--  <div *ngFor="let quote of quotesArray; let quoteIndex = index"> -->
+                          Retail to Corporate
+                        <table class="table mt-3" >
+                          <thead>
+                            <tr class="refresh">
+                              <th class="text-right">ID</th>
+                              <th class="text-right">TicketNumber</th>
+                              <th class="text-right">BaseFare</th>
+                              <th class="text-right">Tax</th>
+                              <th class="text-right">Commission</th>
+                              <th class="text-right">M1</th>
+                              <th class="text-right">M2</th>
+                              <th class="text-right">D1</th>
+                              <th class="text-right">D2</th>
+                              <th class="text-right">Total </th>
+                              <th class="text-right">LPO </th>
+                              <th class="text-right">AD </th>
+                              <th class="text-right">Voucher </th>
+                            </tr>
+                          </thead>
+                          <tbody   *ngFor="let pnr of pnrDetails().controls; let pnrIndex = index;trackBy: trackByFn" [formGroupName]="pnrIndex">
+                            <!--    <div > -->
+
+                              <!--    <div > -->
+                                <td class="td-width">
+                                  <input
+                                    formControlName="UniqueId"
+                                    type="text"
+                                    class="form-control"
+                                  />
+                                </td>
+                              <td class="td-width">
+                                <input
+                                  formControlName="TicketNumber"
+                                  type="text"
+                                  class="form-control"
+                                />
+                              </td>
+                              <td class="td-width">
+                                <input
+                                (input)="customerTotal(pnr.value, pnrIndex)"
+                                  formControlName="BaseFare"
+                                  type="text"
+                                  class="form-control"
+                                />
+                              </td>
+                              <td class="td-width">
+                                <input
+                                (input)="customerTotal(pnr.value, pnrIndex)"
+                                  formControlName="Tax"
+                                  type="text"
+                                  class="form-control"
+                                />
+                              </td>
+                              <td class="td-width">
+                                <input
+                                (input)="customerTotal(pnr.value, pnrIndex)"
+                                  formControlName="CommissionAmount"
+                                  type="text"
+                                  class="form-control"
+                                />
+                              </td>
+                              <td class="td-width">
+                                <input
+                                (input)="customerTotal(pnr.value, pnrIndex)"
+                                formControlName="M1"
+                                type="text"
+                                class="form-control"
+                              />
+                              </td>
+                              <td class="td-width">
+                                <input
+                                (input)="customerTotal(pnr.value, pnrIndex)"
+                                formControlName="M2"
+                                type="text"
+                                class="form-control"
+                              />
+                              </td>
+                              <td class="td-width">
+                                <input
+                                (input)="customerTotal(pnr.value, pnrIndex)"
+                                formControlName="D1"
+                                type="text"
+                                class="form-control"
+                              />
+                              </td>
+                              <td class="td-width">
+                                <input
+                                (input)="customerTotal(pnr.value, pnrIndex)"
+                                formControlName="D2"
+                                type="text"
+                                class="form-control"
+                              />
+                              </td>
+                              <td class="td-width">
+                                <input
+                                (input)="customerTotal(pnr.value, pnrIndex)"
+                                formControlName="TotalAmount"
+                                type="text"
+                                class="form-control"
+                              />
+                              </td>
+                              <td class="td-width">
+                                <input
+                                (input)="voucherTotal(pnr.value, pnrIndex)"
+                                formControlName="AdjLPOAmount"
+                                type="text"
+                                class="form-control"
+                              />
+                              </td>
+                              <td class="td-width">
+                                <input
+                                (input)="voucherTotal(pnr.value, pnrIndex)"
+                                formControlName="AdjCommissionAmount"
+                                type="text"
+                                class="form-control"
+                              />
+                              </td>
+                              <td class="td-width">
+                                <input
+                                (input)="voucherTotal(pnr.value, pnrIndex)"
+                                formControlName="AdjVouAmount"
+                                type="text"
+                                class="form-control"
+                              />
+                              </td>
+                              <!--  </div> -->
+
+
+                            <!--    </div> -->
+                          </tbody>
+
+
+                        </table>
+                        <hr />
+                       <!--  <button class="btn btn-primary float-right">
+                          Save
+                        </button> -->
+
+                      </div>
+
+                  </form>
+                  <button class="btn btn-primary btn-md float-right ml-2 " (click)="submit()">Submit</button>
+
+                </div>
+              </div>
+            </div>
+            <!-- Invoice Items Details ends -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Invoice template ends -->

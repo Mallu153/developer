@@ -1,0 +1,79 @@
+.pointer {
+  cursor: pointer;
+}
+
+.input-width {
+  width: 160px;
+}
+.input-width-prefix {
+  width: 90px;
+}
+
+.email--text{
+  text-transform: lowercase;
+}
+.table td,
+.table th {
+  font-size: 14px !important;
+  text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  padding: 14px;
+}
+@import 'core/variables/variables';
+
+/* ------------------------------------------------------------ *\
+	Form Retails for new customer
+\* ------------------------------------------------------------ */
+
+.form-retail-new-customer {
+  & {
+    padding: $spacer;
+    border-top: 1px solid $gray-450;
+  }
+  .form-actions {
+    text-align: right;
+  }
+}
+:host ::ng-deep .ng-select .ng-select-container {
+  border-radius: 1px;
+}
+:host ::ng-deep .ng-select.ng-select-single .ng-select-container {
+  height: calc(1.5em + 0.75rem + 3px);
+}
+.tbl-container{
+  max-width: fit-content;
+  max-height: fit-content;
+}
+.tbl-fixed{
+  overflow-x: scroll;
+  overflow-y: scroll;
+  height: fit-content;
+  max-height: 70vh;
+  margin-top: 40px;
+}
+
+table{
+ min-width: max-content;
+ border-collapse:collapse;
+}
+
+
+table th{
+  position: sticky;
+  top:0px;
+  /* background-image: linear-gradient(to right, #efdeff 0%, #cdb7e2 51%, #efdeff 100%); */
+  background: #D5F1FD;
+  color: #226CC5;
+  text-align: center;
+  border: 1px solid #f5f5f5;
+  font-weight: 500;
+  font-size: 13px !important;
+}
+
+table td{
+/* background: #fff; */
+text-align: center;
+border: 1px solid #f5f5f5;
+}

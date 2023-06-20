@@ -1,0 +1,59 @@
+<section *ngIf="paxInfo&&paxInfo?.length>0;else noResults" class="mb-2">
+<div>
+  <div  class="table-responsive">
+    <table  class="table  m-0">
+      <thead >
+        <tr class="refresh">
+          <th >Pax Type</th>
+          <th >First Name</th>
+          <th >Last Name</th>
+          <th >Email</th>
+          <th >Phone Number</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let pax of paxInfo;trackBy: trackByFn">
+          <td >{{pax.paxCode}}</td>
+          <td >{{pax.firstName}}</td>
+          <td >{{pax.lastName}}</td>
+          <td >{{pax.email}}</td>
+          <td >{{pax.phone}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</section>
+<ng-template #noResults>
+  <span>no pax details found</span> <br>
+</ng-template>
+
+<section *ngIf="addons&&addons?.length>0;else noaddonsResults">
+  <div>
+    <div  class="table-responsive">
+      <table  class="table  m-0">
+        <thead >
+          <tr class="refresh">
+            <th >AddOn Type</th>
+            <th >AddOn Name</th>
+            <th >AddOn Type</th>
+            <th >AddOn Code</th>
+            <th >AddOn Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let addon of addons;trackBy: trackByFn">
+            <td >{{addon.addOnType}}</td>
+            <td >{{addon.addOnName}}</td>
+            <td >{{addon.addOnType}}</td>
+            <td >{{addon.addOnCode}}</td>
+            <td >{{addon.addOnDescription}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  </section>
+  <ng-template #noaddonsResults>
+    <span *ngIf="sourceType !=='previewPackage'">no addons details found</span>
+  </ng-template>

@@ -1,0 +1,263 @@
+<div class="container-fluid">
+  <div class="modal-header py-1">
+    <h4 class="modal-title">Price Breakup Details</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <!-- LAST TKT DTE 15DEC2021/00:00 LT in POS - SEE ADV PURCHASE -->
+    <div class="text-center" *ngIf="priceBreakupDeatils && priceBreakupDeatils.length > 0">
+      <strong style="color: #d24029; font-size: 12px"
+        >LAST TKT DTE {{ lastTicketDate | date: 'mediumDate' }} LT in POS - SEE ADV PURCHASE</strong
+      >
+    </div>
+    <table class="table m-0" *ngIf="priceBreakupDeatils && priceBreakupDeatils.length > 0">
+      <thead>
+        <tr class="refresh">
+          <th scope="col">Route</th>
+          <th scope="col">AirLine</th>
+          <th scope="col">Flight</th>
+          <th scope="col">BK</th>
+          <th scope="col">Date</th>
+          <th scope="col">Time</th>
+          <th scope="col">Fare Basis</th>
+          <th scope="col">NVB</th>
+          <th scope="col">NVA</th>
+          <th scope="col">BG</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let price of priceBreakupDeatils; let i = index;trackBy: trackByFn">
+          <td>
+            <div *ngFor="let s1 of price?.itineraries">
+              <div *ngFor="let itineraries of s1?.segments">
+                {{ itineraries.departure.iataCode }} -{{ itineraries.arrival.iataCode }}
+              </div>
+            </div>
+          </td>
+          <td>
+            <div *ngFor="let s1 of price?.itineraries">
+              <div *ngFor="let itineraries of s1?.segments">
+                {{ itineraries.carrierCode }}
+              </div>
+            </div>
+          </td>
+          <td>
+            <div *ngFor="let s1 of price?.itineraries">
+              <div *ngFor="let itineraries of s1?.segments">
+                {{ itineraries.number }}
+              </div>
+            </div>
+          </td>
+          <td>NA</td>
+          <td>
+            <div *ngFor="let s1 of price?.itineraries">
+              <div *ngFor="let itineraries of s1?.segments">
+                {{ itineraries.departure.at | date: 'dd-MM-yyyy'}}
+              </div>
+            </div>
+          </td>
+          <td>
+            <div *ngFor="let s1 of price?.itineraries">
+              <div *ngFor="let itineraries of s1?.segments">
+                {{ itineraries.departure.at | date : 'shortTime' }}
+              </div>
+            </div>
+          </td>
+          <td>
+            <div *ngFor="let fare of price?.travelerPricings;trackBy: trackByFn">
+              <div *ngIf="fare.travelerType === selectedPaxType">
+                <div *ngFor="let faredetailsbysegment of fare?.fareDetailsBySegment;trackBy: trackByFn">
+                  <div *ngFor="let s1 of price?.itineraries">
+                    <div *ngFor="let itineraries of s1?.segments">
+                      <div *ngIf="faredetailsbysegment.segmentId === itineraries.id">
+                        {{ faredetailsbysegment?.fareBasis }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </td>
+          <td>NA</td>
+          <td>NA</td>
+          <td>
+            <div *ngFor="let fare of price?.travelerPricings;trackBy: trackByFn">
+              <div *ngIf="fare.travelerType === selectedPaxType">
+                <div *ngFor="let faredetailsbysegment of fare?.fareDetailsBySegment;trackBy: trackByFn">
+                  <div *ngFor="let s1 of price?.itineraries">
+                    <div *ngFor="let itineraries of s1?.segments">
+                      <div *ngIf="faredetailsbysegment.segmentId === itineraries.id">
+                        <span *ngIf="faredetailsbysegment?.includedCheckedBags">
+                          {{ faredetailsbysegment?.includedCheckedBags.weight }}  {{ faredetailsbysegment?.includedCheckedBags.weightUnit }}
+                        </span>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <table class="table m-0" *ngIf="priceBreakupDeatils && priceBreakupDeatils.length > 0">
+      <thead>
+        <tr class="refresh">
+          <th scope="col">Rate Type</th>
+          <th scope="col">Amount</th>
+          <th scope="col">Duty Tax Fee Type</th>
+
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            NA
+          </td>
+          <td>
+            NA
+          </td>
+          <td>
+            NA
+          </td>
+
+        </tr>
+      </tbody>
+    </table>
+    <table class="table m-0" *ngIf="priceBreakupDeatils && priceBreakupDeatils.length > 0">
+      <thead>
+        <tr class="refresh">
+          <th scope="col">Commission Name</th>
+          <th scope="col">Percentage</th>
+          <th scope="col">Tour & FM Code</th>
+
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            NA
+          </td>
+          <td>
+            0 %
+          </td>
+          <td>
+            NA
+          </td>
+
+        </tr>
+      </tbody>
+    </table>
+    <div class="row">
+      <div class="col-md-6">
+        <table class="table m-0" *ngIf="priceBreakupDeatils && priceBreakupDeatils.length > 0">
+          <thead>
+            <tr class="refresh">
+              <th scope="col">Currency</th>
+              <th scope="col">Amount</th>
+              <th scope="col"></th>
+
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+               <div *ngFor="let p of priceBreakupDeatils;trackBy: trackByFn">
+                 <div *ngFor="let c of p?.travelerPricings;trackBy: trackByFn">
+                  <div *ngIf="c.travelerType === selectedPaxType">
+                    {{c.price.currency}}
+                    </div>
+                 </div>
+               </div>
+              </td>
+              <td>
+                <div *ngFor="let p of priceBreakupDeatils;trackBy: trackByFn">
+                  <div *ngFor="let c of p?.travelerPricings;trackBy: trackByFn">
+                   <div *ngIf="c.travelerType === selectedPaxType">
+                      {{c.price.base}}
+                     </div>
+                  </div>
+                </div>
+              </td>
+              <td >
+                <div *ngFor="let p of priceBreakupDeatils;trackBy: trackByFn">
+                  <div *ngFor="let c of p?.travelerPricings;trackBy: trackByFn">
+                   <div *ngIf="c.travelerType === selectedPaxType">
+                     <div *ngIf="c.price.base"> B Fare</div>
+                     </div>
+                  </div>
+                </div>
+
+              </td>
+            </tr>
+            <tr>
+              <td>
+               <div *ngFor="let p of priceBreakupDeatils;trackBy: trackByFn">
+                 <div *ngFor="let c of p?.travelerPricings;trackBy: trackByFn">
+                  <div *ngIf="c.travelerType === selectedPaxType">
+                    {{c.price.currency}}
+                    </div>
+                 </div>
+               </div>
+              </td>
+              <td>
+                <div *ngFor="let p of priceBreakupDeatils;trackBy: trackByFn">
+                  <div *ngFor="let c of p?.travelerPricings;trackBy: trackByFn">
+                   <div *ngIf="c.travelerType === selectedPaxType">
+                     {{ (c.price.total - c.price.base)?.toFixed(2) }}
+                     </div>
+                  </div>
+                </div>
+              </td>
+              <td >
+                <div *ngFor="let p of priceBreakupDeatils;trackBy: trackByFn">
+                  <div *ngFor="let c of p?.travelerPricings;trackBy: trackByFn">
+                   <div *ngIf="c.travelerType === selectedPaxType">
+                     <div *ngIf="c.price.base"> Tax</div>
+                     </div>
+                  </div>
+                </div>
+
+              </td>
+            </tr>
+            <tr>
+              <td>
+               <div *ngFor="let p of priceBreakupDeatils;trackBy: trackByFn">
+                 <div *ngFor="let c of p?.travelerPricings;trackBy: trackByFn">
+                  <div *ngIf="c.travelerType === selectedPaxType">
+                    {{c.price.currency}}
+                    </div>
+                 </div>
+               </div>
+              </td>
+              <td>
+                <div *ngFor="let p of priceBreakupDeatils;trackBy: trackByFn">
+                  <div *ngFor="let c of p?.travelerPricings;trackBy: trackByFn">
+                   <div *ngIf="c.travelerType === selectedPaxType">
+                     {{ c.price.total }}
+                     </div>
+                  </div>
+                </div>
+              </td>
+              <td >
+                Total
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div *ngIf="loading" class="text-center">
+      <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+       Loading Please wait...
+     </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light" (click)="activeModal.close('Close click')">Close</button>
+  </div>
+</div>
+
+

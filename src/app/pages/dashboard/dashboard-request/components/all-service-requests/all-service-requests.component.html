@@ -1,0 +1,432 @@
+<div>
+  <div class="card">
+    <div class="card-header">
+      <h4 class="card-title">
+        Service Requests List
+        <!-- <button type="button"   [routerLink]="['/dashboard/request/pax-search']" class="btn btn-outline-primary mr-1 mb-1 float-right">
+          Request
+        </button> -->
+      </h4>
+    </div>
+    <div class="card-body">
+      <form [formGroup]="srListSearchForm">
+        <div class="form-row">
+          <div class="col-md-2 col-12">
+            <div class="form-group mb-2">
+              <label for="reqid"> Request ID</label>
+              <input
+                type="number"
+                id="reqid"
+                placeholder="Request ID"
+                class="form-control square"
+                name="reqid"
+                formControlName="requestId"
+              />
+            </div>
+          </div>
+          <div class="col-md-3 col-12" *ngIf="keys?.includes(customerInputKey)">
+            <div class="form-group mb-2">
+              <label for="custName"> Customer</label>
+              <input
+                id="custName"
+                type="search"
+                placeholder="Search Customer"
+                #typeaheadInstance="ngbTypeahead"
+                formControlName="customer"
+                class="form-control square"
+                (keydown)="typeaheadKeydown($event)"
+                [resultTemplate]="searchResultTemplate"
+                [inputFormatter]="formatter"
+                [ngbTypeahead]="onSearchCustomer"
+                (selectItem)="bindValueOfControl($event, 'customer')"
+                (change)="onChangeCustomer($event.target.value)"
+              />
+              <ng-template #searchResultTemplate let-r="result" let-t="term">
+                <ngb-highlight [result]="r.BusinessName" [term]="t"></ngb-highlight>
+              </ng-template>
+            </div>
+          </div>
+          <div class="col-md-3 col-12" *ngIf="keys?.includes(contactInputKey)">
+            <div class="form-group mb-2">
+              <label for="Contact"> Requestor</label>
+              <select id="Contact" name="Contact" class="form-control square" formControlName="requestor">
+                <option value="">Choose</option>
+                <option [value]="contact.CUSTOMERCONTACTID" *ngFor="let contact of contactList">
+                  {{ contact.Requestor }}
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-md-2 col-12">
+            <div class="form-group mb-2">
+              <label for="fromCreatedDate"> From Created Date</label>
+              <input
+                type="date"
+                id="fromCreatedDate"
+                class="form-control square"
+                name="fromCreatedDate"
+                formControlName="fromCreatedDate"
+              />
+            </div>
+          </div>
+          <div class="col-md-2 col-12">
+            <div class="form-group mb-2">
+              <label for="toCreatedDate"> To Created Date</label>
+              <input
+                type="date"
+                id="toCreatedDate"
+                class="form-control square"
+                name="toCreatedDate"
+                formControlName="toCreatedDate"
+                [ngClass]="{ 'is-invalid': submitted && f.toCreatedDate.errors }"
+              />
+              <div *ngIf="submitted && f.toCreatedDate.errors" class="invalid-feedback">
+                <div *ngIf="f.toCreatedDate.errors.required">Please enter your to created date</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-flex"></div>
+        <ul ngbNav #nav="ngbNav" [(activeId)]="activetab" class="nav-tabs">
+          <li ngbNavItem="flight" [disabled]="tabsdisable">
+            <a ngbNavLink>
+              <span>
+                <i class="icon-plane mr-1"></i>
+                Flight
+              </span>
+            </a>
+            <ng-template ngbNavContent>
+              <div class="form-row">
+                <div class="col-md-2 col-12">
+                  <div class="form-group mb-2">
+                    <label for="from">From</label>
+                    <input
+                      type="search"
+                      id="from"
+                      class="form-control square"
+                      placeholder="Enter From"
+                      name="from"
+                      formControlName="from"
+                      (keydown)="typeaheadKeydown($event)"
+                      [resultTemplate]="searchResultTemplate"
+                      [inputFormatter]="flightfromformatter"
+                      [ngbTypeahead]="onSearchLocation"
+                    />
+                    <ng-template #searchResultTemplate let-r="result" let-t="term">
+                      <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+                    </ng-template>
+                  </div>
+                </div>
+                <div class="col-md-2 col-12">
+                  <div class="form-group mb-2">
+                    <label for="to">To</label>
+                    <input
+                      type="search"
+                      id="to"
+                      class="form-control square"
+                      placeholder="Enter To"
+                      formControlName="to"
+                      name="to"
+                      (keydown)="typeaheadKeydown($event)"
+                      [resultTemplate]="searchResultTemplate"
+                      [inputFormatter]="flightfromformatter"
+                      [ngbTypeahead]="onSearchLocation"
+                    />
+                    <ng-template #searchResultTemplate let-r="result" let-t="term">
+                      <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+                    </ng-template>
+                  </div>
+                </div>
+
+                <div class="col-md-2 col-12">
+                  <div class="form-group mb-2">
+                    <label for="to">Departure From</label>
+                    <input
+                      type="date"
+                      id="depatureFrom"
+                      class="form-control square"
+                      formControlName="depatureDateFrom"
+                      name="depatureFrom"
+                    />
+                  </div>
+                </div>
+                <div class="col-md-2 col-12">
+                  <div class="form-group mb-2">
+                    <label for="to">Departure To</label>
+                    <input
+                      type="date"
+                      id="depatureTo"
+                      class="form-control square"
+                      formControlName="depatureDateTo"
+                      name="depatureTo"
+                    />
+                  </div>
+                </div>
+                <div class="col-md-1 col-12">
+                  <div class="form-group mb-2">
+                    <label for="triptype">Trip Type</label>
+                    <select id="triptype" name="triptype" class="form-control square" formControlName="tripType">
+                      <option value="">Select</option>
+                      <option value="1">OneWay</option>
+                      <option value="69">Round</option>
+                      <option value="11">Mulicity</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-2 col-12">
+                  <div class="form-group mb-2">
+                    <label for="class">Class</label>
+                    <select id="class" name="class" class="form-control square" formControlName="class">
+                      <option value="">Select</option>
+                      <option [value]="class.id" *ngFor="let class of masterClassList">
+                        {{ class.name }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <button (click)="tabClose()" type="button" class="btn p-0 ml-2 mt-1">
+                  <i class="icon-close" aria-hidden="true" style="font-size: 28px"></i>
+                </button>
+              </div>
+            </ng-template>
+          </li>
+          <li ngbNavItem="hotel" [disabled]="tabsdisable">
+            <a ngbNavLink>
+              <span>
+                <i class="fa fa-bed mr-1"></i>
+                Hotel
+              </span>
+            </a>
+            <ng-template ngbNavContent>
+              <div class="form-row">
+                <div class="col-md-3 col-12">
+                  <div class="form-group mb-2">
+                    <label for="location">Location ,City , Hotel Or Area</label>
+                    <input
+                      type="search"
+                      placeholder="Ex. PARIS , France(PAR)"
+                      id="location"
+                      class="form-control square"
+                      name="location"
+                      formControlName="lineLocation"
+                      #typeaheadInstance="ngbTypeahead"
+                      (keydown)="typeaheadKeydown($event)"
+                      [resultTemplate]="searchResultTemplate"
+                      [inputFormatter]="hotelformatter"
+                      [ngbTypeahead]="onSearchHotel"
+                    />
+                    <ng-template #searchResultTemplate let-r="result" let-t="term">
+                      <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+                    </ng-template>
+                  </div>
+                </div>
+                <div class="col-md-2 col-12">
+                  <div class="form-group mb-2">
+                    <label for="to">Check-In Date From</label>
+                    <input
+                      type="date"
+                      id="CheckInDateFrom"
+                      class="form-control square"
+                      formControlName="checkInDateFrom"
+                      name="CheckInDateFrom"
+                    />
+                  </div>
+                </div>
+                <div class="col-md-2 col-12">
+                  <div class="form-group mb-2">
+                    <label for="to">Check-In Date To</label>
+                    <input
+                      type="date"
+                      id="CheckInDateTo"
+                      class="form-control square"
+                      formControlName="checkInDateTo"
+                      name="CheckInDateTo"
+                    />
+                  </div>
+                </div>
+                <button (click)="tabClose()" type="button" class="btn p-0 ml-2 mt-1">
+                  <i class="icon-close" aria-hidden="true" style="font-size: 28px"></i>
+                </button>
+              </div>
+            </ng-template>
+          </li>
+          <li ngbNavItem="ancillary" [disabled]="tabsdisable">
+            <a ngbNavLink>
+              <span>
+                <i class="fa fa-car mr-1"></i>
+                Ancillary
+              </span>
+            </a>
+            <ng-template ngbNavContent>
+              <p style="text-align: justify; text-justify: inter-word">
+                Under Developing Coming Soon
+                <button (click)="tabClose()" type="button" class="btn p-0 ml-2 mt-1">
+                  <i class="icon-close" aria-hidden="true" style="font-size: 28px"></i>
+                </button>
+              </p>
+            </ng-template>
+          </li>
+        </ul>
+        <div [ngbNavOutlet]="nav"></div>
+
+        <div class="mb-2">
+          <button type="submit" class="btn btn-primary" (click)="OnSubmit()">
+            <i class="ft-search mr-1"></i>
+            {{ loading ? 'Loading...' : 'Search' }}
+          </button>
+          <button type="button" (click)="reset()" class="btn btn-secondary ml-2"><i class="ft-x mr-1"></i>Reset</button>
+        </div>
+      </form>
+
+      <fieldset class="form-group" *ngIf="rows && rows.length > 0">
+        <label
+          >Show
+          <select
+            name="users-list-select"
+            class="form-control form-control-sm d-inline-block width-100 p-right-25 pl-4 mx-1"
+            (click)="updateLimit($event)"
+          >
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+          </select>
+          entries</label
+        >
+      </fieldset>
+      <ngx-datatable
+        [rows]="rows"
+        [rowHeight]="'auto'"
+        #tableRowDetails
+        class="bootstrap core-bootstrap"
+        [limit]="limitRef"
+        [columnMode]="ColumnMode.force"
+        [headerHeight]="50"
+        [footerHeight]="50"
+        [scrollbarH]="true"
+        [sorts]="[{ prop: 'serviceRequestNumber', dir: 'desc' }]"
+        *ngIf="rows && rows.length > 0"
+      >
+        <ngx-datatable-column name="S.No" [width]="60">
+          <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-row="row">
+            {{ rowIndex + 1 }}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column [width]="160" name="Request ID" prop="serviceRequestNumber">
+          <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+            <div class="text-primary">
+              <button class="btn btn-link p-0" style="box-shadow: none !important" (click)="getLinesBySrRequest(row)">
+                {{ row.serviceRequestNumber }} - {{ row.serviceRequestLine }}
+              </button>
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column [width]="130" name="Status" prop="currentStatus">
+          <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+            <div class="{{ row.cssClass }}">
+              {{ value }}
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column [width]="130" name="Product" prop="product">
+          <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+            <div>
+              {{ value }}
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column [width]="250" name="Customer Name" prop="businessName">
+          <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+            <div class="long--text">
+              {{ value }}
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Contact Name" prop="contactName" [width]="180"></ngx-datatable-column>
+
+        <ngx-datatable-column name="Origin/ Destination" prop="originDestinationLocation" [width]="350">
+          <ng-template let-row="row" let-name="value" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+            <ng-template #tipCityContent>
+              <div *ngFor="let city of row.originDestinationLocation?.split(','); let i = index">
+                <span *ngIf="i > 0"> {{ city }}</span>
+              </div>
+            </ng-template>
+
+            <div *ngIf="row.product == 'Flight' || row.product == 'Package'">
+              <span> {{ row.originDestinationLocation?.split(',')[0] }}</span>
+
+              <span
+                *ngIf="row.originDestinationLocation?.split(',').length > 1"
+                placement="right"
+                [ngbTooltip]="tipCityContent"
+                class="font-small-3 pointer long--text"
+              >
+                + {{ row.originDestinationLocation?.split(',').length - 1 }} more
+              </span>
+            </div>
+            <span *ngIf="row.product === 'Hotel' || row.product == 'Ancillary' || row.product === 'Attractions'">
+              <span> {{ row.originDestinationLocation?.split(',')[0] }}</span>
+            </span>
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Date of Journey / Check In" prop="dateOfJourneyCheckIn" [width]="250">
+          <ng-template let-row="row" let-name="value" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+            <ng-template #tipDateContent>
+              <div *ngFor="let dateVal of row.dateOfJourneyCheckIn?.split(','); let d = index">
+                <span *ngIf="d > 0"> {{ dateVal | date: 'mediumDate' }}</span>
+              </div>
+            </ng-template>
+            {{ row.dateOfJourneyCheckIn?.split(',')[0] | date: 'mediumDate' }}
+            <span
+              *ngIf="row.dateOfJourneyCheckIn?.split(',').length > 1"
+              placement="right"
+              [ngbTooltip]="tipDateContent"
+              class="font-small-3 pointer"
+            >
+              + {{ row.dateOfJourneyCheckIn?.split(',').length - 1 }} more
+            </span>
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Class / No Of Nights /Days/ ATT Count" prop="classDays" [width]="290">
+          <ng-template let-row="row" let-name="value" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+            <div *ngIf="row.product !== 'Attractions' && row.product !== 'Package' && row.product !== 'Hotel'">
+              <ng-template #tipClassContent>
+                <div *ngFor="let classVal of row.classDays.split(','); let c = index">
+                  <span *ngIf="c > 0"> {{ classVal }}</span>
+                </div>
+              </ng-template>
+              {{ row.classDays?.split(',')[0] }}
+              <span
+                *ngIf="row.classDays?.split(',').length > 1"
+                placement="right"
+                [ngbTooltip]="tipClassContent"
+                class="font-small-3 pointer"
+              >
+                + {{ row.classDays?.split(',').length - 1 }} more
+              </span>
+            </div>
+            <div *ngIf="row.product === 'Attractions'">{{ row.classDays?.split(',').length }} attraction</div>
+            <div *ngIf="row.product === 'Package'">{{ row.classDays?.split(',') }} days</div>
+            <div *ngIf="row.product === 'Hotel'">{{ row.classDays?.split(',') }} nights</div>
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column [width]="200" name="Created Date" prop="serviceRequestDate">
+          <ng-template ngx-datatable-cell-template let-value="value">
+            <!-- {{ value | date: 'dd-MMM-yyyy' }} -->
+            {{ value }}
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column [width]="170" name="Pax / Room Persons" prop="paxCount">
+          <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+            <div>
+              {{ value }}
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+      </ngx-datatable>
+    </div>
+  </div>
+</div>

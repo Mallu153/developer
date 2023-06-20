@@ -1,0 +1,389 @@
+<div class="card">
+  <div class="card-header custom-card-header-in-price p-1 m-1 text-bold-600">
+    <span class="icon-block shadow-sm"
+      ><img _ngcontent-gkw-c226="" src="/assets/img/flight.svg" alt="flight" width="22"
+    /></span>
+    <span class="px-2"># {{ flightFormDataStore?.requestId }} - {{ flightFormDataStore?.requestLineId }} </span>
+    <span class="px-2"
+      ><i class="fas fa-plane-departure rounded bg-white text-primary shadow-sm p-1"></i>
+      {{ flightFormDataStore?.routes[0]?.fromAirportCityCode + '(' + flightFormDataStore?.routes[0]?.fromCode + ')' }}
+      <i class="fas fa-long-arrow-alt-right"></i>
+      {{
+        flightFormDataStore?.routes[flightFormDataStore?.routes.length - 1]?.toAirportCityCode +
+          '(' +
+          flightFormDataStore?.routes[flightFormDataStore?.routes.length - 1]?.toCode +
+          ')'
+      }}
+      <i class="fas fa-plane-arrival rounded bg-white text-primary shadow-sm p-1"></i>
+    </span>
+    <span>
+      <i class="far fa-calendar-alt rounded bg-white text-primary shadow-sm p-1"></i>
+      {{ flightFormDataStore?.routes[0]?.deptDate | date: 'fullDate' }}
+    </span>
+
+    <span *ngFor="let paxTypeList of paxTypesData">
+      <span class="px-2">{{ paxTypeList.paxType }}</span>
+      <span class="rounded-circle bg-white text-primary shadow-sm w-25px h-25px d-inline-block text-center lh-25px">{{
+        paxTypeList.count
+      }}</span>
+    </span>
+
+    <button class="btn btn-outline-info pull-right" (click)="removeFlightForm.emit()">
+      <i class="far fa-trash-alt"></i>
+    </button>
+  </div>
+  <div class="card-body">
+    <!-- <pre>{{supplierData | json}}</pre> -->
+    <a (click)="toggleContent()" class="pull-right mt-4 font-small-3 text-info"> {{ divStates ? 'Less' : 'More' }}</a>
+
+    <div [formGroup]="flightForm">
+      <div class="form-row">
+        <div class="col-md-2 col-12">
+          <div class="form-group mb-2">
+            <label for="supplierData">Supplier *</label>
+
+            <ng-select [items]="supplierData" bindLabel="businessName" formControlName="supplierData"> </ng-select>
+          </div>
+        </div>
+        <div class="col-md-2 col-12">
+          <div class="form-group mb-2">
+            <label for="supplierReference">PNR *</label>
+            <input
+              type="text"
+              id="supplierReference"
+              class="form-control square"
+              name="supplierReference"
+              formControlName="supplierReference"
+            />
+          </div>
+        </div>
+        <div class="col-md-2 col-12">
+          <div class="form-group mb-2">
+            <label for="supplierReferenceDate">PNR Date</label>
+            <input
+              type="date"
+              id="supplierReferenceDate"
+              class="form-control square"
+              name="supplierReferenceDate"
+              formControlName="supplierReferenceDate"
+            />
+          </div>
+        </div>
+        <div class="col-md-2 col-12">
+          <div class="form-group mb-2">
+            <label for="headerAirlineCodeNumber">Airline</label>
+            <div class="row no-gutters">
+              <div class="col-6">
+                <input
+                  type="text"
+                  id="headerAirlineCode"
+                  class="form-control square"
+                  name="headerAirlineCode"
+                  formControlName="headerAirlineCode"
+                />
+              </div>
+
+              <div class="col-6">
+                <input
+                  type="text"
+                  id="headerAirlineNumber"
+                  class="form-control square"
+                  name="headerAirlineNumber"
+                  formControlName="headerAirlineNumber"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-2 col-12">
+          <div class="form-group mb-2">
+            <label for="headerDeptTime">Dept Time</label>
+            <input
+              type="time"
+              id="headerDeptTime"
+              class="form-control square"
+              name="headerDeptTime"
+              formControlName="headerDeptTime"
+            />
+          </div>
+        </div>
+        <div class="col-md-2 col-12">
+          <div class="form-group mb-2">
+            <label for="headerArrTime">Arr Time</label>
+            <input
+              type="time"
+              id="headerArrTime"
+              class="form-control square"
+              name="headerArrTime"
+              formControlName="headerArrTime"
+            />
+          </div>
+        </div>
+        <div class="col-md-1 col-12">
+          <div class="form-group mb-2">
+            <label for="headerArrDays">Arr Days</label>
+            <select id="headerArrDays" class="form-control square" name="headerArrDays" formControlName="headerArrDays">
+              <option value="0">0</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md-2 col-12">
+          <div class="form-group mb-2">
+            <label for="headerBase">Base</label>
+            <input type="text" id="headerBase" class="form-control square text-right" (input)="onChangePriceInputs()"  formControlName="headerBase" />
+          </div>
+        </div>
+        <div class="col-md-2 col-12">
+          <div class="form-group mb-2">
+            <label for="headerTax">Tax</label>
+            <input type="text" id="headerTax" class="form-control square text-right" (input)="onChangePriceInputs()" formControlName="headerTax" />
+          </div>
+        </div>
+        <div class="col-md-2 col-12">
+          <div class="form-group mb-2">
+            <div class="checkbox mt-4">
+              <input type="checkbox" id="checkbox1-{{flightFormIndex}}"  formControlName="priceForPax"  (change)="onChangePriceInputs()" />
+              <label for="checkbox1-{{flightFormIndex}}"><span>Per PAX</span></label>
+            </div>
+          </div>
+        </div>
+        <input type="hidden" formControlName="serviceRequest" />
+        <input type="hidden" formControlName="serviceRequestLine" />
+        <input type="hidden" formControlName="serviceProductId" />
+        <input type="hidden" formControlName="serviceProduct" />
+      </div>
+
+      <div *ngIf="divStates">
+        <div class="p-2 border mb-2 inset-shadow">
+          <div class="form-subheader mb-1 text-info text-bold-600">Price</div>
+          <div formArrayName="paxTypePrice">
+            <div *ngFor="let paxTypePriceList of paxTypePrice.controls; let i = index" [formGroupName]="i">
+              <div class="form-row">
+                <div class="col-md-1 col-12">
+                  <div class="form-group mb-2">
+                    <label for="paxType{{ i }}">Pax Type</label>
+                    <input
+                      type="text"
+                      id="paxType{{ i }}"
+                      class="form-control square"
+                      formControlName="paxType"
+                      [readOnly]="true"
+                    />
+                  </div>
+                </div>
+                <div class="col-md-2 col-12">
+                  <div class="form-group mb-2">
+                    <label for="base{{ i }}">Base</label>
+                    <input
+                      type="text"
+                      id="base{{ i }}"
+                      class="form-control square text-right"
+                      formControlName="base"
+                    />
+                  </div>
+                </div>
+                <div class="col-md-2 col-12">
+                  <div class="form-group mb-2">
+                    <label for="tax{{ i }}">Tax</label>
+                    <input
+                      type="text"
+                      id="deptTime{{ i }}"
+                      class="form-control square text-right"
+                      formControlName="tax"
+                    />
+                  </div>
+                </div>
+                <div class="col-md-2 col-12">
+                  <div class="form-group mb-2">
+                    <label for="total{{ i }}">Total</label>
+                    <input
+                      type="text"
+                      id="total{{ i }}"
+                      class="form-control square text-right"
+                      formControlName="total"
+                      [readOnly]="true"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <!-- <button type="button" (click)="removeSegment(i)">Remove Segment</button> -->
+            </div>
+          </div>
+        </div>
+
+        <div class="p-2 border mb-2 inset-shadow">
+          <div class="form-subheader mb-1 text-info text-bold-600">Segments</div>
+          <div formArrayName="segments">
+            <div *ngFor="let segment of segments.controls; let i = index" [formGroupName]="i">
+              <div class="form-row">
+                <div class="col-md-1 col-12">
+                  <div class="form-group mb-2">
+                    <label for="deptCode{{ i }}">Dept</label>
+                    <input
+                      type="text"
+                      id="deptCode{{ i }}"
+                      class="form-control square"
+                      formControlName="deptCode"
+                      [readOnly]="true"
+                    />
+                  </div>
+                </div>
+                <div class="col-md-1 col-12">
+                  <div class="form-group mb-2">
+                    <label for="arrCode{{ i }}">Arr</label>
+                    <input
+                      type="text"
+                      id="arrCode{{ i }}"
+                      class="form-control square"
+                      formControlName="arrCode"
+                      [readOnly]="true"
+                    />
+                  </div>
+                </div>
+                <div class="col-md-2 col-12">
+                  <div class="form-group mb-2">
+                    <label for="deptDate{{ i }}">Dept Date</label>
+                    <input
+                      type="date"
+                      id="deptDate{{ i }}"
+                      class="form-control square"
+                      formControlName="deptDate"
+                      [readOnly]="true"
+                    />
+                  </div>
+                </div>
+                <div class="col-md-1 col-12">
+                  <div class="form-group mb-2">
+                    <label for="deptTime{{ i }}">Dept Time</label>
+                    <input type="time" id="deptTime{{ i }}" class="form-control square" formControlName="deptTime" />
+                  </div>
+                </div>
+                <div class="col-md-2 col-12">
+                  <div class="form-group mb-2">
+                    <label for="arrDate{{ i }}">Arr Date</label>
+                    <input type="date" id="arrDate{{ i }}" class="form-control square" formControlName="arrDate" />
+                  </div>
+                </div>
+                <div class="col-md-1 col-12">
+                  <div class="form-group mb-2">
+                    <label for="arrTime{{ i }}">Arr Time</label>
+                    <input type="time" id="arrTime{{ i }}" class="form-control square" formControlName="arrTime" />
+                  </div>
+                </div>
+                <div class="col-md-2 col-12">
+                  <div class="form-group mb-2">
+                    <label for="airLineCodeNumberSegment{{ i }}">Airline</label>
+                    <div class="row no-gutters">
+                      <div class="col-6">
+                        <input
+                          type="text"
+                          id="airlineCode{{ i }}"
+                          class="form-control square"
+                          formControlName="airlineCodeSegment"
+                        />
+                      </div>
+
+                      <div class="col-6">
+                        <input
+                          type="text"
+                          id="airlineNumber{{ i }}"
+                          class="form-control square"
+                          formControlName="airlineNumberSegment"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- <button type="button" (click)="removeSegment(i)">Remove Segment</button> -->
+            </div>
+          </div>
+        </div>
+        <!-- <button type="button" (click)="addSegment()">Add Segment</button> -->
+        <div class="p-2 border mb-2 inset-shadow">
+          <div class="form-subheader mb-1 text-info text-bold-600">Passengers</div>
+          <div formArrayName="passengers">
+            <div *ngFor="let passenger of passengers.controls; let i = index" [formGroupName]="i">
+              <div class="form-row">
+                <div class="col-md-2 col-12">
+                  <div class="form-group mb-2">
+                    <label for="passengerFirstName{{ i }}">First Name</label>
+                    <input
+                      type="text"
+                      id="passengerFirstName{{ i }}"
+                      class="form-control square"
+                      formControlName="passengerFirstName"
+                    />
+                  </div>
+                </div>
+                <div class="col-md-2 col-12">
+                  <div class="form-group mb-2">
+                    <label for="passengerLastName{{ i }}">Last Name</label>
+                    <input
+                      type="text"
+                      id="passengerLastName{{ i }}"
+                      class="form-control square"
+                      formControlName="passengerLastName"
+                    />
+                  </div>
+                </div>
+                <div class="col-md-2 col-12">
+                  <div class="form-group mb-2">
+                    <label for="passengerMobile{{ i }}">Mobile</label>
+                    <input
+                      type="text"
+                      id="passengerMobile{{ i }}"
+                      class="form-control square"
+                      formControlName="passengerMobile"
+                    />
+                  </div>
+                </div>
+                <div class="col-md-2 col-12">
+                  <div class="form-group mb-2">
+                    <label for="passengerEmail{{ i }}">Email</label>
+                    <input
+                      type="email"
+                      id="passengerEmail{{ i }}"
+                      class="form-control square"
+                      formControlName="passengerEmail"
+                    />
+                  </div>
+                </div>
+                <div class="col-md-2 col-12">
+                  <div class="form-group mb-2">
+                    <label for="passengerTicket{{ i }}">Ticket</label>
+                    <input
+                      type="text"
+                      id="passengerTicket{{ i }}"
+                      class="form-control square"
+                      formControlName="passengerTicket"
+                    />
+                  </div>
+                </div>
+
+                <input type="hidden" formControlName="passengerRequestLinePaxId" />
+                <input type="hidden" formControlName="passengerPaxId" />
+                <input type="hidden" formControlName="passengerPaxTypeId" />
+                <input type="hidden" formControlName="passengerPaxType" />
+                <input type="hidden" formControlName="passengerPaxTitleId" />
+                <input type="hidden" formControlName="passengerPaxTitle" />
+
+                <!-- <button type="button" (click)="removePassenger(i)">Remove Passenger</button> -->
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- <button type="button" (click)="addPassenger()">Add Passenger</button> -->
+      </div>
+    </div>
+  </div>
+</div>

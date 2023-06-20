@@ -1,0 +1,167 @@
+
+
+
+
+ <section id="horizontal-form-layout">
+  <div class="row match-height">
+    <div class="col-xl-12 col-lg-12 col-md-12 col-12">
+      <h6 class="mt-2 mb-0 ">
+        <span class="d-flex align-items-center">
+          <span>
+            <a class="a_link" (click)="goToDashBoard()">Home</a>
+            <i class="ft-chevron-right"></i>
+            <span> Cash Withdrawl - Bank to Agent</span>
+          </span>
+        </span>
+      </h6>
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title">Cash Withdrawl - Bank to Agent</h4>
+        </div>
+        <div class="card-content">
+          <div class="card-body">
+            <form [formGroup]="withdrawBankToAgentForm">
+              <div class="row">
+                <div class="col-md-6 col-12">
+                  <div class="form-group row">
+                    <label class="col-md-3 col-form-label" for="Amount">Amount</label>
+                    <div class="col-md-9">
+                      <input
+                      type="tel"
+                      (keypress)="numberOnly($event)"
+                      placeholder="Enter Amount"
+                       class="form-control square"
+                       id="Amount"
+                       name="Amount"
+                       maxlength="10"
+                       formControlName="transferAmount"
+                       [ngClass]="{ 'is-invalid': (submitted || f.transferAmount.touched) && f.transferAmount.errors }"
+                       >
+                       <div *ngIf="(submitted || f.transferAmount.touched) && f.transferAmount.errors" class="invalid-feedback">
+                        <div *ngIf="f.transferAmount.errors.required">Please enter your amount </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-6 col-12">
+                  <div class="form-group row">
+                    <label class="col-md-3 col-form-label" for="Account">Account</label>
+
+                    <div class="col-md-9">
+                      <input
+                      type="search"
+                      class="form-control square"
+                      id="Account"
+                      name="Account"
+                      #typeaheadPaxInstance="ngbTypeahead"
+                      placeholder="Search Bank Name Or Branch Or Account Number"
+                      [resultTemplate]="searchResultTemplate"
+                      [inputFormatter]="bankFormatter"
+                       [ngbTypeahead]="onSearchBankDetails"
+                       formControlName="transferFromId"
+                       [ngClass]="{ 'is-invalid': (submitted || f.transferFromId.touched) && f.transferFromId.errors }"
+                      >
+                      <ng-template #searchResultTemplate let-r="result" let-t="term">
+                        <ngb-highlight [result]="r.bankInfo" [term]="t"></ngb-highlight>
+                      </ng-template>
+                      <div *ngIf="(submitted || f.transferFromId.touched) && f.transferFromId.errors" class="invalid-feedback">
+                        <div *ngIf="f.transferFromId.errors.required">Please select your account details </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-md-3">
+                <div class="col-md-6 col-12">
+                  <div class="form-group row">
+                    <label class="col-md-3 col-form-label" for="Reference">Reference Number</label>
+                    <div class="col-md-9">
+                      <input
+                      type="text"
+                      class="form-control square"
+                      placeholder="Ex: AEDG2344"
+                      id="Reference"
+                      name="Reference"
+                      maxlength="50"
+                      formControlName="referenceNo"
+                      [ngClass]="{ 'is-invalid': (submitted || f.referenceNo.touched) && f.referenceNo.errors }"
+                      >
+                      <div *ngIf="(submitted || f.referenceNo.touched) && f.referenceNo.errors" class="invalid-feedback">
+                        <div *ngIf="f.referenceNo.errors.required">Please enter your reference number </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6 col-12">
+                  <div class="form-group row">
+                    <label class="col-md-3 col-form-label" for="Remarks">Remarks</label>
+                    <div class="col-md-9">
+                      <input
+                      type="text"
+                      class="form-control square"
+                      id="Remarks"
+                      name="Remarks"
+                      placeholder="Enter Remarks"
+                      formControlName="remarks"
+                      [ngClass]="{ 'is-invalid': (submitted || f.remarks.touched) && f.remarks.errors }"
+                      >
+                      <div *ngIf="(submitted || f.remarks.touched) && f.remarks.errors" class="invalid-feedback">
+                        <div *ngIf="f.remarks.errors.required">Please enter your remarks </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 col-12">
+                  <div class="form-group row">
+                    <label class="col-md-3 col-form-label" for="horizontal-form-5">Uploads</label>
+                    <div class="col-md-9">
+                      <fieldset class="form-group square">
+                        <div class="custom-file ">
+                          <input
+                          type="file"
+                          class="custom-file-input"
+                          id="inputGroupFile01"
+                          accept=".jpg, .jpeg, .png"
+                          multiple
+                          (change)="onFileChange($event)"
+                          >
+                          <label class="custom-file-label square" for="inputGroupFile01">Choose file</label>
+                        </div>
+                      </fieldset>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="col-12 col-md-6 col-lg-6">
+                  <div class="bg-light-secondary p-0" *ngFor="let img of myArrayFiles;let imageIndex = index">
+                    <div class="form-group ">
+                      <span class="text p-1 more-highlight mb-2">
+                        <a href="{{img?.name}}" target="_blank">{{img?.name}} </a>
+                          <i class="ft-x float-right mt-1 mr-2" (click)="removeMultipleFiles(imageIndex,img.name)" aria-hidden="true"></i>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </form>
+            <div>
+              <button type="button"  (click)="onSubmitForm()" class="btn btn-primary  mr-1">
+                <i class="ft-bookmark"></i>
+                Save
+              </button>
+              <!-- <button type="button" class="btn gradient-ibiza-sunset">
+                <i class="ft-x mr-2"></i>
+                Cancel
+              </button> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

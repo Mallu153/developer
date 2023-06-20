@@ -1,0 +1,28 @@
+
+<div class="d-flex align-items-center bg-white py-1 px-2 rounded shadow-sm" *ngIf="serviceRequestData && serviceRequestData?.contact">
+  <h5 class="card-title mb-0">
+    <ng-template #popContent>
+      <span class="text-sm" style="font-size: 14px !important">
+        {{serviceRequestData?.contact?.primaryPhoneNumber}},
+        {{serviceRequestData?.contact?.primaryEmail}}
+      </span>
+    </ng-template>
+    <span class="text-sm" style="font-size: 14px !important">RFQ#: <span class="text-info-blue">
+      {{ serviceRequestData?.requestId  }}  {{srLineId}}
+    </span> ,
+
+    </span>
+    <span class="vip-line"><img src="assets/img/company-icon.svg" alt="company"  width="27" class="mb-2" />
+      {{serviceRequestData?.customerName}}
+    </span> ,
+    <span class="text-info-blue" placement="bottom" [ngbPopover]="popContent">
+      <img src="assets/img/company-contact1.svg"  alt="company contact" width="30" class="mb-2" />
+      {{serviceRequestData?.contact?.firstName +" " +serviceRequestData?.contact?.lastName }}
+    </span>
+
+  </h5>
+  <div class="text-info-blue" style="margin-left: auto">
+    <h6 class="mb-0">{{serviceRequestData?.createdDate | date: 'dd-MMM-yyyy'}} ,
+      {{serviceRequestData?.createdDate.substring(11, 19)}}</h6>
+  </div>
+</div>

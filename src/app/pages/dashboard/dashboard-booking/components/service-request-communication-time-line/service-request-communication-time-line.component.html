@@ -1,0 +1,131 @@
+<section id="basic-hidden-label-form-layouts" *ngIf="loading">
+  <div class="row match-height">
+    <div class="col-lg-12 col-12">
+      <div class="card">
+        <div class="card-content">
+          <div class="card-body">
+            <h5 class="text-center">data not found</h5>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="time-line-box horizontal-scroll-container">
+  <button
+    (click)="showPrev()"
+    class="prevBtn btncircle btn-primary"
+    title="previous"
+    *ngIf="timeline && timeline.length > 0"
+  >
+    <span>
+      <i class="ft-chevron-left"></i>
+    </span>
+  </button>
+
+  <div class="horizontal-scroll-content" #horizontalScrollElem>
+    <div>
+      <div class="card mb-0" *ngIf="timeline && timeline.length > 0">
+        <div class="card-content">
+          <div class="card-body">
+            <div class="swiper-wrapper">
+              <div class="swiper-slide" *ngFor="let item of timeline; let index = index;trackBy: trackByFn">
+                <div class="timestamp">
+                  <span class="date"> {{ item.date_time | date: dateFormatTop }}</span>
+                </div>
+                <div
+                  class="status"
+                  [ngClass]="{
+                    active: showTimeInfo[index],
+                    whatsapp: item.channel === 'WA',
+                    email: item.media_type === 'mail'
+                  }"
+                  (click)="showTimeLineDetailsInfo(index)"
+                >
+                  <span *ngIf="item.in_out === 'IN'">
+                    <i class="ft-arrow-down mr-1 font-size-20"></i>
+                  </span>
+
+                  <span *ngIf="item.media_type === 'mail'">
+                    {{ item.date_time | date: 'shortTime' }}
+                  </span>
+                  <span *ngIf="item.channel === 'WA'">
+                    {{ item.date_time | date: 'shortTime' }}
+                  </span>
+                  <span *ngIf="item.in_out === 'OUT'">
+                    <i class="ft-arrow-up mr-1 font-size-20"></i>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="swiper-pagination"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    (click)="showNext()"
+    class="nextBtn btncircle btn-primary"
+    title="next"
+    *ngIf="timeline && timeline.length > 0"
+  >
+    <span>
+      <i class="ft-chevron-right"></i>
+    </span>
+  </button>
+</section>
+
+<div class="card mt-0" *ngIf="timeline && timeline.length > 0">
+  <div class="card-content">
+    <div class="card-body">
+      <div *ngFor="let item of timeline; let index = index;trackBy: trackByFn">
+        <div [hidden]="!showTimeInfo[index]">
+          <h3 class="text-bold-700 mb-2" *ngIf="item.channel_subject !== 'NA'">{{ item.channel_subject }}</h3>
+          <h4 class="mb-2">{{ item.date_time | date: dateFormat }} {{ item.date_time | date: 'shortTime' }}</h4>
+          <!-- | safeHtml -->
+          <p [innerHTML]="item.message ">
+
+          </p>
+          <div class="row" *ngIf="item.media_url">
+            <div class="col-md-2">
+                <div   class="alert alert-light " role="alert" [ngSwitch]="item.media_type">
+                  <span *ngSwitchCase="'image'"> <i class="fa fa-file-picture-o link-highlate "></i></span>
+                  <span *ngSwitchCase="'application'">
+                    <i class="fa fa-file-excel-o link-highlate " *ngIf="item.media_url?.split('/')[4]?.split('.')[1] === 'xlsx'||item.media_url?.split('/')[4]?.split('.')[1] === 'excel'"></i>
+                    <i class="far fa-file-pdf link-highlate" *ngIf="item.media_url?.split('/')[4]?.split('.')[1] === 'pdf'"></i>
+                    <i class="far fa-file-word link-highlate" *ngIf="item.media_url?.split('/')[4]?.split('.')[1] === 'docx'"></i>
+                    <i class="ft-file-text link-highlate" *ngIf="item.media_url?.split('/')[4]?.split('.')[1] === 'txt'"></i>
+                  </span>
+                  <a target="_blank" [href]="item.media_url" download class="link-highlate font-size-12">
+                    {{item.media_url?.split('/')[4]}}
+                  </a>
+                </div>
+            </div>
+          </div>
+          <div class="row" *ngIf="item.attachments">
+           <div class="col-md-2" *ngFor="let images of item.attachments; let subIndex = index;trackBy: trackByFn">
+            <div [ngSwitch]="images.file_ext">
+              <div   class="alert alert-light " role="alert" >
+                <span *ngSwitchCase="'picture'"> <i class="fa fa-file-picture-o link-highlate "></i></span>
+                <span *ngSwitchCase="'excel'">  <i class="fa fa-file-excel-o link-highlate "></i></span>
+                <span *ngSwitchCase="'word'">   <i class="far fa-file-word link-highlate"></i></span>
+                <span *ngSwitchCase="'pdf'">    <i class="far fa-file-pdf link-highlate"></i></span>
+                <span *ngSwitchCase="'txt'">    <i class="ft-file-text"></i></span>
+                <a target="_blank" [href]="images.file_path" download class="link-highlate font-size-12">
+                   {{images.file_name}}
+                </a>
+              </div>
+            </div>
+           </div>
+          </div>
+          <span *ngIf="item.in_out === 'IN'">
+            {{ item.action_from_name }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
