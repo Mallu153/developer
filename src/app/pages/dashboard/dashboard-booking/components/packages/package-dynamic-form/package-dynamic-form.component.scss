@@ -1,0 +1,25 @@
+.refresh {
+  background-image: linear-gradient(to right, #D5F1FD 0%, #D5F1FD 51%, #D5F1FD 100%);
+  color: #226CC5;
+  letter-spacing: 1;
+}
+.table .refresh th,
+.table td {
+  padding: 0.5rem 1rem !important;
+  vertical-align: top;
+  border-top: 1px solid #f5f5f5;
+  vertical-align: middle;
+  font-weight: 500;
+  font-size: 13px !important;
+}
+.table-responsive {
+  display: block !important;
+  width: 100% !important;
+  overflow-x: unset !important;
+  -webkit-overflow-scrolling: touch;
+}
+.table thead th {
+  vertical-align: bottom;
+  border-bottom: none !important;
+  /* border-bottom: 2px solid #e0e0e0; */
+}

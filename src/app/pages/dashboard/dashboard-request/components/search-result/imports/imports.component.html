@@ -1,0 +1,61 @@
+<section>
+  <div class="row">
+    <div class="col-lg-12 col-md-12 col-12">
+      <div class="card">
+        <div class="card-header"></div>
+        <div class="card-body">
+          <form [formGroup]="importForm">
+            <div class="form-row">
+              <div class="col-md-3 col-12">
+                <div class="form-group mb-2">
+                  <label for="name">PNR No<span class="required-asterisk">*</span></label>
+                  <input
+                    type="text"
+                    id="pnrNo"
+                    class="form-control square"
+                    name="pnrNo"
+                    placeholder="PNR No"
+                    formControlName="pnrNo"
+                    [ngClass]="{
+                      'is-invalid': (submitted || f.pnrNo.touched) && f.pnrNo.errors
+                    }"
+                  />
+                  <div *ngIf="(submitted || f.pnrNo.touched) && f.pnrNo.errors" class="invalid-feedback">
+                    <div *ngIf="f.pnrNo.errors.required">Please enter PNR No</div>
+                    <div *ngIf="f.pnrNo.errors?.pnrNoExists">This PNR No is already taken.</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-3">
+                <div class="form-group mb-2">
+                  <label for="reqid"> Office ID</label>
+                  <input
+                    type="number"
+                    id="officeId"
+                    (keypress)="numberOnly($event)"
+                    placeholder="Office ID"
+                    class="form-control square"
+                    name="officeId"
+                    formControlName="officeId"
+                  />
+                </div>
+              </div>
+              <div class="col-2 mt-3">
+                <button
+                  type="submit"
+                  *ngIf="!isEdit"
+                  (click)="onSubmit()"
+                  class="btn btn-primary mr-2 mb-1"
+                  [disabled]="importForm?.invalid"
+                >
+                  <i class="ft-download"></i>
+                  Import
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

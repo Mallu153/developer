@@ -1,0 +1,113 @@
+<!--table starts-->
+<section id="ng-tables">
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-content">
+          <div class="card-body">
+            <form>
+              <div class="form-group form-inline justify-content-end">
+                Search:
+                <input
+                  class="form-control ml-2"
+                  type="text"
+                  name="searchTerm"
+                  [(ngModel)]="customizableTableService.searchTerm"
+                />
+                <span class="ml-3" *ngIf="customizableTableService.loading$ | async">Loading...</span>
+              </div>
+
+              <div class="table-responsive">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col" sortable="name" (sort)="onSort($event)">Name</th>
+                      <th scope="col" sortable="area" (sort)="onSort($event)">Mobile</th>
+                      <th scope="col" sortable="email" (sort)="onSort($event)">Email</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    <tr *ngFor="let data of tableData$ | async">
+                      <th scope="row">
+                        <div class="customer-id d-flex align-items-center">
+                          <span>
+                            {{ data.paxId }}
+                          </span>
+
+                          <div class="checkbox ml-1">
+                            <input
+                              (change)="onProfileCheckboxChage($event, data)"
+                              type="checkbox"
+                              id="{{ data.paxId }}-{{ data.firstName }}"
+                            />
+
+                            <label for="{{ data.paxId }}-{{ data.firstName }}"></label>
+                          </div>
+                        </div>
+                      </th>
+
+                      <td>
+                        <ngb-highlight
+                          [result]="data.firstName"
+                          [term]="customizableTableService.searchTerm"
+                        ></ngb-highlight>
+                      </td>
+                      <td>
+                        <ngb-highlight
+                          [result]="data.mobile | phone"
+                          [term]="customizableTableService.searchTerm"
+                        ></ngb-highlight>
+                      </td>
+
+                      <td>
+                        <ngb-highlight
+                          [result]="data.email"
+                          [term]="customizableTableService.searchTerm"
+                        ></ngb-highlight>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="d-flex justify-content-between p-2">
+                <ngb-pagination
+                  [collectionSize]="total$ | async"
+                  [(page)]="customizableTableService.page"
+                  [pageSize]="customizableTableService.pageSize"
+                >
+                </ngb-pagination>
+
+                <select
+                  class="custom-select"
+                  style="width: auto"
+                  name="pageSize"
+                  [(ngModel)]="customizableTableService.pageSize"
+                >
+                  <option [ngValue]="2">2 items per page</option>
+                  <option [ngValue]="4">4 items per page</option>
+                  <option [ngValue]="6">6 items per page</option>
+                </select>
+              </div>
+
+              <div class="form-row">
+                <div class="col-md-12">
+                  <div class="form-actions text-right">
+                    <button (click)="onFormDataSubmit()" type="button" class="btn btn-primary">
+                      <div class="btn-wrapper d-flex align-items-center">
+                        Go <i class="fa ft-arrow-right-circle ml-1"></i>
+                      </div>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!--table ends-->

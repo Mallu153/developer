@@ -1,0 +1,126 @@
+/* ------------------------------------------------------------ *\
+	Table css
+\* ------------------------------------------------------------ */
+.pointer {
+  cursor: pointer;
+}
+.listtr {
+  background: #975aff;
+  color: #ffffff;
+  padding: 10px;
+}
+thead {
+  background: #975aff;
+}
+
+th {
+  color: #ffffff;
+  white-space: nowrap;
+  font-size: 14px;
+}
+th,
+td,
+td {
+  border-bottom-width: 0;
+}
+
+.table td,
+.table th {
+  font-size: 14px !important;
+  text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  padding: 14px;
+}
+
+.table th {
+  border-top: 0px solid #975aff;
+}
+
+.table-responsive {
+  border: 0px solid #cecece;
+}
+
+.wrap-text {
+  word-wrap: break-word;
+}
+@media (max-width: 767px) {
+  table {
+    table-layout: fixed;
+    width: 100%;
+    *margin-left: -100px;
+    /*ie7*/
+  }
+  td {
+    border-top: 1px solid #ccc;
+    padding: 10px;
+    width: 130px;
+  }
+  tr {
+    height: 40px !important;
+  }
+
+  th {
+    border-top: 1px solid #ccc;
+    padding: 10px;
+    width: 110px;
+    vertical-align: middle;
+  }
+  th.col2 {
+    border-top: 1px solid #ccc;
+    padding: 10px;
+    width: 130px;
+    vertical-align: middle;
+  }
+  ::ng-deep .thcol1 {
+    padding-top: 20px;
+  }
+  ::ng-deep .table thead th {
+    vertical-align: middle;
+    height: 54px;
+  }
+
+  .col1 {
+    position: absolute;
+    *position: relative;
+    /*ie7*/
+    left: 0;
+    width: 130px;
+  }
+  .outer {
+    position: relative;
+  }
+  .inner {
+    overflow-x: scroll;
+    overflow-y: visible;
+    width: calc(100% - 130px);
+    margin-left: 130px;
+  }
+}
+
+@media (min-width: 768px) {
+  .inner {
+    overflow-x: visible;
+    overflow-y: visible;
+    width: calc(100% - 0px);
+    margin-left: 0px;
+  }
+  .col1 {
+    position: inherit;
+    *position: relative;
+    /*ie7*/
+    left: 0;
+    width: auto;
+  }
+  th {
+    border-top: 1px solid #ccc;
+    padding: 10px;
+    width: 200px;
+    vertical-align: middle;
+  }
+  .table td,
+  .table th {
+    width: 10%;
+  }
+}

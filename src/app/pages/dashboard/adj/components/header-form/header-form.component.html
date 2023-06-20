@@ -1,0 +1,55 @@
+
+<section id="basic-hidden-label-form-layouts">
+  <div class="row match-height">
+    <div class="col-lg-12 col-md-12 col-12 ">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title">{{PageTitle}}</h4>
+        </div>
+        <div class="card-content">
+          <div class="card-body">
+            <form [formGroup]="headerForm" class="form">
+              <div class="form-row">
+                <div class="col-12 col-md-3">
+                  <label for="pnrno">PNRNO</label>
+                  <input type="email" class="form-control form-control-sm square"
+                    [ngClass]="{ 'is-invalid': (submitted || f.pnrno.touched) && f.pnrno.errors }"
+                    id="pnrno" placeholder=" Enter Your PNR Number" formControlName="pnrno" />
+                  <div *ngIf="(submitted || f.pnrno.touched) && f.pnrno.errors" class="invalid-feedback">
+                    <div *ngIf="f.pnrno.errors.required">pnrno is required</div>
+                  </div>
+                </div>
+                 <div class="col-12 col-md-2 mt-3">
+                  <button type="button" (click)="onPnrSearch()" class="btn btn-primary ">
+                    <i class="fa ft-search mr-1"></i>
+                    <span> Search </span>
+                  </button>
+
+                </div>
+
+              </div>
+            </form>
+           <!--  <div class="text-center" *ngIf="createnewContact">
+              <ngb-alert type="light-info" class="mb-2" [dismissible]="false">
+                <span class="mb-0">No Found Pax Data We Can </span>
+                <a (click)="gotoNewPaxForm()" class="font-weight-bold text-info">Create</a>
+              </ngb-alert>
+            </div>
+            <div class="text-center" *ngIf="customerIDCheck">
+              <ngb-alert type="light-info" class="mb-2" [dismissible]="false">
+                <span class="mb-0">No data found with the given search criteria </span>
+                <a class="font-weight-bold text-info" (click)="gotoContactForm()">Click here,to create a Corporate
+                  Contact</a>
+                <span class="mb-0"> Or </span>
+                &nbsp;&nbsp;
+                <a class="font-weight-bold text-info">Proceed for Retail</a>
+              </ngb-alert>
+            </div> -->
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

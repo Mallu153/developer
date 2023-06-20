@@ -1,0 +1,197 @@
+<app-request-details></app-request-details>
+<section id="basic-hidden-label-form-layouts" *ngIf="hotelPnrData">
+  <div class="row match-height">
+    <div class="col-lg-12 col-12">
+      <div class="card">
+        <div class="card-content">
+          <div class="card-body">
+            <form [formGroup]="hotelbookingPnrForm">
+              <div class="table-responsive">
+                <table class="table m-0">
+                  <thead formArrayName="room_number">
+                    <tr>
+                      <th>Room Number</th>
+                      <th  class="border-right text-center" *ngFor="let room_no of  pnr_room_number().controls; let room_no_index = index;trackBy: trackByFn" [formGroupName]="room_no_index" >
+                        Room {{room_no.value.room_number}} - {{hotelPnrData?.room_name[room_no_index]}}({{hotelPnrData?.room_type[room_no_index]}})
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr formArrayName="room_check_in_date">
+                      <th scope="row">Check In</th>
+                      <td  class="border-right text-center" *ngFor="let check_in of pnr_room_check_in_date().controls; let check_in_index = index;trackBy: trackByFn" [formGroupName]="check_in_index"
+                      >
+                      <input
+                      type="date"
+                      id="room_check_in{{ check_in_index }}"
+                      name="room_check_in{{ check_in_index }}"
+                      class="form-control form-control-sm square flight__input__width "
+                      formControlName="room_check_in_date"
+                    />
+                    </td>
+                    </tr>
+                    <tr formArrayName="room_check_out_date">
+                      <th scope="row">Check Out</th>
+                      <td  class="border-right text-center" *ngFor="let check_out of pnr_room_check_out_date().controls; let check_out_index = index;trackBy: trackByFn" [formGroupName]="check_out_index"
+                      >
+                      <input
+                      type="date"
+                      id="room_check_out{{ check_out_index }}"
+                      name="room_check_out{{ check_out_index }}"
+                      class="form-control form-control-sm square flight__input__width "
+                      formControlName="room_check_out_date"
+                    />
+                    </td>
+                    </tr>
+                    <tr formArrayName="room_type">
+                      <th scope="row">Room Type</th>
+                      <td  class="border-right text-center" *ngFor="let check_out of pnr_room_type().controls; let room_type_index = index;trackBy: trackByFn" [formGroupName]="room_type_index"
+                      >
+
+                    <select
+                    id="room_type{{ room_type_index }}"
+                    name="room_type{{ room_type_index }}"
+                    class="form-control form-control-sm square flight__input__width"
+                    formControlName="room_type"
+                  >
+                    <option value="">Choose</option>
+                    <option *ngFor="let room_type of room_type_details;trackBy: trackByFn" [value]="room_type.description.content">
+                      {{ room_type.description.content }}
+                    </option>
+                  </select>
+                    </td>
+                    </tr>
+                    <tr formArrayName="room_name">
+                      <th scope="row">Room</th>
+                      <td  class="border-right text-center" *ngFor="let room_name_data of pnr_room_name().controls; let room_name_index = index;trackBy: trackByFn" [formGroupName]="room_name_index"
+                      >
+
+                    <select
+                    id="room_Name{{ room_name_index }}"
+                      name="room_Name{{ room_name_index }}"
+                    class="form-control form-control-sm square flight__input__width"
+                    formControlName="room_name"
+                  >
+                    <option value="">Choose</option>
+                    <option *ngFor="let room_name of room_name_details ; trackBy: trackByFn" [value]="room_name.description">
+                      {{ room_name.description }}
+                    </option>
+                  </select>
+                    </td>
+                    </tr>
+                    <tr formArrayName="room_number">
+                      <th scope="row">Cancel</th>
+                      <td  class="border-right text-center" *ngFor="let room_no of  pnr_room_number().controls; let room_no_index = index;trackBy: trackByFn" [formGroupName]="room_no_index" >
+                        <div class="checkbox mb-1 flight__input__width">
+                          <input type="checkbox" id="room_cancel_{{ room_no_index }}" formControlName="cancel_flag" />
+                          <label for="room_cancel_{{ room_no_index }}"><span></span></label>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr formArrayName="room_hotel">
+                      <th scope="row">Hotel</th>
+                      <td  class="border-right text-center" *ngFor="let room_hotel_data of pnr_room_hotel().controls; let room_hotel_index = index;trackBy: trackByFn" [formGroupName]="room_hotel_index"
+                      >
+                      <!-- [ngbTypeahead]="onSearchHotelName(hotelPnrData.room_hotel_city_code[room_hotel_index])" -->
+                  <input
+                      type="text"
+                      #typeaheadInstance="ngbTypeahead"
+                      (keydown)="typeaheadKeydown($event)"
+                      [resultTemplate]="searchResultHotelNameTemplate"
+                      [inputFormatter]="hotelNameFormatter"
+                      [ngbTypeahead]="onSearchHotelName(hotel_destination_code)"
+                      (selectItem)="bindValueOfRoomHotelControl($event, room_hotel_index, 'room_hotel')"
+                      id="hotelName{{ room_hotel_index }}"
+                      name="hotelName{{ room_hotel_index }}"
+                      class="form-control form-control-sm square flight__input__width "
+                      formControlName="room_hotel"
+                      (input)="onHotelNameBlur($event)"
+                    />
+                    <ng-template #searchResultHotelNameTemplate let-r="result" let-t="term">
+                      <ngb-highlight [result]="r.hotelName" [term]="t"></ngb-highlight>
+                    </ng-template>
+                    </td>
+                    </tr>
+                    <tr formArrayName="room_hotel_city">
+                      <th scope="row">Place</th>
+                      <td  class="border-right text-center" *ngFor="let room_hotel_city_data of pnr_room_hotel_city().controls; let room_hotel_city_index = index;trackBy: trackByFn" [formGroupName]="room_hotel_city_index"
+                      >
+
+                      <input
+                      type="search"
+                      #typeaheadInstance="ngbTypeahead"
+                      (keydown)="typeaheadKeydown($event)"
+                      [resultTemplate]="searchResultHotelPlaceTemplate"
+                      [inputFormatter]="formatter"
+                      [ngbTypeahead]="onSearchLocation"
+                      id="room_hotel_city{{ room_hotel_city_index }}"
+                      name="room_hotel_city{{ room_hotel_city_index }}"
+                      class="form-control form-control-sm square flight__input__width "
+                      (selectItem)="bindValueOfPlaceControl($event, room_hotel_city_index, 'room_hotel_city')"
+                      formControlName="room_hotel_city"
+                    />
+                    <ng-template #searchResultHotelPlaceTemplate let-r="result" let-t="term">
+                      <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+                    </ng-template>
+                    </td>
+                    </tr>
+                    <!-- <tr>
+                      <th scope="row">Lead</th>
+                      <td>Larry</td>
+                      <td>the Bird</td>
+                      <td>@twitter</td>
+                    </tr> -->
+                   <!--  <tr>
+                      <th scope="row">Email</th>
+                      <td>Larry</td>
+                      <td>the Bird</td>
+                      <td>@twitter</td>
+                    </tr> -->
+                   <!--  <tr>
+                      <th scope="row">Phone Number</th>
+                      <td>Larry</td>
+                      <td>the Bird</td>
+                      <td>@twitter</td>
+                    </tr> -->
+                  </tbody>
+                </table>
+              </div>
+            </form>
+            <div class="pull-left d-flex mb-2 mt-2" >
+              <button
+                type="button"
+                class="btn btn-primary mr-2"
+                (click)="onSubmitHotelPnrForm()"
+                [disabled]="!modifyButtonDisabled"
+              >
+                <i class="ft-bookmark"></i>
+                Save
+              </button>
+              <button
+              type="button"
+              (click)="reloadComponent()"
+              class="btn  mr-2"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              *ngIf="generateCheckListButton"
+              (click)="getCheckListData(requestId,amendment_request_id)"
+            >
+              <i class="ft-file-text mr-1"></i>
+              Generate Check List
+            </button>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<app-generate-check-list [generated_check_list]="flightCheckList" [check_list_action_type]="hotel" *ngIf="flightCheckList &&flightCheckList.length>0"></app-generate-check-list>
+

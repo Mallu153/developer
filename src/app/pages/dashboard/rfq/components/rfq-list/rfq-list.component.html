@@ -1,0 +1,286 @@
+<section id="simple-table">
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title">RFQ List</h4>
+        </div>
+        <div class="card-content">
+          <div class="card-body">
+            <form [formGroup]="supplierFilterForm">
+              <div class="form-row">
+                <div class="col-md-2 col-12">
+                  <div class="form-group mb-2">
+                    <label for="Product">Product</label>
+                    <select id="Product" name="Product" class="form-control square" formControlName="productId">
+                      <option value="">Choose</option>
+                      <option [value]="product.id" *ngFor="let product of productList">
+                        {{ product.name }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-2 col-12">
+                  <div class="form-group mb-2">
+                    <label for="RFQ-ID">RFQ ID</label>
+                    <input
+                      type="number"
+                      formControlName="rfqId"
+                      placeholder="Enter Rfq Id"
+                      id="RFQ-ID"
+                      class="form-control square"
+                      name="RFQ-ID"
+                    />
+                  </div>
+                </div>
+                <div class="col-md-2 col-12">
+                  <div class="form-group mb-2">
+                    <label for="REQUEST-ID">Request ID</label>
+                    <input
+                      type="number"
+                      formControlName="requestId"
+                      placeholder="Enter Request Id"
+                      id="REQUEST-ID"
+                      class="form-control square"
+                      name="REQUEST-ID"
+                    />
+                  </div>
+                </div>
+                <div class="col-md-2 col-12">
+                  <div class="form-group mb-2">
+                    <label for="Request-Line-ID">Request Line ID</label>
+                    <input
+                      type="number"
+                      formControlName="requestLineId"
+                      id="Request-Line-ID"
+                      placeholder="Enter Request Line Id"
+                      class="form-control square"
+                      name="Request-Line-ID"
+                    />
+                  </div>
+                </div>
+                <div class="col-md-2 col-12">
+                  <div class="form-group mb-2">
+                    <label for="customer">Customer</label>
+                    <input
+                      type="search"
+                      id="Customer"
+                      placeholder="Enter Customer Name"
+                      class="form-control square"
+                      name="Customer"
+                      #typeaheadInstance="ngbTypeahead"
+                      [resultTemplate]="searchResultTemplate"
+                      [inputFormatter]="formatter"
+                      [ngbTypeahead]="onSearchCustomer"
+                      formControlName="customerId"
+                      (selectItem)="bindValueOfControl($event, 'customerId')"
+                      (change)="onChangeCustomer($event.target.value)"
+                    />
+                    <ng-template #searchResultTemplate let-r="result" let-t="term">
+                      <ngb-highlight [result]="r.businessName" [term]="t"></ngb-highlight>
+                    </ng-template>
+                  </div>
+                </div>
+                <div class="col-md-2 col-12">
+                  <div class="form-group mb-2">
+                    <label for="Contact">Contact</label>
+                    <select id="Contact" name="Contact" class="form-control square" formControlName="customerContactId">
+                      <option value="">Choose</option>
+                      <option [value]="contact.CUSTOMERCONTACTID" *ngFor="let contact of contactList">
+                        {{ contact.Requestor }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="col-md-3 col-12">
+                  <div class="form-group mb-2">
+                    <label for="Supplier">Supplier</label>
+                    <input
+                      id="supplier"
+                      type="search"
+                      #suppliertypeaheadInstance="ngbTypeahead"
+                      class="form-control square"
+                      placeholder="Enter Supplier Name"
+                      [resultTemplate]="searchSupplierResultTemplate"
+                      [inputFormatter]="Supplierformatter"
+                      formControlName="supplierId"
+                      [ngbTypeahead]="onSearchSupplier"
+                    />
+
+                    <ng-template #searchSupplierResultTemplate let-r="result" let-t="term">
+                      <ngb-highlight [result]="r.businessName" [term]="t"></ngb-highlight>
+                    </ng-template>
+                  </div>
+                </div>
+                <div class="col-md-2 col-12">
+                  <div class="form-group mb-2">
+                    <label for="toCreatedDate">From </label>
+                    <input
+                      type="date"
+                      id="toCreatedDate"
+                      class="form-control square"
+                      name="fromCreatedDate"
+                      formControlName="fromCreatedDate"
+                    />
+                  </div>
+                </div>
+                <div class="col-md-2 col-12">
+                  <div class="form-group mb-2">
+                    <label for="toCreatedDate">To </label>
+                    <input
+                      type="date"
+                      id="toCreatedDate"
+                      class="form-control square"
+                      name="toCreatedDate"
+                      formControlName="toCreatedDate"
+                    />
+                  </div>
+                </div>
+                <div class="col-md-3 col-12">
+                  <div class="form-group mb-2">
+                    <label for="createdBy">Created By</label>
+
+                    <ng-select
+                      [items]="userName$ | async"
+                      bindLabel="fullName"
+                      bindValue="userId"
+                      [minTermLength]="minLengthUserNameTerm"
+                      [loading]="userNameLoading"
+                      typeToSearchText="Please enter {{ minLengthUserNameTerm }} or more characters"
+                      [typeahead]="userNameInput$"
+                      formControlName="createdBy"
+                    >
+                    </ng-select>
+                  </div>
+                </div>
+              </div>
+            </form>
+            <div class="d-flex justify-content-end mb-2">
+              <button type="button" class="btn btn-primary mr-2" (click)="onApplySerachForm()">Search</button>
+              <button type="button" class="btn btn-secondary" (click)="reset()">Cancel</button>
+            </div>
+            <fieldset class="form-group" *ngIf="supplierData && supplierData.length > 0">
+              <label
+                >Show
+                <select
+                  name="users-list-select"
+                  [(ngModel)]="pageSize"
+
+                  class="form-control form-control-sm d-inline-block width-100 p-right-25"
+                >
+                  <option [ngValue]="10">10</option>
+                  <option [ngValue]="15">15</option>
+                  <option [ngValue]="25">25</option>
+                  <option [ngValue]="50">50</option>
+                  <option [ngValue]="100">100</option>
+                </select>
+                entries</label
+              >
+            </fieldset>
+            <div class="table-responsive table" *ngIf="supplierData && supplierData.length > 0">
+              <div class="outer">
+                <div class="inner">
+                  <table class="table m-0">
+                    <thead>
+                      <tr class="refresh pointer">
+                        <th scope="col">S.No</th>
+                        <th scope="col" [appSort]="supplierData" data-order="desc" data-name="productId">Product</th>
+                        <th scope="col" [appSort]="supplierData" data-order="desc" data-name="requestId">
+                          SR-SRLINE-RFQ-S
+                        </th>
+                        <th scope="col" [appSort]="supplierData" data-order="desc" data-name="supplierId">Supplier</th>
+                        <th scope="col" [appSort]="supplierData" data-order="desc" data-name="supplierContact">
+                          Supplier Contact
+                        </th>
+                        <th scope="col" [appSort]="supplierData" data-order="desc" data-name="customerName">
+                          Customer
+                        </th>
+                        <th scope="col" [appSort]="supplierData" data-order="desc" data-name="contactName">
+                          Customer Contact
+                        </th>
+                        <th scope="col" [appSort]="supplierData" data-order="desc" data-name="phoneNo">Phone Number</th>
+                        <th scope="col" [appSort]="supplierData" data-order="desc" data-name="primaryEmail">Email</th>
+
+                        <th scope="col" [appSort]="supplierData" data-order="desc" data-name="userName">Created By</th>
+                        <th scope="col" [appSort]="supplierData" data-order="desc" data-name="createdDate">
+                          Created Date
+                        </th>
+                        <th scope="col">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        *ngFor="
+                          let j of supplierData | filter: searchText | slice: (page - 1) * pageSize:page * pageSize;
+                          index as i;trackBy: trackByFn
+                        "
+                      >
+                        <td >{{ (page - 1) * pageSize + i + 1 }}</td>
+                        <td > {{ j.productName }}</td>
+                        <td >
+                          <span class="text-primary cursor-pointer" (click)="openServiceRequest(j)"> {{ j.requestId }} - {{ j.requestLineId }} </span>
+                          -
+                          <span class="text-primary cursor-pointer" (click)="openPricePopupAllParamas(j)">
+                            {{ j.rfqId }}
+                          </span>
+                          -
+                          <span class="text-primary ">
+                            {{ j.supplierId }}
+                          </span>
+                        </td>
+
+                        <td class="pt-3 wrap-text text-primary " >
+                           {{ j.supplier }}
+                          <span (click)="openPricePopupAllParamas(j)" class="cursor-pointer">{{ '(' + j.countRfqInfo + ')' }}</span>
+                        </td>
+                        <td class="pt-3 wrap-text">{{ j.supplierContact }}</td>
+                        <td class="pt-3 wrap-text">{{ j.customerName }}</td>
+                        <td class="pt-3 wrap-text">{{ j.contactName }}</td>
+                        <td class="pt-3 wrap-text">
+                          <a class="text-primary cursor-pointer" href="tel:{{ j.phoneNo }}">
+                            <i class="ft-phone-call" *ngIf="j.phoneNo"></i>
+                            {{ j.phoneNo }}
+                          </a>
+                        </td>
+                        <td class="pt-3 wrap-text">
+                          <a class="text-primary cursor-pointer" *ngIf="j.primaryEmail" (click)="openEmailForm(j.requestId,j.primaryEmail)">
+                            <i class="fa fa-envelope-o" ></i>
+                            {{ j.primaryEmail }}
+                          </a>
+                        </td>
+                        <td class="pt-3 wrap-text">{{ j.userName }}</td>
+                        <td class="pt-3 wrap-text">{{ j.creationDate }}</td>
+                        <td>
+                          <button type="button" (click)="addPrice(j)" class="btn btn-primary bg-light-primary mr-1 btn-sm">
+                            Add Price
+                          </button>
+                          <button type="button"  (click)="onEditProducts(j)" class="btn btn-sm edit_button">Edit</button>
+                          <button type="button" class="btn btn-sm" (click)="openOtherContacts(j.supplierId)"  >Other Contacts</button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="d-flex justify-content-between p-2" *ngIf="supplierData && supplierData?.length > 0">
+              <p>Showing 1 to {{ pageSize }} of {{ supplierData?.length }} entries</p>
+              <ngb-pagination
+                [collectionSize]="supplierData?.length"
+                [(page)]="page"
+                [maxSize]="10"
+                [boundaryLinks]="true"
+                [pageSize]="pageSize"
+                size="sm"
+                class="d-flex justify-content-center"
+              >
+              </ngb-pagination>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

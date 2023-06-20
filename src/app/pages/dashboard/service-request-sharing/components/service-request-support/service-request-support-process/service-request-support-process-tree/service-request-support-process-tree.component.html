@@ -1,0 +1,44 @@
+<!-- <div class="tree">
+  <ul *ngIf="items?.length > 0" >
+    <li *ngFor="let item of items; let i = index">
+
+      <a > {{ item.toStatus }}</a>
+
+      <app-service-request-support-process-tree
+      *ngIf="item?.transitionDto?.length > 0"
+      [key]="key"
+      [data]="item?.transitionDto"
+    ></app-service-request-support-process-tree>
+    </li>
+  </ul>
+</div> -->
+<!-- <div class="tree-menu-1st-example">
+  <ul *ngIf="items?.length > 0" >
+    <li *ngFor="let item of items; let i = index">
+
+      <a > {{ item.ToStatusName }}</a>
+
+      <app-service-request-support-process-tree
+      *ngIf="item?.childs?.length > 0"
+      [key]="key"
+      [data]="item?.childs"
+    ></app-service-request-support-process-tree>
+    </li>
+  </ul>
+</div> -->
+<div class="tree-menu-1st-example">
+  <ul *ngIf="items?.length > 0">
+    <li *ngFor="let item of items; let i = index">
+      <a class="text-success" *ngIf="item?.children?.length == 0"> {{ item.ToStatusName }}</a>
+      <a class="text-primary" *ngIf="item?.children?.length > 0" (click)="item.isShow = !item.isShow"
+        ><i class="" [ngClass]="item.isShow ? 'ft-minus-square' : 'ft-plus-square'"></i> {{ item.ToStatusName }}</a
+      >
+
+      <app-service-request-support-process-tree
+        *ngIf="item?.children?.length > 0 && item.isShow"
+        [key]="key"
+        [data]="item?.children"
+      ></app-service-request-support-process-tree>
+    </li>
+  </ul>
+</div>

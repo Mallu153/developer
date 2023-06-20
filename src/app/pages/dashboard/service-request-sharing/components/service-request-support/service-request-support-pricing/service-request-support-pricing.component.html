@@ -1,0 +1,42 @@
+<section id="pricing">
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title">Pricing</h4>
+        </div>
+        <div class="card-content">
+          <div class="card-body table-responsive">
+            <table class="table text-center m-0">
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th>Field</th>
+                  <th>Operator</th>
+                  <th>Value</th>
+                  <th>Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let price of prices">
+                  <td>{{ price.item }}</td>
+                  <td>{{ price.field }}</td>
+                  <td>{{ price.operator }}</td>
+                  <td>{{ price.fieldValue }}</td>
+                  <td>
+                    {{ price.charge }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <p>* Taxes applicable</p>
+    </div>
+  </div>
+</section>

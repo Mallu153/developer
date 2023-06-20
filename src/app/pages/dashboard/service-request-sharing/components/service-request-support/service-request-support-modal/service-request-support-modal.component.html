@@ -1,0 +1,68 @@
+<section id="service-request-support-modal">
+  <div class="row match-height">
+    <div class="col-lg-12 col-md-12 col-12">
+      <div class="card">
+        <div class="modal-header">
+          <h4 class="modal-title">Support</h4>
+          <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <!--  <div class="card-header">
+          <h4 class="card-title">{{ pageTitle }}</h4>
+        </div> -->
+        <div class="card-content">
+          <div class="card-body">
+            <ul ngbNav #nav="ngbNav" [(activeId)]="type" class="nav-tabs nav-justified">
+              <li [ngbNavItem]="'instruction'">
+                <a class="btn btn-primary bg-light-primary mr-1" ngbNavLink>Instruction</a>
+                <ng-template ngbNavContent> <p [innerHtml]="serviceType.instructions"></p> </ng-template>
+              </li>
+              <li [ngbNavItem]="'faq'">
+                <a class="btn btn-primary bg-light-primary mr-1" ngbNavLink>Faq's</a>
+                <ng-template ngbNavContent>
+                  <app-service-request-support-faq [serviceType]="serviceType"></app-service-request-support-faq>
+                </ng-template>
+              </li>
+              <li [ngbNavItem]="'process'">
+                <a class="btn btn-primary bg-light-primary mr-1" ngbNavLink>Process</a>
+                <ng-template ngbNavContent>
+                  <app-service-request-support-process
+                    [serviceType]="serviceType"
+                  ></app-service-request-support-process>
+                </ng-template>
+              </li>
+              <li [ngbNavItem]="'price'">
+                <a class="btn btn-primary bg-light-primary mr-1" ngbNavLink>Pricing</a>
+                <ng-template ngbNavContent>
+                  <app-service-request-support-pricing
+                    [serviceType]="serviceType"
+                  ></app-service-request-support-pricing>
+                </ng-template>
+              </li>
+              <li [ngbNavItem]="'attachments'">
+                <a class="btn btn-primary bg-light-primary mr-1" ngbNavLink>Attachments</a>
+                <ng-template ngbNavContent>
+                  <app-service-request-support-attachments
+                    [serviceType]="serviceType"
+                  ></app-service-request-support-attachments>
+                </ng-template>
+              </li>
+              <li [ngbNavItem]="'documents'">
+                <a class="btn btn-primary bg-light-primary mr-1" ngbNavLink>Documents</a>
+                <ng-template ngbNavContent>
+                  <app-service-request-support-documents
+                    [serviceType]="serviceType"
+                  ></app-service-request-support-documents>
+                </ng-template>
+              </li>
+            </ul>
+
+            <div [ngbNavOutlet]="nav"></div>
+            <!-- class="mt-2" -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

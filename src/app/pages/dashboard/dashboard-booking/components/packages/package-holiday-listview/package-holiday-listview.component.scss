@@ -1,0 +1,222 @@
+.day__active {
+  font-weight: bold !important;
+  background: #fff !important;
+  border-radius: 20px !important;
+  border: 1px solid #008cff !important;
+  color: #4a4a4a !important;
+}
+.dayplan-title {
+  /* font-size: 13px;
+  color: #000;
+  font-weight: 600;
+  padding: 10px 27px;
+  display: inline-block;
+  align-items: center;
+  background: linear-gradient(87deg, #f4d1ca 15%, #e2d9b2 100%) !important;
+  border-radius: 6px 0 0 0;
+  max-width: 250px; */
+  font-size: 13px;
+  color: #2f8be6;
+  font-weight: 600;
+  padding: 10px 27px;
+  display: inline-block;
+  align-items: center;
+  background: #fff;
+  border-radius: 4px 0 0 0;
+  max-width: 250px;
+  border: 1px solid #e0e0e0;
+  border-top: none;
+  border-left: none;
+}
+
+.day-plan-incusions-container {
+  display: inline-block;
+  flex-direction: row;
+  justify-content: flex-end;
+  flex: 1;
+  align-items: center;
+}
+.day-plan-inclusions {
+  display: inline-block;
+}
+
+.flight-row-title {
+  font-size: 14px;
+  color: #4a4a4a;
+}
+
+.show_filters {
+  display: block !important;
+}
+.not_filters {
+  display: none !important;
+}
+
+.flight-row-body {
+  display: flex;
+  flex-direction: row;
+  margin-top: 15px;
+}
+.flight-row-airline-details {
+  margin-left: 25px;
+  padding-right: 5px;
+  width: 50px;
+  box-sizing: border-box;
+}
+
+:host ::ng-deep.dropdown-toggle::after {
+  display: none;
+}
+.socialm a.btn-outline-info {
+  text-decoration: none;
+  background-color: #f7f7f7;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#f7f7f7), to(#e7e7e7));
+  background-image: -webkit-linear-gradient(top, #f7f7f7, #e7e7e7);
+  background-image: -moz-linear-gradient(top, #f7f7f7, #e7e7e7);
+  background-image: -ms-linear-gradient(top, #f7f7f7, #e7e7e7);
+  background-image: -o-linear-gradient(top, #f7f7f7, #e7e7e7);
+  color: #909090;
+  position: relative;
+  text-align: center;
+  border-radius: 50%;
+  box-shadow: 0px 1px 2px #c9c9c9, inset 0px 1px 0px #fff;
+  border: solid 1px transparent;
+  font-size: 16px;
+  width: 34px;
+}
+.socialm a.btn-outline-info:hover {
+  text-decoration: none;
+  background-color: #f7f7f7 !important;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#f7f7f7), to(#e7e7e7));
+  background-image: -webkit-linear-gradient(top, #f7f7f7, #e7e7e7);
+  background-image: -moz-linear-gradient(top, #f7f7f7, #e7e7e7);
+  background-image: -ms-linear-gradient(top, #f7f7f7, #e7e7e7);
+  background-image: -o-linear-gradient(top, #f7f7f7, #e7e7e7);
+  color: #2f8be6 !important;
+  position: relative;
+  text-align: center;
+  border-radius: 50%;
+  box-shadow: 0px 1px 2px #c9c9c9, inset 0px 1px 0px #fff;
+  border: solid 1px transparent;
+}
+.margin-left-auto {
+  margin-left: auto;
+}
+
+.menu-bar {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+}
+
+.arrow {
+  border: none;
+  background: white;
+  font-size: 30px;
+  color: #2f8be6;
+  cursor: pointer;
+  margin: 0 10px;
+  padding: 5px;
+}
+.arrow.right-arrow {
+  position: absolute;
+  right: 20px;
+}
+
+/* .left-arrow {
+  transform: rotate(180deg);
+} */
+
+.menu-list {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  overflow-y: hidden; /* add this line to hide the vertical scrollbar */
+  -webkit-overflow-scrolling: touch;
+  white-space: nowrap;
+}
+
+.menu-item {
+  padding: 10px;
+  margin-right: 10px;
+  //background-color: #eee;
+  //border-radius: 5px;
+  //font-size: 16px;
+  //font-weight: bold;
+  //text-transform: uppercase;
+}
+
+.btn.btn-b1.btn-outline-primary1 {
+  border-bottom: 4px solid #2f8be6;
+  background: rgba(47, 139, 230, 0.1);
+  border-radius: 0;
+}
+.btn.btn-b1 {
+  border-bottom: 4px solid #ffffff;
+  color: #000;
+}
+.btn.btn-b1 strong {
+  color: #0d58d9;
+}
+.day__header {
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  background: #f7f7f7;
+  color: #2470c7;
+}
+.font-sm {
+  font-size: 18px;
+  font-weight: 600;
+}
+.rounded-10 {
+  width: 25px;
+  height: 25px;
+  text-align: center;
+  font-weight: 600;
+  border-radius: 30px;
+  line-height: 25px;
+  font-size: 14px;
+  margin: 0 30px 0 10px;
+}
+
+.bg-blue {
+  color: #ffffff;
+  background: #0d58d9;
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  border-radius: 50%;
+  line-height: 39px;
+}
+
+.bg-orange {
+  color: #ffffff;
+  background: #f98752;
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  border-radius: 50%;
+  line-height: 39px;
+}
+
+.bg-green {
+  color: #ffffff;
+  background: #58b368;
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  border-radius: 50%;
+  line-height: 39px;
+}
+.bg-ppl {
+  color: #ffffff;
+  background: #883cf1;
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  border-radius: 50%;
+  line-height: 39px;
+}

@@ -1,0 +1,51 @@
+
+<div  *ngIf="priceApiResponseData && priceApiResponseData.length >0">
+  <div class="modal-header">
+    <h4 class="modal-title py-1" *ngIf="rfqId">Option Received for RFQ #{{rfqId?.rfqId}}</h4>
+    <h4 class="modal-title py-1" *ngIf="unicIDOptions">Option Received from {{selectedSupplierName}} for  RFQ #{{unicIDOptions.rfqId}} & SR-Line {{unicIDOptions.srLine}}</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="table-responsive">
+      <table class="table m-0">
+        <thead>
+          <tr class="refresh">
+            <th scope="col">Supplier</th>
+            <th scope="col">Service Request Name</th>
+            <th scope="col">Price</th>
+            <th scope="col"></th>
+
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let price of priceApiResponseData; let i=index; trackBy: trackByFn">
+            <td>
+
+              <span class="text-primary cursor-pointer"
+              (click)=" offline(price.productId,price.bookingChannel,price.bookingId,price.bookingReferenceNo)">
+              {{price?.serviceRequestNo}}-{{price?.serviceRequestLineNo}}-{{price?.rfqId}}- {{price?.bookingId}}-{{selectedSupplierName}}
+              </span>
+            </td>
+            <td>
+              {{price?.serviceRequestLineName}}
+            </td>
+
+            <td>
+              {{price?.totalAmount}}
+            </td>
+
+            <td>
+              <button class="btn btn-link" (click)="onSaveQuote(price.bookingId,price.productId,price.bookingReferenceNo)">Add to Quote</button>
+             </td>
+
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light" (click)="activeModal.close('Close click')">Close</button>
+  </div>
+</div>

@@ -1,0 +1,190 @@
+.halfsize {
+  max-width: 90px;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+/* :host ::ng-deep .ng-select .ng-select-container {
+  border-radius: 0px;
+} */
+/* /input type=number increment hiddeen css/ */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  /* display: none; <- Crashes Chrome on hover */
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+input[type='number']:hover {
+  -moz-appearance: textfield; /* Firefox */
+  appearance: textfield; /* Firefox */
+}
+.round-img img {
+  height: auto;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+}
+
+.img-out {
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  border: 1px solid #cecece;
+  overflow: hidden;
+  position: relative;
+  margin: auto;
+}
+
+.round-img {
+  position: relative;
+  text-align: center;
+}
+
+.uploadtxt {
+  text-align: center;
+  font-size: 11px;
+  color: #0b44a0;
+  font-weight: bold;
+}
+
+.round-img input {
+  opacity: 0;
+  position: absolute;
+  width: 100px;
+  left: 0;
+  right: 0;
+  top: 0;
+  margin: auto;
+  height: 122px;
+  cursor: pointer;
+}
+
+// loading csse
+.lds-spinner {
+  color: official;
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+.lds-spinner div {
+  transform-origin: 40px 40px;
+  animation: lds-spinner 1.2s linear infinite;
+}
+.lds-spinner div:after {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 3px;
+  left: 37px;
+  width: 6px;
+  height: 18px;
+  border-radius: 20%;
+  background: #975aff;
+}
+.lds-spinner div:nth-child(1) {
+  transform: rotate(0deg);
+  animation-delay: -1.1s;
+}
+.lds-spinner div:nth-child(2) {
+  transform: rotate(30deg);
+  animation-delay: -1s;
+}
+.lds-spinner div:nth-child(3) {
+  transform: rotate(60deg);
+  animation-delay: -0.9s;
+}
+.lds-spinner div:nth-child(4) {
+  transform: rotate(90deg);
+  animation-delay: -0.8s;
+}
+.lds-spinner div:nth-child(5) {
+  transform: rotate(120deg);
+  animation-delay: -0.7s;
+}
+.lds-spinner div:nth-child(6) {
+  transform: rotate(150deg);
+  animation-delay: -0.6s;
+}
+.lds-spinner div:nth-child(7) {
+  transform: rotate(180deg);
+  animation-delay: -0.5s;
+}
+.lds-spinner div:nth-child(8) {
+  transform: rotate(210deg);
+  animation-delay: -0.4s;
+}
+.lds-spinner div:nth-child(9) {
+  transform: rotate(240deg);
+  animation-delay: -0.3s;
+}
+.lds-spinner div:nth-child(10) {
+  transform: rotate(270deg);
+  animation-delay: -0.2s;
+}
+.lds-spinner div:nth-child(11) {
+  transform: rotate(300deg);
+  animation-delay: -0.1s;
+}
+.lds-spinner div:nth-child(12) {
+  transform: rotate(330deg);
+  animation-delay: 0s;
+}
+@keyframes lds-spinner {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes bouncing {
+  0% {
+    top: 40%;
+  }
+  100% {
+    top: 30%;
+  }
+}
+
+@keyframes fadein {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+.page-overlay-wrapper {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  z-index: 1009;
+  //background: rgba(112, 191, 93, 0.5);
+
+  .bee-spinner {
+    width: 20%;
+    height: 20%;
+    position: fixed;
+    top: 30%;
+    left: calc(75% - 20%);
+    z-index: 100;
+    //background-image: url(../../assets/bee-spinner.png);
+    background-repeat: no-repeat;
+    background-size: 97%;
+    //animation: bouncing 0.4s cubic-bezier(0.1, 0.25, 0.1, 1) 0s infinite alternate both;
+  }
+}
+.ng-select.custom .ng-select-container  {
+  border-radius: 1px !important;
+}

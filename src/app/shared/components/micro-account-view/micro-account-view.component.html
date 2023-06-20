@@ -1,0 +1,178 @@
+<section id="vertical-timeline-center" class="timeline-center timeline-wrapper col-sm-10 col-12 offset-sm-1">
+  <div *ngIf="view_type_str === 'table'">
+    <div class="card">
+      <div class="card-content">
+        <div class="card-body">
+          <table class="table table-bordered table-sm m-0">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Transaction Details</th>
+                <th>Debit</th>
+                <th>Credit</th>
+                <th>Balance</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let micro_account of micro_accountData; let i = index;trackBy: trackByFn">
+                <td>{{ micro_account.reference_date_time | date: 'medium' }}</td>
+                <td>
+                  {{ micro_account.traction_from | titlecase }} - {{ micro_account.reference_head }} -
+                  {{ micro_account.reference_value }}
+                </td>
+                <td align="right">{{ micro_account.debit | number: '1.2-2' }}</td>
+                <td align="right">{{ micro_account.credit | number: '1.2-2' }}</td>
+                <td align="right">{{ micro_account.balance | number: '1.2-2' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="view_type_str === 'timeline'">
+    <div *ngFor="let micro_account of micro_accountData; let i = index;trackBy: trackByFn">
+      <ul class="timeline" *ngIf="micro_account.date_header">
+        <li class="timeline-line mt-4"></li>
+        <li class="timeline-group">
+          <h5>
+            <span class="badge badge-primary cursor-default">
+              {{ micro_account.reference_date_time | date: 'dd-MMM-yyyy' }}
+            </span>
+          </h5>
+        </li>
+      </ul>
+      <ul class="timeline">
+        <li class="timeline-line"></li>
+
+        <li class="timeline-item timeline-item-{{ micro_account.traction_type }}">
+          <div class="timeline-badge">
+            <span
+              class="bg-primary bg-lighten-4"
+              data-toggle="tooltip"
+              placement="right"
+              ngbTooltip="{{ micro_account.traction_type | titlecase }}"
+            >
+              <i
+                class="fa info"
+                [ngClass]="{
+                  'fa-money': micro_account.traction_from === 'receipt',
+                  'fa-money-payment': micro_account.traction_from === 'payment',
+                  'fa-ticket': micro_account.traction_from === 'issue',
+                  'fa-ticket-cancel': micro_account.traction_from === 'cancel'
+                }"
+              ></i>
+            </span>
+          </div>
+          <div class="timeline-card card shadow-z-1">
+            <div class="card-content">
+              <div class="card-body">
+                <table class="col-12 table-bordered table-sm">
+                  <tr>
+                    <th class="text-right">Reference</th>
+                    <td>
+                      {{ micro_account.reference_head }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <th class="text-right">Sub Reference</th>
+                    <td>
+                      {{ micro_account.reference_value }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <th class="text-right">Transaction Type</th>
+                    <td>
+                      {{ micro_account.traction_type | titlecase }} ({{ micro_account.traction_from | titlecase }})
+                    </td>
+                  </tr>
+                  <tr>
+                    <th class="text-right">Transaction Date</th>
+                    <td>
+                      {{ micro_account.reference_date_time | date: 'medium' }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <th class="text-right">Transaction Amount</th>
+                    <td align="right">
+                      {{ micro_account.transaction_amount | number: '1.2-2' }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <th class="text-right">Balance</th>
+                    <td align="right">
+                      {{ micro_account.balance | number: '1.2-2' }}
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <!-- <li class="timeline-item mt-5" *ngIf="micro_account.traction_type ==='debit'">
+      <div class="timeline-badge">
+        <span class="avatar" data-toggle="tooltip" placement="left" ngbTooltip="Debit">
+          <i class="fa fa-money  primary"></i>
+        </span>
+      </div>
+      <div class="timeline-card card shadow-z-1">
+        <div class="card-body">
+          <table class="col-12 table-bordered table-sm">
+            <tr>
+              <th>
+                Reference
+              </th>
+              <td>
+               {{micro_account.reference_head}}
+              </td>
+            </tr>
+            <tr>
+              <th>
+                Sub Reference
+              </th>
+              <td>
+               {{micro_account.reference_value}}
+              </td>
+            </tr>
+            <tr>
+              <th>
+                Traction Type
+              </th>
+              <td>
+               {{micro_account.traction_type}}
+              </td>
+            </tr>
+            <tr>
+              <th>
+                Traction Amount
+              </th>
+              <td>
+               {{micro_account.transaction_amount}}
+              </td>
+            </tr>
+            <tr>
+              <th>
+                Balance
+              </th>
+              <td>
+               {{micro_account.balance}}
+              </td>
+            </tr>
+            <tr>
+              <th>
+                Transction Date
+              </th>
+              <td>
+               {{micro_account.reference_date_time | date: 'dd-MMM-yyyy'}}
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </li> -->
+      </ul>
+    </div>
+  </div>
+</section>

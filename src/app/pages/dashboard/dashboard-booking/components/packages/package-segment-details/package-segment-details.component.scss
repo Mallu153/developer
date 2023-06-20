@@ -1,0 +1,46 @@
+.segment-menu-bar {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+}
+
+.arrow {
+  border: none;
+  background: white;
+  font-size: 30px;
+  color: #2f8be6;
+  cursor: pointer;
+  margin: 0 0px;
+  padding: 0px;
+}
+.arrow.right-arrow {
+  position: absolute;
+  right: 20px;
+}
+
+/* .left-arrow {
+  transform: rotate(180deg);
+} */
+
+.segment-menu-list {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  overflow-y: hidden; /* add this line to hide the vertical scrollbar */
+  -webkit-overflow-scrolling: touch;
+  white-space: nowrap;
+}
+
+.segment-menu-item {
+  padding: 10px;
+  margin-right: 10px;
+  //background-color: #eee;
+  //border-radius: 5px;
+  //font-size: 16px;
+  //font-weight: bold;
+  //text-transform: uppercase;
+  font-weight: 500;
+  font-size: 17px;
+}

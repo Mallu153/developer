@@ -1,0 +1,23 @@
+.product-side-navbar-sr li {
+  -webkit-box-shadow: 0 0.125rem 0.25rem rgb(0 0 0 / 8%);
+  -moz-box-shadow: 0 0.125rem 0.25rem rgb(0 0 0 / 8%);
+  box-shadow: 0 0.125rem 0.25rem rgb(0 0 0 / 8%);
+  border-radius: 10px 0px 0px 10px;
+  -moz-border-radius: 10px 0px 0px 10px;
+  -webkit-border-radius: 10px 0px 0px 10px;
+  margin-bottom: 4px;
+  min-height: 38px;
+  background: rgb(47, 139, 230);
+  background: linear-gradient(90deg, rgba(47, 139, 230, 1) 0%, rgba(78, 161, 244, 1) 100%);
+}
+.nav-link {
+  display: block;
+  padding: 9px 9px 0px 9px !important;
+  color: #ffffff;
+}
+
+@media only screen and (min-width: 320px) and (max-width: 1024px) {
+  .product-side-navbar-sr {
+    display: none;
+  }
+}

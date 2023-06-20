@@ -1,0 +1,1121 @@
+<section class="section-flight">
+  <div class="card">
+    <div *ngIf="hotelLinesData?.lineStatus" class="mobile-none margin-left-auto segment-line-status-name ">
+      {{hotelLinesData.lineStatus}}
+    </div>
+    <div class="card-content">
+      <div class="card-body py-1 px-2">
+
+        <div class="section__body">
+
+          <form [formGroup]="hotelForm">
+            <div class="form-container position-relative">
+
+              <div class="form-body">
+                <div class="row m-0">
+                  <div class="form-row-city align-items-top shadow-sm mb-3 srchbar position-relative">
+                    <ul class="nav position-abs mobile-none">
+                      <li class="nav-item">
+                        <a class="nav-link px-1">
+                          <i class="fa fa-bed text-primary" style="font-size: 20px"></i>
+                        </a>
+                      </li>
+                      <li class="nav-item" placement="left" ngbTooltip="Add Hotel" *ngIf="isEdit">
+                        <a class="nav-link px-1"
+                          ><i class="ft-plus-square text-primary" (click)="resetFormData()" style="font-size: 25px"></i
+                        ></a>
+                      </li>
+                    </ul>
+                    <div class="fm-from form-group citygroup mb-0 pr-4 hotel-up" style="width: auto">
+                      <label for="cityhotelarea"
+                        >Location ,City , Hotel Or Area
+                        <ul class="list-unstyled mb-0 pull-right" *ngIf="keys?.includes(hotelGeoLocation)">
+                          <li class="d-inline-block mr-2 mb-2 mobile-none">
+                            <div class="checkbox">
+                              <input type="checkbox" id="location" formControlName="lineSearchType" /><label
+                                for="location"
+                                ><span>GeoLocation</span></label
+                              >
+                            </div>
+                          </li>
+                        </ul>
+                      </label>
+
+                      <div class="position-relative has-icon-left" *ngIf="hotelForm.value.lineSearchType === false">
+                        <input
+                          id="cityhotelarea"
+                          type="text"
+                          placeholder="Ex. PARIS , France(PAR)"
+                          #typeaheadInstance="ngbTypeahead"
+                          formControlName="lineLocation"
+                          class="trav_inputField pl-3"
+                          style="border: none"
+                          (keydown)="typeaheadKeydown($event)"
+                          [resultTemplate]="searchResultTemplate"
+                          [inputFormatter]="formatter"
+                          title="{{ hotelForm.value.lineLocation?.name }}"
+                          [ngbTypeahead]="onSearchLocation"
+                          [ngClass]="{ 'is-invalid': (submitted || f.lineLocation.touched) && f.lineLocation.errors }"
+                        />
+                        <!--  (selectItem)="bindValueOfControl($event, 'lineLocation')" -->
+                        <ng-template #searchResultTemplate let-r="result" let-t="term">
+                          <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+                        </ng-template>
+                        <div class="form-control-position mobile-none" style="top: 3px; left: -12px">
+                          <i class="ft-map-pin" style="font-size: 24px"></i>
+                        </div>
+                        <div
+                          *ngIf="(submitted || f.lineLocation.touched) && f.lineLocation.errors"
+                          class="invalid-feedback"
+                        >
+                          <div *ngIf="f.lineLocation.errors.required">Please enter your City , Hotel Or Area</div>
+                        </div>
+                      </div>
+                      <div class="position-relative has-icon-left" *ngIf="hotelForm.value.lineSearchType === true">
+                        <input
+                          id="cityhotelarea"
+                          type="text"
+                          placeholder="Ex. PARIS , France(PAR)"
+                          formControlName="lineLocation"
+                          class="trav_inputField pl-3"
+                          style="border: none"
+                          value="{{ hotelForm.value.lineLocation?.name }}"
+                          ngx-google-places-autocomplete
+                          (onAddressChange)="handleAddressChange($event)"
+                          title="{{ hotelForm.value.lineLocation?.name }}"
+                          [ngClass]="{ 'is-invalid': (submitted || f.lineLocation.touched) && f.lineLocation.errors }"
+                        />
+                        <div class="form-control-position" style="top: 3px; left: -12px">
+                          <i class="ft-map-pin" style="font-size: 24px"></i>
+                        </div>
+                        <div
+                          *ngIf="(submitted || f.lineLocation.touched) && f.lineLocation.errors"
+                          class="invalid-feedback"
+                        >
+                          <div *ngIf="f.lineLocation.errors.required">Please enter your City , Hotel Or Area</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="trav-dates position-relative">
+                      <div class="form-group citygroup date-icon">
+                        <label>Check In</label>
+                        <div class="col-12 m-pl-0 mobile-none p-0">
+                          <div class="dp-hidden position-absolute">
+                            <div class="input-group">
+                              <input
+                                name="datepicker"
+                                class="form-control border-0"
+                                ngbDatepicker
+                                #datepicker="ngbDatepicker"
+                                [autoClose]="'outside'"
+                                (dateSelect)="onDateSelection($event, datepicker)"
+                                [displayMonths]="2"
+                                [dayTemplate]="t"
+                                [navigation]="navigation"
+                                outsideDays="hidden"
+                                [startDate]="fromDate!"
+                                tabindex="-1"
+                              />
+                              <ng-template #t let-date let-focused="focused">
+                                <span
+                                  class="custom-day"
+                                  [class.focused]="focused"
+                                  [class.range]="isRange(date)"
+                                  [class.faded]="isHovered(date) || isInside(date)"
+                                  (mouseenter)="hoveredDate = date"
+                                  (mouseleave)="hoveredDate = null"
+                                >
+                                  {{ date.day }}
+                                </span>
+                              </ng-template>
+                            </div>
+                          </div>
+
+                          <div class="input-group">
+                            <input
+                              #dpFromDate
+                              class="form-control border-0 p-0"
+                              placeholder="yyyy-mm-dd"
+                              name="dpFromDate"
+                              [value]="dateFormatter.format(fromDate)"
+                              (click)="datepicker.toggle()"
+                              formControlName="lineCheckInDate"
+                              readonly
+                              (input)="fromDate = validateInput(fromDate, dpFromDate.value)"
+                              [ngClass]="{
+                                'is-invalid': (submitted || f.lineCheckInDate.touched) && f.lineCheckInDate.errors
+                              }"
+                            />
+                            <div
+                              *ngIf="(submitted || f.lineCheckInDate.touched) && f.lineCheckInDate.errors"
+                              class="invalid-feedback"
+                            >
+                              <div *ngIf="f.lineCheckInDate.errors.required">required</div>
+                            </div>
+                          </div>
+                        </div>
+
+
+
+                        <div class="form-group mobile-only">
+                          <div class="input-group">
+                            <input
+                             class="form-control square border-0"
+                             outsideDays="hidden"
+                             (click)="checkInd2.toggle()"
+                              placeholder="yyyy-mm-dd"
+                              name="dp"
+                              ngbDatepicker
+                              #checkInd2="ngbDatepicker"
+                              formControlName="lineCheckInDate"
+                              (ngModelChange)="CheckInDateAndCheckOutDateCalculate(hotelForm.value.lineCheckInDate,hotelForm.value.lineCheckOutDate )"
+
+                              [ngClass]="{
+                                'is-invalid': (submitted || f.lineCheckInDate.touched) && f.lineCheckInDate.errors
+                              }"
+                             >
+                             <div
+                              *ngIf="(submitted || f.lineCheckInDate.touched) && f.lineCheckInDate.errors"
+                              class="invalid-feedback"
+                            >
+                              <div *ngIf="f.lineCheckInDate.errors.required">required</div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <!--  <input
+                  class="form-control form-control-sm square border-0 "
+                   outsideDays="hidden"
+                   (click)="d.toggle()"
+                    placeholder="yyyy-mm-dd"
+                    name="dp"
+                    appendTo="body"
+                    [displayMonths]="displayMonths"
+                  [navigation]="navigation"
+                   ngbDatepicker #d="ngbDatepicker"
+                  formControlName="lineCheckInDate"
+                  [minDate]="checkinToday"
+                  (ngModelChange)="CheckInDateAndCheckOutDateCalculate(hotelForm.value.lineCheckInDate,hotelForm.value.lineCheckOutDate )"
+                  [ngClass]="{ 'is-invalid': (submitted || f.lineCheckInDate.touched) && f.lineCheckInDate.errors }"
+                  >
+                  <div *ngIf="(submitted || f.lineCheckInDate.touched) && f.lineCheckInDate.errors"
+                  class="invalid-feedback">
+                  <div *ngIf="f.lineCheckInDate.errors.required">required</div>
+                </div> -->
+                        <!--  <div class="col-12">
+                    <div class="dp-hidden position-absolute">
+                      <div class="input-group">
+                        <input
+                          name="datepicker"
+                          class="form-control border-0"
+                          ngbDatepicker
+                          #datepicker="ngbDatepicker"
+                          [autoClose]="'outside'"
+                          (dateSelect)="onDateSelection($event,datepicker)"
+                          [displayMonths]="2"
+                          [dayTemplate]="t"
+                          navigation="arrow"
+                          outsideDays="hidden"
+                          appendTo="body"
+                          [startDate]="fromDate!"
+                          tabindex="-1"
+                        />
+                        <ng-template #t let-date let-focused="focused">
+                          <span
+                            class="custom-day"
+                            [class.focused]="focused"
+                            [class.range]="isRange(date)"
+                            [class.faded]="isHovered(date) || isInside(date)"
+                            (mouseenter)="hoveredDate = date"
+                            (mouseleave)="hoveredDate = null"
+                          >
+                            {{ date.day }}
+                          </span>
+                        </ng-template>
+                      </div>
+                    </div>
+                  </div> -->
+
+                        <!--  {{hotelForm.value.lineCheckInDate | json}} -->
+                        <!-- <div class="input-group">
+                    <input
+                      #dpFromDate
+                      class="form-control border-0"
+                      name="dpFromDate"
+                      [value]="dateFormatter.format(fromDate)"
+                      (click)="datepicker.toggle()"
+                      (input)="fromDate = validateInput(fromDate, dpFromDate.value)"
+                      formControlName="lineCheckInDate"
+                      [ngClass]="{ 'is-invalid': (submitted || f.lineCheckInDate.touched) && f.lineCheckInDate.errors }"
+                    />
+                    <div *ngIf="(submitted || f.lineCheckInDate.touched) && f.lineCheckInDate.errors"
+                  class="invalid-feedback">
+                  <div *ngIf="f.lineCheckInDate.errors.required">required</div>
+                </div>
+                  </div> -->
+
+                        <!-- <input type="date" id="checkin" class="form-control dates-border-none form-control-sm square"
+                    name="checkin" formControlName="lineCheckInDate"
+                    (input)="CheckInDateAndCheckOutDateCalculate(hotelForm.value.lineCheckInDate, hotelForm.value.lineCheckOutDate)"
+                    [ngClass]="{ 'is-invalid': (submitted || f.lineCheckInDate.touched) && f.lineCheckInDate.errors }" />
+                  <div *ngIf="(submitted || f.lineCheckInDate.touched) && f.lineCheckInDate.errors"
+                    class="invalid-feedback">
+                    <div *ngIf="f.lineCheckInDate.errors.required">required</div>
+                  </div> -->
+                      </div>
+                    </div>
+                    <div class="trav-dates position-relative return-date">
+                      <div class="form-group citygroup">
+                        <label>Check Out</label>
+
+                        <div class="col-12 m-pl-0 mobile-none p-0">
+                          <div class="input-group">
+                            <input
+                              #dpToDate
+                              class="form-control form-control-sm square border-0 p-0"
+                              placeholder="yyyy-mm-dd"
+                              name="dpToDate"
+                              [value]="dateFormatter.format(toDate)"
+                              (click)="datepicker.toggle()"
+                              readonly
+                              (input)="toDate = validateInput(toDate, dpToDate.value)"
+                              formControlName="lineCheckOutDate"
+                              [ngClass]="{
+                                'is-invalid': (submitted || f.lineCheckOutDate.touched) && f.lineCheckOutDate.errors
+                              }"
+                            />
+                            <div
+                              *ngIf="(submitted || f.lineCheckOutDate.touched) && f.lineCheckOutDate.errors"
+                              class="invalid-feedback"
+                            >
+                              <div *ngIf="f.lineCheckOutDate.errors.required">required</div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="form-group mobile-only">
+                          <div class="input-group">
+                            <input
+                             class="form-control square border-0"
+                             outsideDays="hidden"
+                             (click)="checkOutd2.toggle()"
+                              placeholder="yyyy-mm-dd"
+                              name="dp"
+                              ngbDatepicker
+                              #checkOutd2="ngbDatepicker"
+                              formControlName="lineCheckOutDate"
+                              (ngModelChange)="CheckInDateAndCheckOutDateCalculate(hotelForm.value.lineCheckInDate,hotelForm.value.lineCheckOutDate )"
+                              [minDate]="hotelForm.value.lineCheckInDate"
+
+                              [ngClass]="{
+                                'is-invalid': (submitted || f.lineCheckOutDate.touched) && f.lineCheckOutDate.errors
+                              }"
+                             >
+                             <div
+                              *ngIf="(submitted || f.lineCheckOutDate.touched) && f.lineCheckOutDate.errors"
+                              class="invalid-feedback"
+                            >
+                              <div *ngIf="f.lineCheckOutDate.errors.required">required</div>
+                            </div>
+                          </div>
+                        </div>
+                        <!--    <input
+                  class="form-control form-control-sm square border-0"
+                   outsideDays="hidden"
+                   (click)="d2.toggle()"
+                    placeholder="yyyy-mm-dd"
+                    name="dp2"
+                    appendTo="body"
+                    [minDate]="hotelForm?.value?.lineCheckInDate"
+                    [displayMonths]="displayMonths"
+                  [navigation]="navigation"
+                   ngbDatepicker #d2="ngbDatepicker"
+                  formControlName="lineCheckOutDate"
+                  (ngModelChange)="CheckInDateAndCheckOutDateCalculate(hotelForm.value.lineCheckInDate,hotelForm.value.lineCheckOutDate )"
+                  [ngClass]="{ 'is-invalid': (submitted || f.lineCheckOutDate.touched) && f.lineCheckOutDate.errors }"
+                  >
+                  <div *ngIf="(submitted || f.lineCheckOutDate.touched) && f.lineCheckOutDate.errors"
+                  class="invalid-feedback">
+                  <div *ngIf="f.lineCheckOutDate.errors.required">required</div>
+                </div> -->
+                        <!--    <div class="col-12">
+                    <div class="input-group">
+                      <input
+                        #dpToDate
+                        class="form-control border-0"
+                        name="dpToDate"
+                        (click)="datepicker.toggle()"
+                        formControlName="lineCheckOutDate"
+                        [value]="dateFormatter.format(toDate)"
+                        (input)="toDate = validateInput(toDate, dpToDate.value)"
+                        [ngClass]="{ 'is-invalid': (submitted || f.lineCheckOutDate.touched) && f.lineCheckOutDate.errors }"
+                      />
+
+                      <div *ngIf="(submitted || f.lineCheckOutDate.touched) && f.lineCheckOutDate.errors"
+                    class="invalid-feedback ">
+                    <div *ngIf="f.lineCheckOutDate.errors.required">required</div>
+                  </div>
+                    </div>
+                  </div> -->
+                        <!-- <input type="date" id="checkout" class="form-control dates-border-none form-control-sm square"
+                    name="checkout" formControlName="lineCheckOutDate"
+                    (input)="CheckInDateAndCheckOutDateCalculate(hotelForm.value.lineCheckInDate,hotelForm.value.lineCheckOutDate )"
+                    [ngClass]="{ 'is-invalid': (submitted || f.lineCheckOutDate.touched) && f.lineCheckOutDate.errors }" />
+                  <div *ngIf="(submitted || f.lineCheckOutDate.touched) && f.lineCheckOutDate.errors"
+                    class="invalid-feedback ">
+                    <div *ngIf="f.lineCheckOutDate.errors.required">required</div>
+                  </div> -->
+                        <!--  <label>
+                    <p class="blackText m-0">
+                      <span class="font30">7</span>
+                      <span>Nov</span>
+                      <span class="shortYear">'21</span>
+                    </p>
+                    <p class="code m-0">Sunday</p>
+                  </label> -->
+                      </div>
+                    </div>
+
+                    <div class="trav-dates w-250 trav-n position-relative pt-1">
+                      <div class="form-group row px-3 mb-top-1">
+                        <div class="col-md-6 col-6">
+                          <div class="form-group mb-2 align-items-center">
+                            <div><label for="enights">Nights</label></div>
+                            <input
+                              type="number"
+                              id="enights"
+                              class="form-control square "
+                              name="enights"
+                              formControlName="lineNoOfNights"
+                              readonly
+                            />
+                          </div>
+                        </div>
+                        <div class="col-md-6 col-6" *ngIf="!isEdit">
+                          <div class="form-group mb-2 align-items-center">
+                            <label for="rooms">Rooms</label>
+                            <select
+                              id="rooms"
+                              name="rooms"
+                              (change)="roomsInputDependsOnAddRooms($event.target.value)"
+                              class="form-control square "
+                              formControlName="lineRoomCount"
+                              [ngClass]="{
+                                'is-invalid': (submitted || f.lineRoomCount.touched) && f.lineRoomCount.errors
+                              }"
+                            >
+                              <option value="1">1</option>
+                              <option value="2">2</option>
+                              <option value="3">3</option>
+                              <option value="4">4</option>
+                              <option value="5">5</option>
+                              <option value="6">6</option>
+                              <option value="7">7</option>
+                              <option value="8">8</option>
+                              <option value="9">9</option>
+                            </select>
+                            <div
+                              *ngIf="(submitted || f.lineRoomCount.touched) && f.lineRoomCount.errors"
+                              class="invalid-feedback"
+                            >
+                              <div *ngIf="f.lineRoomCount.errors.required">Please select your rooms</div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-6 col-6" *ngIf="isEdit">
+                          <div class="form-group mb-2  align-items-center">
+                            <label for="rooms">Rooms</label>
+                            <select
+                              id="rooms"
+                              name="rooms"
+                              (change)="EditroomsInputDependsOnAddRooms($event.target.value)"
+                              class="form-control square ml-1"
+                              formControlName="lineRoomCount"
+                              [ngClass]="{
+                                'is-invalid': (submitted || f.lineRoomCount.touched) && f.lineRoomCount.errors
+                              }"
+                            >
+                              <option value="1">1</option>
+                              <option value="2">2</option>
+                              <option value="3">3</option>
+                              <option value="4">4</option>
+                              <option value="5">5</option>
+                              <option value="6">6</option>
+                              <option value="7">7</option>
+                              <option value="8">8</option>
+                              <option value="9">9</option>
+                            </select>
+                            <div
+                              *ngIf="(submitted || f.lineRoomCount.touched) && f.lineRoomCount.errors"
+                              class="invalid-feedback"
+                            >
+                              <div *ngIf="f.lineRoomCount.errors.required">Please select your rooms</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <p
+                      *ngIf="keys?.includes(hoteMoreBtn)"
+                      class="pointer m-0 more-font-size font-weight-bold"
+                      (click)="collapse.toggle()"
+                      [attr.aria-expanded]="!isCollapsed"
+                      aria-controls="collapseExample1234"
+                    >
+                      <i class="ft-chevron-right"></i> {{ !isCollapsed ? 'Less' : 'More' }}
+                    </p>
+                  </div>
+
+                  <div class="mt-1 full-right card srchbarright">
+                    <app-products-navigations
+                      [activeId]="2"
+                      [flightLink]="flightLink"
+                      [hotelLink]="hotelLink"
+                      [ancillaryLink]="ancillaryLink"
+                      [holidayLink]="holidayLink"
+                      [activityLink]="activityLink"
+                    ></app-products-navigations>
+
+                    <!--<div class="form-group row ml-0">
+                <label for="team" class="d-flex mb-0"><img src="assets/img/team-icon.svg" width="35" /></label>
+                <select class="form-control form-control-sm square shadow-sm" id="team"
+                  style="width: calc(100% - 40px)">
+                  <option [value]="team.teamId" *ngFor="let team of teamList">
+                    {{ team.teamName }}
+                  </option>
+                </select>
+              </div>
+              <div class="form-group row ml-0">
+                <label for="resoures" class="d-flex mb-0" style="width: 35px; justify-content: center"><img
+                    src="assets/img/user-icon.svg" width="26" /></label>
+                <select class="form-control form-control-sm square shadow-sm" id="resoures"
+                  style="width: calc(100% - 40px)" formControlName="defaultMemeber">
+                  <option [value]="members.memberId" *ngFor="let members of teamMembersList">
+                    {{ members.memberName }}
+                  </option>
+                </select>
+              </div>-->
+
+
+                  </div>
+                </div>
+                <div class="form-row" #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
+                  <div class="col-md-2 col-12">
+                    <div class="form-group mb-2">
+                      <label for="country">Country</label>
+                      <ng-select [searchable]="true" placeholder="Country" formControlName="lineCountry">
+                        <ng-option *ngFor="let country of countryListLov" [value]="country.id">
+                          {{ country.name }}
+                        </ng-option>
+                      </ng-select>
+                    </div>
+                  </div>
+                  <div class="col-md-2 col-12">
+                    <div class="form-group mb-2">
+                      <label for="hotelcity">City</label>
+                      <input
+                        id="hotelcity"
+                        type="text"
+                        placeholder="Enter City"
+                        #typeaheadInstance="ngbTypeahead"
+                        formControlName="lineCity"
+                        class="form-control square"
+                        (keydown)="typeaheadKeydown($event)"
+                        [resultTemplate]="searchCityResultTemplate"
+                        [inputFormatter]="cityformatter"
+                        [ngbTypeahead]="onSearchCity"
+                      />
+                      <ng-template #searchCityResultTemplate let-r="result" let-t="term">
+                        <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+                      </ng-template>
+                    </div>
+                  </div>
+                  <!--  <div class="col-md-2 col-12">
+              <div class="form-group mb-2">
+                <label for="location">Location</label>
+                <input id="location" type="text" placeholder="Enter Location" #typeaheadInstance="ngbTypeahead"
+                  class="form-control" (keydown)="typeaheadKeydown($event)" [resultTemplate]="searchCityResultTemplate"
+                  [inputFormatter]="cityformatter" [ngbTypeahead]="onSearchCity" />
+                <ng-template #searchCityResultTemplate let-r="result" let-t="term">
+                  <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+                </ng-template>
+              </div>
+            </div> -->
+                  <div class="col-md-2 col-12">
+                    <div class="form-group mb-2">
+                      <label for="hotelname">Hotel Name</label>
+
+                      <input
+                        id="hotelname"
+                        type="text"
+                        placeholder="Enter Hotel Names"
+                        #typeaheadInstance="ngbTypeahead"
+                        class="form-control square"
+                        (keydown)="typeaheadKeydown($event)"
+                        [resultTemplate]="searchHotelNamesResultTemplate"
+                        [inputFormatter]="hotelNamesformatter"
+                        [ngbTypeahead]="onSearchHotelNames"
+                        formControlName="lineHotelName"
+                      />
+                      <ng-template #searchHotelNamesResultTemplate let-r="result" let-t="term">
+                        <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+                      </ng-template>
+                    </div>
+                  </div>
+                  <div class="col-md-2 col-12">
+                    <div class="form-group mb-2">
+                      <label for="propertytype">Property Type</label>
+                      <input
+                        id="propertytype"
+                        type="text"
+                        placeholder="Enter Property"
+                        #typeaheadInstance="ngbTypeahead"
+                        class="form-control square"
+                        (keydown)="typeaheadKeydown($event)"
+                        [resultTemplate]="searchPropertyResultTemplate"
+                        [inputFormatter]="propertyformatter"
+                        [ngbTypeahead]="onSearchProperty"
+                        formControlName="linePropertyType"
+                      />
+                      <ng-template #searchPropertyResultTemplate let-r="result" let-t="term">
+                        <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+                      </ng-template>
+                    </div>
+                  </div>
+                  <div class="col-md-2 col-12">
+                    <div class="form-group mb-2">
+                      <label for="mealtype">Meal Type</label>
+                      <input
+                        id="mealtype"
+                        type="text"
+                        placeholder="Enter Meals"
+                        #typeaheadInstance="ngbTypeahead"
+                        class="form-control square"
+                        (keydown)="typeaheadKeydown($event)"
+                        [resultTemplate]="searchMealsResultTemplate"
+                        [inputFormatter]="mealsformatter"
+                        [ngbTypeahead]="onSearchMeals"
+                        formControlName="lineMealType"
+                      />
+                      <ng-template #searchMealsResultTemplate let-r="result" let-t="term">
+                        <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+                      </ng-template>
+                    </div>
+                  </div>
+                  <div class="col-md-2 col-12">
+                    <div class="form-group mb-2">
+                      <label for="cresidency">Country Residency</label>
+                      <ng-select
+                        [searchable]="true"
+                        id="cresidency"
+                        placeholder="Country Residency"
+                        formControlName="lineCountryResidency"
+                      >
+                        <ng-option *ngFor="let country of countryListLov" [value]="country.id">
+                          {{ country.name }}
+                        </ng-option>
+                      </ng-select>
+                    </div>
+                  </div>
+                  <div class="col-md-2 col-12">
+                    <div class="form-group mb-2">
+                      <label for="nationality">Nationality</label>
+                      <ng-select [searchable]="true" placeholder="Nationality" formControlName="lineNationality">
+                        <ng-option *ngFor="let nationality of NationalityListLov" [value]="nationality.id">
+                          {{ nationality.name }}
+                        </ng-option>
+                      </ng-select>
+                      <!--
+                 [ngClass]="{ 'is-invalid': (submitted || f.lineNationality.touched) && f.lineNationality.errors }"
+                 <div *ngIf="(submitted || f.lineNationality.touched) && f.lineNationality.errors"
+                  class="invalid-feedback">
+                  <div *ngIf="f.lineNationality.errors.required">required</div>
+                </div> -->
+                    </div>
+                  </div>
+                  <div class="col-md-2 col-12">
+                    <div class="form-group mb-2">
+                      <label for="rating">Rating</label>
+                      <ng-select [searchable]="true" placeholder="Rating" formControlName="lineRatings">
+                        <ng-option *ngFor="let hotelsrating of hotelRatingListLov" [value]="hotelsrating.id">
+                          {{ hotelsrating.name }}
+                        </ng-option>
+                      </ng-select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <!-- <div class="col-md-2 col-12">
+              <div class="form-group mb-2">
+                <label for="checkin">Check In</label>
+                <input type="date" id="checkin" class="form-control form-control-sm square" name="checkin"
+                  formControlName="lineCheckInDate" (input)="
+                    CheckInDateAndCheckOutDateCalculate(
+                      hotelForm.value.lineCheckInDate,
+                      hotelForm.value.lineCheckOutDate
+                    )
+                  "
+                  [ngClass]="{ 'is-invalid': (submitted || f.lineCheckInDate.touched) && f.lineCheckInDate.errors }" />
+                <div *ngIf="(submitted || f.lineCheckInDate.touched) && f.lineCheckInDate.errors"
+                  class="invalid-feedback">
+                  <div *ngIf="f.lineCheckInDate.errors.required">Please enter your check in date</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-2 col-12">
+              <div class="form-group mb-2">
+                <label for="checkout">Check Out</label>
+                <input type="date" id="checkout" class="form-control form-control-sm square" name="checkout"
+                  formControlName="lineCheckOutDate" (input)="
+                    CheckInDateAndCheckOutDateCalculate(
+                      hotelForm.value.lineCheckInDate,
+                      hotelForm.value.lineCheckOutDate
+                    )
+                  "
+                  [ngClass]="{ 'is-invalid': (submitted || f.lineCheckOutDate.touched) && f.lineCheckOutDate.errors }" />
+                <div *ngIf="(submitted || f.lineCheckOutDate.touched) && f.lineCheckOutDate.errors"
+                  class="invalid-feedback">
+                  <div *ngIf="f.lineCheckOutDate.errors.required">Please enter your check out date</div>
+                </div>
+              </div>
+            </div> -->
+
+                  <!--  <div class="col-md-1 col-12">
+              <div class="form-group mb-2">
+                <select id="both" name="both" class="form-control mt-3">
+                  <option value="both" selected>Both</option>
+                </select>
+              </div>
+            </div> -->
+                </div>
+                <div formArrayName="roomsData">
+                  <div *ngFor="let r of roomsData().controls; let j = index" [formGroupName]="j">
+                    <div class="form-row room-det">
+                      <label class="mt-3 ml-1 sm-mt-0">Room {{ j + 1 }}</label>
+                      <div class="col-md-11 col-12 ml-2 d-flex pl-0">
+                        <div class="form-group mb-2">
+                          <label for="adults">Adt</label>
+                          <select
+                            id="adults{{ j }}"
+                            name="adults"
+                            class="form-control form-control-sm square"
+                            formControlName="roomAdultCount"
+                            style="width: 50px"
+                          >
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                          </select>
+                        </div>
+                        <div class="form-group mb-2 ml-2">
+                          <label for="childern">Chd</label>
+                          <select
+                            id="Childerns123_{{ j }}"
+                            (change)="childDependsOnAgeInput($event.target.value, j)"
+                            name="Childerns"
+                            class="form-control form-control-sm square"
+                            formControlName="roomChildCount"
+                            style="width: 50px"
+                          >
+                            <option value="0">0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                          </select>
+                        </div>
+
+                        <div formArrayName="childAge" class="child-age-column m-d-fiex">
+                          <div
+                            *ngFor="let c of childAge(j).controls; let k = index"
+                            [formGroupName]="k"
+                            class="m-w-100 ml-3"
+                          >
+                            <div class="col-md-12 p-0">
+                              <div class="mb-2 col-md-6 p-0">
+                                <label for="age">Child&nbsp;{{ k + 1 }}&nbsp;age</label><br />
+                                <select
+                                  id="age"
+                                  name="age"
+                                  class="form-control form-control-sm form-control-age square"
+                                  style="width: 100px"
+                                  formControlName="roomChildAges"
+                                >
+                                  <!--  <option value="">Choose</option> -->
+                                  <option value="1">1</option>
+                                  <option value="2">2</option>
+                                  <option value="3">3</option>
+                                  <option value="4">4</option>
+                                  <option value="5">5</option>
+                                  <option value="6">6</option>
+                                  <option value="7">7</option>
+                                  <option value="8">8</option>
+                                  <option value="9">9</option>
+                                  <option value="10">10</option>
+                                  <option value="11">11</option>
+                                  <option value="12">12</option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="col-12 col-md-4 mt-1" *ngIf="keys?.includes(hotelAddPax)">
+                          <div class="form-group ml-3 mb-0">
+                            <button type="button" (click)="openPersonModal(j)" class="btn btn-sm btn-icon p-0 m-2">
+                              <i class="icon-user-follow" aria-hidden="true" style="font-size: 25px"></i>
+                            </button>
+                            <button
+                              *ngIf="
+                                roomsData().at(j).value.roomsPersonList &&
+                                roomsData().at(j).value.roomsPersonList?.length > 0
+                              "
+                              type="button"
+                              class="btn btn-sm btn-icon p-0 m-2"
+                              (click)="
+                                rowsControls[j].isCollapsedSelectedPersons =
+                                  !rowsControls[j]?.isCollapsedSelectedPersons
+                              "
+                              [attr.aria-controls]="'collapse_' + j"
+                            >
+                              <!--  rowsControls[j].isCollapsedSelectedPersons = !rowsControls[j]?.isCollapsedSelectedPerson -->
+                              <i class="fa fa-user" aria-hidden="true" style="font-size: 30px; margin-top: 3px"></i>
+                              {{ roomsData().at(j).value?.roomsPersonList?.length }}
+                              {{ !rowsControls[j]?.isCollapsedSelectedPersons ? 'less' : 'more' }}
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="row p-0 m-0"
+                      id="collapse_{{ j }}"
+                      [ngbCollapse]="rowsControls[j]?.isCollapsedSelectedPersons"
+                    >
+                      <div class="col-12 col-lg-12 col-md-12 px-0">
+                        <h4
+                          class="card-title text-left"
+                          *ngIf="
+                            roomsData().at(j).value.roomsPersonList &&
+                            roomsData().at(j).value.roomsPersonList?.length > 0
+                          "
+                        >
+                          Added Persons
+                        </h4>
+
+                        <div class="table-responsive table">
+                          <div class="outer">
+                            <div class="inner">
+                              <table
+                                class="table m-0"
+                                *ngIf="
+                                  roomsData().at(j).value.roomsPersonList &&
+                                  roomsData().at(j).value.roomsPersonList?.length > 0
+                                "
+                              >
+                                <thead>
+                                  <tr class="refresh">
+                                    <th scope="col">S NO</th>
+                                    <th scope="col">Pax Type</th>
+                                    <th scope="col">First Name</th>
+                                    <th scope="col">Last Name</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Mobile Number</th>
+                                    <th scope="col">Dob</th>
+                                    <th scope="col">Action</th>
+                                  </tr>
+                                </thead>
+
+                                <tbody
+                                  *ngIf="
+                                    roomsData().at(j).value.roomsPersonList &&
+                                    roomsData().at(j).value.roomsPersonList?.length > 0
+                                  "
+                                >
+                                  <tr *ngFor="let s of roomsData().at(j).value.roomsPersonList; index as i;trackBy: trackByFn">
+                                    <td scope="row" class="pt-3 wrap-text">{{ (page - 1) * pageSize + i + 1 }}</td>
+                                    <td scope="row" class="pt-3 wrap-text">{{ s?.passengerAttr1 }}</td>
+                                    <td scope="row" class="pt-3 wrap-text">{{ s?.passengerFirstName }}</td>
+                                    <td scope="row" class="pt-3 wrap-text">{{ s?.passengerLastName }}</td>
+                                    <td scope="row" class="pt-3 wrap-text">{{ s?.passengerEmail }}</td>
+                                    <td scope="row" class="pt-3 wrap-text">{{ s?.passengerPhone }}</td>
+                                    <td scope="row" class="pt-3 wrap-text">
+                                      {{ s?.passengerDob | date: 'dd-MMM-yyyy' }}
+                                    </td>
+                                    <td scope="row" class="pt-3 wrap-text" *ngIf="!isEdit">
+                                      <i class="ft-trash-2 pointer" (click)="delete(j, i)"></i>
+                                    </td>
+                                    <td scope="row" class="pt-3 wrap-text" *ngIf="isEdit">
+                                      <i
+                                        class="ft-trash-2 pointer"
+                                        (click)="Editdelete(j, i, roomsData().at(j).value, s)"
+                                      ></i>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                                <!--  <div class="d-flex justify-content-between p-2">
+                            <ngb-pagination [collectionSize]="roomsData().at(j).value?.roomsPersonList?.length"
+                              [(page)]="page" [maxSize]="3" [boundaryLinks]="true" [pageSize]="pageSize"
+                              class="d-flex justify-content-center">
+                            </ngb-pagination>
+                          </div> -->
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!--<div class="shadow-none p-1 mb-1 bg-light rounded more-highlight d-flex align-items-center">
+            <h6 class="card-title mb-0" style="width:calc(100% - 120px);" (click)="roomscollapse.toggle()"
+              [attr.aria-expanded]="!isCollapsedRooms" aria-controls="roomcollapseExample"><i
+                class="icon-info more-highlight pl-2" placement="right" ngbTooltip="Room Information"></i>
+                <i class="ft-chevron-down  pull-right more-highlight" *ngIf="!isCollapsedRooms"></i>
+              <i class="ft-chevron-up pull-right more-highlight" *ngIf="isCollapsedRooms"></i>
+            </h6></div>-->
+
+                <button
+                  type="button"
+                  *ngIf="isEdit && keys?.includes(hotelAddons)"
+                  (click)="openAddonsModal()"
+                  class="btn btn-outline-info mr-1 mb-0 pull-right mobile-none"
+                  style="width: 150px"
+                >
+                  Add-ons
+                </button>
+
+                <div #roomscollapse="ngbCollapse" [(ngbCollapse)]="isCollapsedRooms">
+                  <p>
+                    The Trident Safety Shield We have deployed extraordinary safety & hygiene measures in keeping with
+                    WHO and MoT guidelines, in partnership with Bureau Veritas.
+                  </p>
+                </div>
+                <div class="lpo--detalils mr-2" *ngIf="keys?.includes(hotelLpo)">
+                  <span
+                    (click)="openSm(content)"
+                    class="btn btn-link text-info pull-right"
+                    style="width: 150px; box-shadow: none"
+                  >
+                    LPO Details
+                  </span>
+                </div>
+                <div class="form-row mobile-none">
+                  <div class="col-md-2 col-12">
+                    <div class="form-group mb-2">
+                      <label> Markup Type</label>
+                      <select
+                        id="markuptype"
+                        name="markuptype"
+                        (change)="changeMarkupType($event.target.value)"
+                        class="form-control square"
+                        formControlName="lineMarkUpType"
+                      >
+                        <!--  <option value="">Choose</option> -->
+                        <option value="A">Amount</option>
+                        <option value="P">Percentage</option>
+                        <option value="B">Both</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-2 col-12" *ngIf="amountInutShow">
+                    <div class="form-group mb-2">
+                      <label>Amount</label>
+                      <input
+                        type="number"
+                        id="amount"
+                        placeholder="Enter Amount"
+                        class="form-control square"
+                        name="amount"
+                        formControlName="lineMarkupAmount"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-2 col-12" *ngIf="percentageshow">
+                    <div class="form-group mb-2">
+                      <label>Percentage</label>
+                      <input
+                        type="text"
+                        id="Percentage"
+                        placeholder="Enter Percentage"
+                        class="form-control square"
+                        name="Percentage"
+                        formControlName="lineMarkupPercentage"
+                      />
+                    </div>
+                  </div>
+                  <!--  <div class="col-md-2 col-12" #collapseLpo="ngbCollapse" [(ngbCollapse)]="isLPODeatilsCollapsed">
+              <div class="form-group mb-2">
+                <label>LPO Number</label>
+                <input type="text" id="lpoNumber" placeholder="Enter LPO Number " class="form-control form-control-sm square"
+                  name="lpoNumber" formControlName="lpoNumber" />
+              </div>
+            </div>
+            <div class="col-md-2 col-12" #collapseLpo="ngbCollapse" [(ngbCollapse)]="isLPODeatilsCollapsed">
+              <div class="form-group mb-2">
+                <label>LPO Date</label>
+                <input type="date" id="lpoDate" class="form-control form-control-sm square"
+                  name="lpoDate" formControlName="lpoDate" />
+              </div>
+            </div>
+            <div class="col-md-2 col-12" #collapseLpo="ngbCollapse" [(ngbCollapse)]="isLPODeatilsCollapsed">
+              <div class="form-group mb-2">
+                <label>LPO Amount</label>
+                <input type="number" id="lpoAmount" placeholder="Enter LPO Amount " class="form-control form-control-sm square"
+                  name="lpoAmount" formControlName="lpoAmount" />
+              </div>
+            </div> -->
+                </div>
+              </div>
+            </div>
+            <hr class="mobile-none" />
+            <div class="form-row align-items-center justify-content-end hrline m-w-100">
+              <div class="col-md-12 text-right mt-1 ">
+                <div class="pull-left d-flex pl-none">
+                  <button
+                    type="button"
+                    *ngIf="isEdit && keys?.includes(hotelRFQBtn)"
+                    (click)="redirectHotelRFQ()"
+                    class="btn btn-info ml-2 mr-2 mobile-none"
+                  >
+                    <i class="ft-navigation"></i> RFP
+                  </button>
+                  <button
+                    type="button"
+                    *ngIf="isEdit && keys?.includes(hotelUpdateBtn)"
+                    (click)="onUpdateHotelForm()"
+                    class="btn btn-info mr-2 btn-f-w"
+                  >
+                    <i class="ft-bookmark"></i> Update
+                  </button>
+                  <i class="ft-shield  ml-2 mt-1 icon-check-font cursor-pointer"  (click)="openPolicyPopup()" *ngIf="isEdit&&policyList?.length>0" [ngClass]="{'text-success':policyList[0]?.policyIsQualified=='Yes','text-danger':policyList[0]?.policyIsQualified=='No'}"></i>
+                  <button
+                    type="button"
+                    *ngIf="isEdit && keys?.includes(hotelCbtUpdateBtn)"
+                    (click)="onUpdateHotelForm()"
+                    class="btn btn-info mr-2 btn-f-w"
+                  >
+                    <i class="ft-bookmark mr-2" ></i>SEARCH HOTEL
+                  </button>
+
+                  <button
+                    type="button"
+                    *ngIf="!isEdit && keys?.includes(hotelSaveBtn)"
+                    class="btn btn-primary mr-2 btn-mobile"
+                    (click)="onSubmitHotelForm()"
+                  >
+                    <i class="ft-bookmark"></i> Save
+                  </button>
+                  <button
+                    type="button"
+                    *ngIf="!isEdit && keys?.includes(hotelCbtSaveBtn)"
+                    class="btn btn-primary mr-2 btn-mobile"
+                    (click)="onSubmitHotelForm()"
+                  >
+                    <i class="ft-bookmark mr-2"></i>SEARCH HOTEL
+                  </button>
+                </div>
+
+                <div class="pull-right d-flex m-pl-none">
+                  <button
+                    type="button"
+                    *ngIf="isEdit && keys?.includes(hotelAdhocBtn)"
+                    class="btn btn-outline-info ml-2 mobile-none"
+                  >
+                    AdHoc Booking
+                  </button>
+
+                  <button
+                    type="button"
+                    *ngIf="isEdit && keys?.includes(hotelOnlineBtn)"
+                    (click)="Online()"
+                    class="btn btn-outline-info ml-2 btn-f-w"
+                  >
+                   Online
+                  </button>
+
+                  <button
+                    type="button"
+                    *ngIf="isEdit && keys?.includes(hotelOfflineBtn)"
+                    (click)="offline()"
+                    class="btn btn-outline-info ml-2 mobile-none"
+                  >
+                    Offline
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+
+          <!-- <hr class="hrline"> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Hotel LPO Deatils -->
+<ng-template #content let-modal>
+  <div class="modal-header py-1">
+    <h4 class="modal-title">LPO Details</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.close('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="hotelForm">
+      <div class="form-row">
+        <div class="col-md-4 col-12">
+          <div class="form-group mb-2">
+            <label>LPO Number</label>
+            <input
+              type="text"
+              id="lpoNumber"
+              placeholder="Enter LPO Number "
+              class="form-control square"
+              name="lpoNumber"
+              formControlName="lpoNumber"
+            />
+          </div>
+        </div>
+        <div class="col-md-4 col-12">
+          <div class="form-group mb-2">
+            <label>LPO Date</label>
+            <input type="date" id="lpoDate" class="form-control square" name="lpoDate" formControlName="lpoDate" />
+          </div>
+        </div>
+        <div class="col-md-4 col-12">
+          <div class="form-group mb-2">
+            <label>LPO Amount</label>
+            <input
+              type="number"
+              id="lpoAmount"
+              placeholder="Enter LPO Amount "
+              class="form-control square"
+              name="lpoAmount"
+              formControlName="lpoAmount"
+            />
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</ng-template>

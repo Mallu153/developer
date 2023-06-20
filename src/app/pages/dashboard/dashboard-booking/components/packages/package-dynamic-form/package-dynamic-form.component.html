@@ -1,0 +1,83 @@
+<app-dynamic-form-builder
+*ngIf="formInput && formInput?.length > 0 && !formInputPatchData"
+[formInput]="formInput"
+[formPatch]="formInputPatchData"
+[sourceType]="'package'"
+(submittedData)="getFormData($event)"
+[events]="formOnSubmitEvent.asObservable()">
+</app-dynamic-form-builder>
+
+<app-dynamic-form-builder
+*ngIf="formInput && formInput?.length > 0 && formInputPatchData"
+[formInput]="formInput"
+[formPatch]="formInputPatchData"
+[sourceType]="'package'"
+(submittedData)="getFormData($event)"
+[events]="formOnSubmitEvent.asObservable()">
+</app-dynamic-form-builder>
+
+
+
+
+<div>
+  <button type="button" (click)="next()" *ngIf="serviceTypeHeader" class="btn btn-info mr-2">
+    <i class="ft-bookmark"></i> {{ formInputPatchData ?' Update': "Add"}}
+  </button>
+</div>
+
+
+
+
+
+
+<section id="striped-light" *ngIf="viewCarRental['segment'+'-'+flightSegmentIndex]?.length>0">
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-content">
+          <div class="card-body">
+            <div class="table-responsive" *ngIf="viewCarRental['segment'+'-'+flightSegmentIndex]?.length>0">
+              <table class="table  m-0">
+                <thead>
+                  <tr class="refresh">
+                    <th>#</th>
+                    <th>Pickup Location</th>
+                    <th>Pickup Date</th>
+                    <th>Pickup Time</th>
+                    <th>Drop Off Location</th>
+                    <th>Drop Off Date</th>
+                    <th>Drop Off Time</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Mobile</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of viewCarRental['segment'+'-'+flightSegmentIndex]; index as i ">
+                    <td *ngIf="item.segmentIndex== flightSegmentIndex">{{i+1}}</td>
+                    <td *ngIf="item.segmentIndex== flightSegmentIndex">{{item?.Pickuplocation}}</td>
+                    <td *ngIf="item.segmentIndex== flightSegmentIndex">{{item?.pickupdate}}</td>
+                    <td *ngIf="item.segmentIndex== flightSegmentIndex">{{item?.pickuptime}}</td>
+                    <td *ngIf="item.segmentIndex== flightSegmentIndex">{{item?.dropofflocation}}</td>
+                    <td *ngIf="item.segmentIndex== flightSegmentIndex">{{item?.dropoffdate}}</td>
+                    <td *ngIf="item.segmentIndex== flightSegmentIndex">{{item?.dropofftme}}</td>
+                    <td *ngIf="item.segmentIndex== flightSegmentIndex">{{item?.Name}}</td>
+                    <td *ngIf="item.segmentIndex== flightSegmentIndex">{{item?.Email}}</td>
+                    <td *ngIf="item.segmentIndex== flightSegmentIndex">{{item['Mobile Number']}}</td>
+                    <td *ngIf="item.segmentIndex== flightSegmentIndex">
+                      <a href="javascript:;">
+                        <i class="ft-edit-2 font-medium-3 mr-2" (click)="onEditAncillaryForm(item)"></i>
+                        <i class="ft-trash font-medium-3" (click)="removeSelectedCars(i,item)"></i>
+                      </a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

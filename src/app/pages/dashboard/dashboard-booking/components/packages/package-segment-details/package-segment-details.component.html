@@ -1,0 +1,32 @@
+<div class="p-0 segment-menu-bar" *ngIf="flightDetailsList?.length > 0">
+  <button class="arrow left-arrow" (click)="segmentScrollLeft()">
+    <i class="ft-chevron-left"></i>
+  </button>
+  <ul class="segment-menu-list" #segmentList>
+    <li
+      class="segment-menu-item text-bold"
+      *ngFor="let flight of flightDetailsList; let i = index; trackBy: trackByTableFn; last as isLast"
+    >
+      <span class="py-1">
+        {{ flight?.serviceSegments?.fromAirportOrCityName }}({{ flight?.serviceSegments?.fromCode }})
+      </span>
+      <span class="bg-info white p-1 rounded mx-2">
+        {{ flight?.serviceSegments?.holidayDays }} D /
+        {{ flight?.serviceSegments?.holidayDays == '0' ? 0 : flight?.serviceSegments?.holidayDays - 1 }} N
+      </span>
+
+      <span class="pt-1">
+        {{ flight?.serviceSegments?.toAirportOrCityName }}({{ flight?.serviceSegments?.toCode }})</span
+      >
+      <!-- <span class="d-inline-block text-muted pt-1">
+        {{
+        flightDetailsList[0].noofAdt + flightDetailsList[0].noofChd + flightDetailsList[0].noofInf
+        }}
+        Travellers
+      </span> -->
+    </li>
+  </ul>
+  <button class="arrow right-arrow" (click)="segmentScrollRight()">
+    <i class="ft-chevron-right"></i>
+  </button>
+</div>

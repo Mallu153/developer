@@ -1,0 +1,50 @@
+<section class="invoice-template">
+  <div class="row justify-content-md-center">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-content p-3">
+          <div id="invoice-template" class="card-body pb-0">
+            <div id="invoice-items-details">
+              <div class="row mt-3 mt-md-0">
+                <div class="col-md-12 col-12">
+                  <p *ngIf="priceData && priceData.length === 0">No Price Records found</p>
+                  <div class="table-responsive" *ngIf="priceData && priceData.length > 0">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th scope="col" sortable="name">Name</th>
+                          <th scope="col" sortable="name">Description</th>
+                          <th scope="col" sortable="name">Tax</th>
+                          <th scope="col" sortable="name">Discount</th>
+                          <th scope="col" sortable="name">Price</th>
+                          <th scope="col" sortable="area">Total</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let price of priceData">
+                          <td>{{ price.itemName }}</td>
+                          <td>{{ price.description }}</td>
+                          <td>
+                            <a class="btn btn-link" (click)="openTaxModal(price)">{{ price.taxPrice }}</a>
+                          </td>
+                          <td>{{ price.discount }}</td>
+                          <td>{{ price.itemPrice }}</td>
+                          <td>{{ price.totalPrice }}</td>
+                        </tr>
+
+                        <tr class="text-bold-500">
+                          <td colspan="5">Total</td>
+                          <td>{{ totalPriceCharge | currency }}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

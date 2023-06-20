@@ -1,0 +1,484 @@
+<div class="page-overlay-wrapper" *ngIf="isloading">
+  <div class="bee-spinner">
+    <div class="lds-spinner">
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+  </div>
+</div>
+<section id="basic-hidden-label-form-layouts">
+  <div class="row match-height">
+    <div class="col-lg-12 col-md-12 col-12">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title">{{ PageTitle }}</h4>
+        </div>
+        <div class="card-content">
+          <div class="card-body">
+            <form [formGroup]="newPaxForm">
+              <div class="row">
+                <div class="col-md-10">
+                  <div class="form-row">
+                    <div class="col-md-3 col-12">
+                      <div class="form-group mb-2">
+                        <label for="biz">Business</label>
+                        <ng-select
+                          class="custom"
+                          [searchable]="true"
+                          formControlName="customerId"
+                          placeholder="Enter Business"
+                          [ngClass]="{
+                            'is-invalid':
+                              (submitted || formControls.customerId.touched) && formControls.customerId.errors
+                          }"
+                        >
+                          <ng-option *ngFor="let biz of bizListlov" [value]="biz.customerId">
+                            {{ biz.businessName }}
+                          </ng-option>
+                        </ng-select>
+                        <div
+                          *ngIf="(submitted || formControls.customerId.touched) && formControls.customerId.errors"
+                          class="invalid-feedback"
+                        >
+                          <div *ngIf="formControls.customerId.errors.required">Please enter your business</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-2 col-12">
+                      <div class="form-group mb-2">
+                        <label for="basic-form-1">Prefix</label>
+                        <select
+                          id="prefix"
+                          class="form-control square"
+                          [ngClass]="{
+                            'is-invalid': (submitted || formControls.prefix.touched) && formControls.prefix.errors
+                          }"
+                          formControlName="prefix"
+                        >
+                          <option [value]="t.id" *ngFor="let t of titleListlov">{{ t.name }}</option>
+                        </select>
+                        <div
+                          *ngIf="(submitted || formControls.prefix.touched) && formControls.prefix.errors"
+                          class="invalid-feedback"
+                        >
+                          <div *ngIf="formControls.prefix.errors.required">Please select your prefix</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-3 col-12">
+                      <div class="form-group mb-2">
+                        <label for="basic-form-3">First Name</label>
+                        <input
+                          type="text"
+                          id="basic-form-3"
+                          [ngClass]="{
+                            'is-invalid': (submitted || formControls.firstName.touched) && formControls.firstName.errors
+                          }"
+                          placeholder="First Name"
+                          class="form-control square"
+                          name="fname"
+                          formControlName="firstName"
+                        />
+                        <div
+                          *ngIf="(submitted || formControls.firstName.touched) && formControls.firstName.errors"
+                          class="invalid-feedback"
+                        >
+                          <div *ngIf="formControls.firstName.errors.required">Please enter your first name</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-2 col-12">
+                      <div class="form-group mb-2">
+                        <label for="basic-form-4">Middle Name</label>
+                        <input
+                          type="text"
+                          id="basic-form-4"
+                          placeholder="Middle  Name"
+                          class="form-control square"
+                          name="mname"
+                          formControlName="middleName"
+                        />
+                      </div>
+                    </div>
+                    <div class="col-md-2 col-12">
+                      <div class="form-group mb-2">
+                        <label for="basic-form-5">Last Name</label>
+                        <input
+                          type="text"
+                          id="basic-form-5"
+                          placeholder="Last Name"
+                          class="form-control square"
+                          name="lname"
+                          formControlName="lastName"
+                          [ngClass]="{
+                            'is-invalid': (submitted || formControls.lastName.touched) && formControls.lastName.errors
+                          }"
+                        />
+                        <div
+                          *ngIf="(submitted || formControls.lastName.touched) && formControls.lastName.errors"
+                          class="invalid-feedback"
+                        >
+                          <div *ngIf="formControls.lastName.errors.required">Please enter your last name</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="col-md-6 col-12">
+                      <div class="form-group mb-2">
+                        <label for="Designation">Designation</label>
+                        <ng-select
+                          class="custom"
+                          [searchable]="true"
+                          bindLabel="name"
+                          [items]="designationListlov"
+                          [addTag]="addDesignationNew"
+                          placeholder="Enter Designation"
+                          formControlName="designationId"
+                        >
+                          <ng-template ng-tag-tmp let-search="searchTerm">
+                            <b>create new option</b>: {{ search }}
+                          </ng-template>
+                        </ng-select>
+                      </div>
+                    </div>
+                    <div class="col-md-6 col-12">
+                      <div class="form-group mb-2">
+                        <label for="Role">Role</label>
+                        <ng-select
+                          [searchable]="true"
+                          class="custom"
+                          formControlName="roleId"
+                          placeholder="Enter Roles"
+                        >
+                          <ng-option *ngFor="let p of roleListlov" [value]="p.id">{{ p.name }} </ng-option>
+                        </ng-select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-2">
+                  <div class="round-img">
+                    <div class="img-out" *ngIf="!newPaxForm.value.dpImageUrl">
+                      <img [src]="imageUrl" width="100%" />
+                    </div>
+                    <div class="img-out" *ngIf="newPaxForm.value.dpImageUrl">
+                      <img [src]="newPaxForm.value.dpImageUrl" width="100%" />
+                    </div>
+                    <input
+                      type="file"
+                      id="imageUpload"
+                      (change)="uploadFile($event)"
+                      accept="image/*"
+                      class="form-control"
+                    />
+                    <div class="uploadtxt">Add Photo</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="col-md-6 col-12">
+                  <div class="form-group mb-2">
+                    <label for="email1">Primary E-mail</label>
+                    <input
+                      type="email"
+                      id="email1"
+                      placeholder="Primary E-mail"
+                      class="form-control square"
+                      name="email1"
+                      formControlName="primaryEmail"
+                      [ngClass]="{
+                        'is-invalid':
+                          (submitted || formControls.primaryEmail.touched) && formControls.primaryEmail.errors
+                      }"
+                    />
+                    <div
+                      *ngIf="(submitted || formControls.primaryEmail.touched) && formControls.primaryEmail.errors"
+                      class="invalid-feedback"
+                    >
+                      <div *ngIf="formControls.primaryEmail.errors.required">Please enter your primary email</div>
+                      <div *ngIf="formControls.primaryEmail.errors.pattern">Email must be a valid email address</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 col-md-5">
+                  <div class="form-group">
+                    <label><span class="hidden-xs">Primary Phone Number</span></label>
+                    <div class="input-group">
+                      <select id="mobile1" class="form-control square halfsize" formControlName="primaryCCP">
+                        <option [value]="c.telephonePrefix" *ngFor="let c of countryListLov">
+                          {{ c.telephonePrefix }}
+                        </option>
+                      </select>
+                      <input
+                        type="tel"
+                        maxlength="20"
+                        id="mb1"
+                        (keypress)="numberOnly($event)"
+                        placeholder="Primary Phone Number"
+                        class="form-control square"
+                        name="mb1"
+                        formControlName="primaryPhoneNumber"
+                        [ngClass]="{
+                          'is-invalid':
+                            (submitted || formControls.primaryPhoneNumber.touched) &&
+                            formControls.primaryPhoneNumber.errors
+                        }"
+                      />
+                      <div
+                        *ngIf="
+                          (submitted || formControls.primaryPhoneNumber.touched) &&
+                          formControls.primaryPhoneNumber.errors
+                        "
+                        class="invalid-feedback"
+                      >
+                        <div *ngIf="formControls.primaryPhoneNumber.errors.required">
+                          Please enter your primary phone number
+                        </div>
+                        <!-- <div *ngIf="formControls.primaryPhoneNumber.errors?.pattern">
+                          Phone number must be 10 digits only!
+                        </div> -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <p
+                  class="pointer ml-2 mt-4"
+                  (click)="collapse.toggle()"
+                  [attr.aria-expanded]="!isCollapsed"
+                  aria-controls="collapseExample"
+                >
+                  {{ !isCollapsed ? 'Show less' : 'Show More' }}
+                </p>
+              </div>
+              <div class="form-row" #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
+                <div class="col-md-4 col-12">
+                  <div class="form-group mb-2">
+                    <label for="email2">Secondary E-mail</label>
+                    <input
+                      type="email"
+                      id="email2"
+                      placeholder="Secondary E-mail"
+                      class="form-control square"
+                      name="email2"
+                      formControlName="secondaryEmail"
+                      [ngClass]="{
+                        'is-invalid':
+                          (submitted || formControls.secondaryEmail.touched) && formControls.secondaryEmail.errors
+                      }"
+                    />
+                    <div
+                      *ngIf="(submitted || formControls.secondaryEmail.touched) && formControls.secondaryEmail.errors"
+                      class="invalid-feedback"
+                    >
+                      <div *ngIf="formControls.secondaryEmail.errors?.pattern">Email must be a valid email address</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-12 col-md-4">
+                  <div class="form-group">
+                    <label><span class="hidden-xs">Secondary Phone Number</span></label>
+                    <div class="input-group">
+                      <select id="mobile2" class="form-control square halfsize" formControlName="secondaryCCP">
+                        <option [value]="c.telephonePrefix" *ngFor="let c of countryListLov">
+                          {{ c.telephonePrefix }}
+                        </option>
+                      </select>
+                      <input
+                        type="tel"
+                        maxlength="20"
+                        (keypress)="numberOnly($event)"
+                        id="mb2"
+                        placeholder="Secondary Phone Number"
+                        class="form-control square square"
+                        name="mb2"
+                        formControlName="secondaryPhoneNumber"
+                      />
+                      <!-- [ngClass]="{
+                        'is-invalid':
+                          (submitted || formControls.secondaryPhoneNumber.touched) &&
+                          formControls.secondaryPhoneNumber.errors
+                      }"
+                      <div
+                        *ngIf="
+                          (submitted || formControls.secondaryPhoneNumber.touched) &&
+                          formControls.secondaryPhoneNumber.errors
+                        "
+                        class="invalid-feedback"
+                      >
+                        <div *ngIf="formControls.secondaryPhoneNumber.errors?.pattern">
+                          Phone number must be 10 digits only!
+                        </div>
+                      </div> -->
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4 col-12">
+                  <div class="form-group mb-2">
+                    <label for="telephoneno">TelePhone No</label>
+                    <input
+                      type="text"
+                      id="telephoneno"
+                      (keypress)="numberOnly($event)"
+                      placeholder="TelePhone No"
+                      class="form-control square"
+                      name="telephoneno"
+                      formControlName="telephoneNumber"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="col-12 col-md-3">
+                  <label for="Nationality">Nationality</label>
+                  <select id="nationality" class="form-control square" formControlName="nationality">
+                    <option value="">Choose</option>
+                    <option [value]="c.id" *ngFor="let c of nationalityListLov">{{ c.name }}</option>
+                  </select>
+                </div>
+                <div class="col-12 col-md-3">
+                  <label for="db">Dob</label>
+                  <input
+                    type="date"
+                    [min]="minDate"
+                    [max]="maxDate"
+                    class="form-control square"
+                    id="dob"
+                    formControlName="dob"
+                  />
+                </div>
+                <div class="col-12 col-md-3">
+                  <label for="passport">Passport</label>
+                  <input
+                    type="text"
+                    placeholder="Passport"
+                    class="form-control square"
+                    id="passport"
+                    formControlName="passport"
+                  />
+                </div>
+                <div class="col-12 col-md-3">
+                  <label for="issuedCountry">Issued Country</label>
+                  <select id="issuedCountry" class="form-control square" formControlName="issuedCountry">
+                    <option value="">Choose</option>
+                    <option [value]="c.id" *ngFor="let c of countryListLov">{{ c.name }}</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="col-md-12 col-12">
+                  <label for="basic-form-9">Remarks and Notes</label>
+                  <textarea
+                    id="basic-form-9"
+                    rows="4"
+                    placeholder="Remarks And Notes"
+                    class="form-control square"
+                    name="comment"
+                    formControlName="remarksAndNotes"
+                  ></textarea>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="col-12 col-md-3">
+                  <label for="basic-form-10">Start Date</label>
+                  <input
+                    type="date"
+                    id="sdate"
+                    class="form-control square"
+                    name="sdate"
+                    formControlName="startDate"
+                    [ngClass]="{
+                      'is-invalid': (submitted || formControls.startDate.touched) && formControls.startDate.errors
+                    }"
+                  />
+                  <div
+                    *ngIf="(submitted || formControls.startDate.touched) && formControls.startDate.errors"
+                    class="invalid-feedback"
+                  >
+                    <div *ngIf="formControls.startDate.errors.required">Please enter your start Date</div>
+                  </div>
+                </div>
+                <div class="col-12 col-md-3">
+                  <label for="basic-form-11">End Date</label>
+                  <input type="date" id="edate" class="form-control square" name="edate" formControlName="endDate" />
+                </div>
+                <div class="col-12 col-md-3">
+                  <label for="rstatus">Status</label>
+                  <select class="form-control square" id="rstatus" formControlName="status">
+                    <option value="true">Active</option>
+                    <option value="false">InActive</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="d-flex justify-content-end mt-1">
+                <button
+                  type="submit"
+                  *ngIf="keys?.includes(activityButtonKey)"
+                  (click)="submit('activities')"
+                  class="btn btn-primary mr-2"
+                >
+                  <i class="ft-map-pin mr-1"></i>Activities
+                </button>
+                <button
+                  type="submit"
+                  *ngIf="keys?.includes(packageButtonKey)"
+                  (click)="submit('holidays')"
+                  class="btn btn-primary pull-right mr-2"
+                >
+                  <i class="icon-bulb mr-1"></i>Holiday Packages
+                </button>
+                <button
+                  type="submit"
+                  *ngIf="keys?.includes(packageButtonKey)"
+                  (click)="submit('holidays', 'dmc')"
+                  class="btn btn-primary pull-right mr-2"
+                >
+                  <i class="icon-bulb mr-1"></i>DMC
+                </button>
+                <button
+                  type="submit"
+                  *ngIf="keys?.includes(ancillaryButtonKey)"
+                  (click)="submit('ancillary')"
+                  class="btn btn-primary pull-right mr-2"
+                >
+                  <i class="fa fa-car mr-1"></i>Ancillary
+                </button>
+                <button
+                  type="submit"
+                  *ngIf="keys?.includes(hotelButtonKey)"
+                  (click)="submit('hotel')"
+                  class="btn btn-primary pull-right ml-2 mr-2"
+                >
+                  <i class="fa fa-bed mr-1"></i>Hotel
+                </button>
+                <button
+                  type="submit"
+                  *ngIf="keys?.includes(flightButtonKey)"
+                  (click)="submit('flight')"
+                  class="btn btn-primary pull-right"
+                >
+                  <i class="icon-plane mr-1"></i>Flight
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

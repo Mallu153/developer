@@ -1,0 +1,1042 @@
+<section id="package-holiday-list-view" *ngIf="packageHolidayList">
+  <div class="row">
+    <div class="col-lg-8 col-md-8 col-sm-8 col-12 offset-md-2">
+      <div class="card">
+        <div class="card-header">
+          <app-package-segment-details
+            [flightDetailsList]="flightDetailsList"
+            *ngIf="flightDetailsList?.length > 0"
+          ></app-package-segment-details>
+        </div>
+        <div class="card-content">
+          <div class="card-body">
+            <div class="mb-2 border-bottom pi-2 shadow">
+              <button
+                type="button"
+                class="btn btn-b1"
+                (click)="getDataAttribute('all')"
+                [ngClass]="{ ' btn-outline-primary1 round': isAllSelected, 'btn-link shadow-none': !isAllSelected }"
+              >
+                <strong>{{ packageHolidayList?.packageHeader?.totalNoOfDays }}</strong>
+                Day Plan
+              </button>
+              <button
+                type="button"
+                class="btn btn-b1 shadow-none"
+                *ngIf="packageHolidayList?.packageHeader?.totalNoOfFlights"
+                [ngClass]="{
+                  ' btn-outline-primary1 round': !isAllSelected && isFlightSelected,
+                  'btn-link ': !isFlightSelected
+                }"
+                (click)="getDataAttribute('flight')"
+              >
+                <strong>{{ packageHolidayList?.packageHeader?.totalNoOfFlights }}</strong>
+                Flights
+              </button>
+              <button
+                type="button"
+                class="btn btn-b1 shadow-none"
+                *ngIf="packageHolidayList?.packageHeader?.totalNoOfHotels"
+                [ngClass]="{
+                  ' btn-outline-primary1 round': !isAllSelected && isHotelSelected,
+                  'btn-link ': !isHotelSelected
+                }"
+                (click)="getDataAttribute('hotel')"
+              >
+                <strong>{{ packageHolidayList?.packageHeader?.totalNoOfHotels }}</strong>
+                Hotels
+              </button>
+              <button
+                type="button"
+                class="btn btn-b1 shadow-none"
+                *ngIf="packageHolidayList?.packageHeader?.totalNoOfAttractions"
+                [ngClass]="{
+                  ' btn-outline-primary1 round': !isAllSelected && isActivitiesSelected,
+                  'btn-link ': !isActivitiesSelected
+                }"
+                (click)="getDataAttribute('activities')"
+              >
+                <strong>{{ packageHolidayList?.packageHeader?.totalNoOfAttractions }}</strong>
+                Activities
+              </button>
+              <button
+                type="button"
+                class="btn btn-b1 shadow-none"
+                *ngIf="packageHolidayList?.packageHeader?.totalNoOfAncillaries"
+                [ngClass]="{
+                  ' btn-outline-primary1 round': !isAllSelected && isAncillarySelected,
+                  'btn-link ': !isAncillarySelected
+                }"
+                (click)="getDataAttribute('ancillary')"
+              >
+                <strong>{{ packageHolidayList?.packageHeader?.totalNoOfAncillaries }}</strong>
+                Ancillary
+              </button>
+              <button
+                type="button"
+                class="bbtn btn-b1 shadow-none"
+                *ngIf="packageHolidayList.notAppicableAncillary.length > 0"
+                [ngClass]="{
+                  ' btn-outline-primary1 round': !isAllSelected && isNotAssignedAncillarySelected,
+                  'btn-link ': !isNotAssignedAncillarySelected
+                }"
+                (click)="getDataAttribute('notAssignedAncillary')"
+              >
+                <strong>{{ packageHolidayList.notAppicableAncillary.length }}</strong>
+                Ancillary
+                <span class="font-small-1">(Unassigned)</span>
+              </button>
+
+              <button
+                type="button"
+                (click)="navigatedToPackageEditMode()"
+                class="btn shadow-none mr-0 btn-link round pull-right"
+              >
+                Modify
+              </button>
+              <span
+                class="d-inline-block text-muted pt-1 pull-right mr-2 cursor-pointer"
+                (click)="showAndHidePassenger(0)"
+                *ngIf="flightDetailsList && flightDetailsList?.length > 0"
+              >
+                {{ flightDetailsList[0]?.noofAdt + flightDetailsList[0]?.noofChd + flightDetailsList[0]?.noofInf }}
+                Travellers
+              </span>
+            </div>
+            <app-package-pax-info
+              [hidden]="!showAndHidePassengers[0]"
+              *ngIf="packageHolidayList && packageHolidayList?.packagePaxDetails"
+              [addons]="[]"
+              [sourceType]="'previewPackage'"
+              [paxInfo]="packageHolidayList?.packagePaxDetails"
+            ></app-package-pax-info>
+
+            <div class="menu-bar" *ngIf="dayCountList && isAllSelected">
+              <button class="arrow left-arrow ml-0 pl-0" (click)="dayScrollLeft()">
+                <i class="ft-chevron-left"></i>
+              </button>
+              <ul class="menu-list" #dayList>
+                <li
+                  class="menu-item btn btn-outline-primary shadow-sm m-1 border-light"
+                  (click)="scrollToId('day', flightItem + 1)"
+                  [ngClass]="{ ' active': daysActive[flightItem + 1], inactive: !daysActive[flightItem + 1] }"
+                  *ngFor="let daycount of dayCountList; index as flightItem; trackBy: trackByDayCountFn"
+                >
+                  <span class="text-bold-600 font-small-2">Day {{ flightItem + 1 }}</span>
+                  <span class="d-block">
+                    {{ packageHolidayList?.packageLines[flightItem]?.date | date: 'EEE, dd MMM yy' }}
+                  </span>
+                </li>
+              </ul>
+              <button class="arrow right-arrow mr-0 pr-0" (click)="dayScrollRight()">
+                <i class="ft-chevron-right"></i>
+              </button>
+            </div>
+
+            <div class="row">
+              <div class="col-12">
+                <div class="d-flex flex-row">
+                  <div class="p-1 col-12">
+                    <div
+                      *ngFor="let item of packageHolidayList?.packageLines; index as i; trackBy: trackByFn"
+                      class="mb-2"
+                      [ngClass]="{
+                        'card border rounded-0':
+                          (isFlightSelected && item?.flight?.length > 0) ||
+                          (isHotelSelected && item?.hotel?.length > 0) ||
+                          (isActivitiesSelected && item?.attractions?.length > 0) ||
+                          (isAncillarySelected && item?.ancillary?.length > 0),
+                        'shadow-lg': scrollClass == 'day_' + (i + 1)
+                      }"
+                      id="day_{{ i + 1 }}"
+                    >
+                      <div
+                        class="day__header"
+                        [ngClass]="{
+                          show_filters:
+                            (isFlightSelected &&
+                              item?.flight?.length > 0 &&
+                              !isHotelSelected &&
+                              !isActivitiesSelected &&
+                              !isAncillarySelected) ||
+                            (isHotelSelected &&
+                              item?.hotel?.length > 0 &&
+                              !isFlightSelected &&
+                              !isActivitiesSelected &&
+                              !isAncillarySelected) ||
+                            (isAncillarySelected &&
+                              item?.ancillary?.length > 0 &&
+                              !isFlightSelected &&
+                              !isHotelSelected &&
+                              !isActivitiesSelected) ||
+                            (isActivitiesSelected &&
+                              item?.attractions?.length > 0 &&
+                              !isFlightSelected &&
+                              !isHotelSelected &&
+                              !isAncillarySelected),
+                          not_filters:
+                            isAllSelected ||
+                            (isFlightSelected && item?.flight?.length == 0) ||
+                            (isHotelSelected && item?.hotel?.length == 0) ||
+                            (isActivitiesSelected && item?.attractions?.length == 0) ||
+                            (isAncillarySelected && item?.ancillary?.length == 0) ||
+                            (isNotAssignedAncillarySelected && packageHolidayList.notAppicableAncillary?.length > 0) ||
+                            (item?.flight?.length == 0 &&
+                              item?.hotel?.length == 0 &&
+                              item?.attractions?.length == 0 &&
+                              item?.ancillary?.length == 0)
+                        }"
+                      >
+                        <span class="dayplan-title mb-2"> {{ i + 1 | ordinal }} Day</span>
+
+                        <span *ngIf="item?.flight?.length > 0 && isAllSelected">
+                          <i class="fas fa-plane ml-2"></i>
+                          Flight: {{ item?.flight?.length }}
+                        </span>
+                        <span *ngIf="item?.hotel?.length > 0 && isAllSelected">
+                          <i class="fas fa-hotel ml-2"></i>
+                          Hotel: {{ item?.hotel?.length }}
+                        </span>
+
+                        <span *ngIf="item?.attractions?.length > 0 && isAllSelected">
+                          <i class="fas fa-hiking ml-2"></i>
+                          Activities: {{ item?.attractions?.length }}
+                        </span>
+                        <span *ngIf="item?.ancillary?.length > 0 && isAllSelected">
+                          <i class="fa fa-car ml-2"></i>
+                          Ancillary: {{ item?.ancillary?.length }}
+                        </span>
+
+                        <span
+                          class="dayplan-title mb-2 pull-right border border-top-0 border-right-0 rounded-0 rounded-top"
+                        >
+                          {{ packageHolidayList?.packageLines[i]?.date | date: 'EEE, dd MMM yy' }}</span
+                        >
+                      </div>
+
+                      <div class="day__header" *ngIf="isAllSelected">
+                        <span class="mr-5 ml-3">
+                          <h4 class="text-primary font-sm mb-0">{{ i + 1 | ordinal }} Day</h4>
+                          {{ packageHolidayList?.packageLines[i]?.date | date: 'EEE, dd MMM yy' }}</span
+                        >
+
+                        <span *ngIf="item?.flight?.length > 0 && isAllSelected" class="d-flex align-items-center">
+                          Flight
+                          <div class="rounded-10 bg-white text-primary shadow-sm">{{ item?.flight?.length }}</div>
+                        </span>
+                        <span *ngIf="item?.hotel?.length > 0 && isAllSelected" class="d-flex align-items-center">
+                          Hotel
+                          <div class="rounded-10 bg-white text-primary shadow-sm">{{ item?.hotel?.length }}</div>
+                        </span>
+
+                        <span *ngIf="item?.attractions?.length > 0 && isAllSelected" class="d-flex align-items-center">
+                          Activities
+                          <div class="rounded-10 bg-white text-primary shadow-sm">{{ item?.attractions?.length }}</div>
+                        </span>
+                        <span *ngIf="item?.ancillary?.length > 0 && isAllSelected" class="d-flex align-items-center">
+                          Ancillary
+                          <div class="rounded-10 bg-white text-primary shadow-sm">{{ item?.ancillary?.length }}</div>
+                        </span>
+                      </div>
+
+                      <div
+                        *ngIf="item?.flight?.length > 0"
+                        [ngClass]="{ show_filters: isFlightSelected, not_filters: !isFlightSelected }"
+                      >
+                        <div *ngFor="let flightItem of item?.flight; trackBy: trackByTableFn; index as flightIndex">
+                          <div class="row">
+                            <div class="col-12">
+                              <div class="card mb-1 mt-1">
+                                <div class="card-body p-1">
+                                  <div class="d-flex flex-row align-items-start">
+                                    <div class="p-1 col-1 text-center">
+                                      <div class="p-0"><i class="fas fa-plane fa-lg bg-blue"></i></div>
+                                    </div>
+
+                                    <div class="p-1 col-9">
+                                      <div>
+                                        <span class="text-muted mr-1">From</span>
+                                        <span>{{ flightItem.originDestinationLocation.split('-')[0] }} </span>
+                                        <span class="text-muted mx-1">to</span>
+                                        <span>{{ flightItem.originDestinationLocation.split('-')[1] }}</span>
+                                      </div>
+
+                                      <div>
+                                        <span class="text-muted mr-1">Class</span>
+                                        <span class="">{{ flightItem.classDays }}</span>
+                                        <div class="d-flex" *ngIf="flightItem?.addons?.length > 0">
+                                          <div>
+                                            <span
+                                              class="text-muted mr-1"
+                                              (click)="showAndHideFlightAddons(i + 1 + flightIndex)"
+                                            >
+                                              <span class="text-warning cursor-pointer"> Addons</span>
+                                              <i
+                                                *ngIf="!flightAddonsHide[i + 1 + flightIndex]"
+                                                class="ft-chevron-right"
+                                              ></i>
+                                              <i
+                                                *ngIf="flightAddonsHide[i + 1 + flightIndex]"
+                                                class="ft-chevron-down"
+                                              ></i>
+                                            </span>
+                                          </div>
+
+                                          <div class="p-1" [hidden]="!flightAddonsHide[i + 1 + flightIndex]">
+                                            <div *ngFor="let addon of flightItem?.addons; trackBy: trackByTableFn">
+                                              <div class="text-info">{{ addon?.addOnType?.name }}</div>
+                                              <div *ngIf="addon?.remarks">
+                                                <span class="text-bold-600 font-small-2">Remarks</span>
+                                                {{ addon?.remarks }}
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="col-2 socialm margin-left-auto" ngbDropdown>
+                                      <a
+                                        *ngIf="
+                                          flightItem.product !== 'Package' &&
+                                          flightItem.product !== 'Ancillary' &&
+                                          flightItem.product !== 'Attractions'
+                                        "
+                                        href="javascript:;"
+                                        class="btn btn-sm btn-outline-info round mr-1 mt-1"
+                                        placement="top"
+                                        ngbDropdownToggle
+                                      >
+                                        <i class="ft-search dropdown-toggle"></i>
+                                        <div ngbDropdownMenu class="dropdown-menu" role="menu">
+                                          <a
+                                            class="dropdown-item"
+                                            (click)="
+                                              Online(
+                                                flightItem.serviceRequestNumber,
+                                                flightItem.serviceRequestLine,
+                                                flightItem.product
+                                              )
+                                            "
+                                            *ngIf="
+                                              flightItem.product !== 'Package' && flightItem.product !== 'Ancillary'
+                                            "
+                                          >
+                                            {{ flightItem.product === 'Flight' ? 'Manual' : 'Online' }}
+                                          </a>
+
+                                          <a
+                                            class="dropdown-item"
+                                            (click)="
+                                              offline(
+                                                flightItem.serviceRequestNumber,
+                                                flightItem.serviceRequestLine,
+                                                flightItem.product
+                                              )
+                                            "
+                                            *ngIf="flightItem.product !== 'Package'"
+                                          >
+                                            Offline
+                                          </a>
+
+                                          <a
+                                            class="dropdown-item"
+                                            (click)="
+                                              mptb(
+                                                flightItem.serviceRequestNumber,
+                                                flightItem.serviceRequestLine,
+                                                flightItem.product
+                                              )
+                                            "
+                                            *ngIf="
+                                              flightItem.product !== 'Package' &&
+                                              flightItem.product !== 'Ancillary' &&
+                                              flightItem.product !== 'Hotel'
+                                            "
+                                          >
+                                            Auto
+                                          </a>
+                                        </div>
+                                      </a>
+
+                                      <a
+                                        *ngIf="flightItem.product === 'Ancillary'"
+                                        (click)="
+                                          offline(
+                                            flightItem.serviceRequestNumber,
+                                            flightItem.serviceRequestLine,
+                                            flightItem.product
+                                          )
+                                        "
+                                        href="javascript:;"
+                                        class="btn btn-sm btn-outline-info round mr-1 mt-1"
+                                        placement="top"
+                                        ngbTooltip="offline"
+                                      >
+                                        <i class="ft-search"></i>
+                                      </a>
+                                      <a
+                                        *ngIf="
+                                          flightItem.product === 'Attractions' || flightItem.product === 'Attraction'
+                                        "
+                                        (click)="
+                                          offline(
+                                            flightItem.serviceRequestNumber,
+                                            flightItem.serviceRequestLine,
+                                            flightItem.product
+                                          )
+                                        "
+                                        href="javascript:;"
+                                        class="btn btn-sm btn-outline-info round mr-1 mt-1"
+                                        placement="top"
+                                        ngbTooltip="offline"
+                                      >
+                                        <i class="ft-search"></i>
+                                      </a>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        *ngIf="item?.hotel?.length > 0"
+                        [ngClass]="{ show_filters: isHotelSelected, not_filters: !isHotelSelected }"
+                      >
+                        <div *ngFor="let hotelItem of item?.hotel; trackBy: trackByTableFn; index as hotelIndex">
+                          <div class="row">
+                            <div class="col-12">
+                              <div class="card mb-1 mt-1">
+                                <div class="card-body p-1">
+                                  <div class="d-flex flex-row align-items-center">
+                                    <div class="p-1 col-1 text-center">
+                                      <div class="p-0"><i class="fas fa-hotel fa-lg bg-orange"></i></div>
+                                    </div>
+
+                                    <div class="p-1 col-9">
+                                      <div>
+                                        <span class="text-muted mr-1">Hotel Location</span>
+                                        <span> {{ hotelItem.originDestinationLocation }} </span>
+                                      </div>
+                                      <!-- <div>
+                                    <span class="text-muted mr-1">On</span> <span class="">{{ hotelItem.dateOfJourneyCheckIn | date: "EEE, dd MMM yy"}}</span>
+
+                                  </div> -->
+                                      <div>
+                                        <span
+                                          >{{ hotelDaysConvert(hotelItem.classDays) + 1 }} D /
+                                          {{ hotelDaysConvert(hotelItem.classDays) }} N</span
+                                        >
+                                        <div class="d-flex" *ngIf="hotelItem?.addons?.length > 0">
+                                          <div>
+                                            <span
+                                              class="text-muted mr-1"
+                                              (click)="showAndHideHotelAddons(i + 1 + hotelIndex)"
+                                            >
+                                              <span class="text-warning cursor-pointer"> Addons</span>
+                                              <i
+                                                *ngIf="!hotelAddonsHide[i + 1 + hotelIndex]"
+                                                class="ft-chevron-right"
+                                              ></i>
+                                              <i
+                                                *ngIf="hotelAddonsHide[i + 1 + hotelIndex]"
+                                                class="ft-chevron-down"
+                                              ></i>
+                                            </span>
+                                          </div>
+
+                                          <div class="p-1" [hidden]="!hotelAddonsHide[i + 1 + hotelIndex]">
+                                            <div *ngFor="let addon of hotelItem?.addons; trackBy: trackByTableFn">
+                                              <div class="text-info">{{ addon.addonTitle }}</div>
+                                              <div *ngIf="addon?.addonRemarks">
+                                                <span class="text-bold-600 font-small-2">Remarks</span>
+                                                {{ addon?.addonRemarks }}
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    <div class="col-2 socialm margin-left-auto" ngbDropdown>
+                                      <a
+                                        *ngIf="
+                                          hotelItem.product !== 'Package' &&
+                                          hotelItem.product !== 'Ancillary' &&
+                                          hotelItem.product !== 'Attractions'
+                                        "
+                                        href="javascript:;"
+                                        class="btn btn-sm btn-outline-info round mr-1 mt-1"
+                                        placement="top"
+                                        ngbDropdownToggle
+                                      >
+                                        <i class="ft-search dropdown-toggle"></i>
+                                        <div ngbDropdownMenu class="dropdown-menu" role="menu">
+                                          <a
+                                            class="dropdown-item"
+                                            (click)="
+                                              Online(
+                                                hotelItem.serviceRequestNumber,
+                                                hotelItem.serviceRequestLine,
+                                                hotelItem.product
+                                              )
+                                            "
+                                            *ngIf="hotelItem.product !== 'Package' && hotelItem.product !== 'Ancillary'"
+                                          >
+                                            {{ hotelItem.product === 'Flight' ? 'Manual' : 'Online' }}
+                                          </a>
+
+                                          <a
+                                            class="dropdown-item"
+                                            (click)="
+                                              offline(
+                                                hotelItem.serviceRequestNumber,
+                                                hotelItem.serviceRequestLine,
+                                                hotelItem.product
+                                              )
+                                            "
+                                            *ngIf="hotelItem.product !== 'Package'"
+                                          >
+                                            Offline
+                                          </a>
+
+                                          <a
+                                            class="dropdown-item"
+                                            (click)="
+                                              mptb(
+                                                hotelItem.serviceRequestNumber,
+                                                hotelItem.serviceRequestLine,
+                                                hotelItem.product
+                                              )
+                                            "
+                                            *ngIf="
+                                              hotelItem.product !== 'Package' &&
+                                              hotelItem.product !== 'Ancillary' &&
+                                              hotelItem.product !== 'Hotel'
+                                            "
+                                          >
+                                            Auto
+                                          </a>
+                                        </div>
+                                      </a>
+
+                                      <a
+                                        *ngIf="hotelItem.product === 'Ancillary'"
+                                        (click)="
+                                          offline(
+                                            hotelItem.serviceRequestNumber,
+                                            hotelItem.serviceRequestLine,
+                                            hotelItem.product
+                                          )
+                                        "
+                                        href="javascript:;"
+                                        class="btn btn-sm btn-outline-info round mr-1 mt-1"
+                                        placement="top"
+                                        ngbTooltip="offline"
+                                      >
+                                        <i class="ft-search"></i>
+                                      </a>
+                                      <a
+                                        *ngIf="
+                                          hotelItem.product === 'Attractions' || hotelItem.product === 'Attraction'
+                                        "
+                                        (click)="
+                                          offline(
+                                            hotelItem.serviceRequestNumber,
+                                            hotelItem.serviceRequestLine,
+                                            hotelItem.product
+                                          )
+                                        "
+                                        href="javascript:;"
+                                        class="btn btn-sm btn-outline-info round mr-1 mt-1"
+                                        placement="top"
+                                        ngbTooltip="offline"
+                                      >
+                                        <i class="ft-search"></i>
+                                      </a>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        *ngIf="item?.attractions?.length > 0"
+                        [ngClass]="{ show_filters: isActivitiesSelected, not_filters: !isActivitiesSelected }"
+                      >
+                        <div *ngFor="let attractionsItem of item?.attractions; trackBy: trackByTableFn">
+                          <div class="row">
+                            <div class="col-12">
+                              <div class="card mb-1 mt-1">
+                                <div class="card-body p-1">
+                                  <div class="d-flex flex-row align-items-center">
+                                    <div class="p-1 col-1 text-center">
+                                      <div class="p-0">
+                                        <i alt="attractions" class="fas fa-hiking fa-lg bg-green"></i>
+                                      </div>
+                                    </div>
+
+                                    <div class="p-1 col-9">
+                                      <div>
+                                        <span class="text-muted mr-1">Activity</span>
+                                        <span class=""> {{ attractionsItem.originDestinationLocation }} </span>
+                                      </div>
+                                      <!-- <div>
+                                    <span class="text-muted mr-1">On</span> <span class="">{{ attractionsItem.dateOfJourneyCheckIn | date: "EEE, dd MMM yy"}}</span>
+
+                                  </div> -->
+                                    </div>
+                                    <div class="col-2 socialm margin-left-auto" ngbDropdown>
+                                      <a
+                                        *ngIf="
+                                          attractionsItem.product !== 'Package' &&
+                                          attractionsItem.product !== 'Ancillary' &&
+                                          attractionsItem.product !== 'Attractions'
+                                        "
+                                        href="javascript:;"
+                                        class="btn btn-sm btn-outline-info round mr-1 mt-1"
+                                        placement="top"
+                                        ngbDropdownToggle
+                                      >
+                                        <i class="ft-search dropdown-toggle"></i>
+                                        <div ngbDropdownMenu class="dropdown-menu" role="menu">
+                                          <a
+                                            class="dropdown-item"
+                                            (click)="
+                                              Online(
+                                                attractionsItem.serviceRequestNumber,
+                                                attractionsItem.serviceRequestLine,
+                                                attractionsItem.product
+                                              )
+                                            "
+                                            *ngIf="
+                                              attractionsItem.product !== 'Package' &&
+                                              attractionsItem.product !== 'Ancillary'
+                                            "
+                                          >
+                                            {{ attractionsItem.product === 'Flight' ? 'Manual' : 'Online' }}
+                                          </a>
+
+                                          <a
+                                            class="dropdown-item"
+                                            (click)="
+                                              offline(
+                                                attractionsItem.serviceRequestNumber,
+                                                attractionsItem.serviceRequestLine,
+                                                attractionsItem.product
+                                              )
+                                            "
+                                            *ngIf="attractionsItem.product !== 'Package'"
+                                          >
+                                            Offline
+                                          </a>
+
+                                          <a
+                                            class="dropdown-item"
+                                            (click)="
+                                              mptb(
+                                                attractionsItem.serviceRequestNumber,
+                                                attractionsItem.serviceRequestLine,
+                                                attractionsItem.product
+                                              )
+                                            "
+                                            *ngIf="
+                                              attractionsItem.product !== 'Package' &&
+                                              attractionsItem.product !== 'Ancillary' &&
+                                              attractionsItem.product !== 'Hotel'
+                                            "
+                                          >
+                                            Auto
+                                          </a>
+                                        </div>
+                                      </a>
+
+                                      <a
+                                        *ngIf="attractionsItem.product === 'Ancillary'"
+                                        (click)="
+                                          offline(
+                                            attractionsItem.serviceRequestNumber,
+                                            attractionsItem.serviceRequestLine,
+                                            attractionsItem.product
+                                          )
+                                        "
+                                        href="javascript:;"
+                                        class="btn btn-sm btn-outline-info round mr-1 mt-1"
+                                        placement="top"
+                                        ngbTooltip="offline"
+                                      >
+                                        <i class="ft-search"></i>
+                                      </a>
+                                      <a
+                                        *ngIf="
+                                          attractionsItem.product === 'Attractions' ||
+                                          attractionsItem.product === 'Attraction'
+                                        "
+                                        (click)="
+                                          offline(
+                                            attractionsItem.serviceRequestNumber,
+                                            attractionsItem.serviceRequestLine,
+                                            attractionsItem.product
+                                          )
+                                        "
+                                        href="javascript:;"
+                                        class="btn btn-sm btn-outline-info round mr-1 mt-1"
+                                        placement="top"
+                                        ngbTooltip="offline"
+                                      >
+                                        <i class="ft-search"></i>
+                                      </a>
+
+                                      <a
+                                        href="javascript:;"
+                                        class="btn btn-sm btn-outline-info round mr-1 mt-1"
+                                        placement="top"
+                                        ngbTooltip="delete"
+                                      >
+                                        <i class="icon-trash"></i>
+                                      </a>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        *ngIf="item?.ancillary?.length > 0"
+                        [ngClass]="{ show_filters: isAncillarySelected, not_filters: !isAncillarySelected }"
+                      >
+                        <div *ngFor="let ancillaryItem of item?.ancillary; trackBy: trackByTableFn">
+                          <div class="row">
+                            <div class="col-12">
+                              <div class="card mb-1 mt-1">
+                                <div class="card-body p-1">
+                                  <div class="d-flex flex-row align-items-center">
+                                    <div class="p-1 col-1 text-center">
+                                      <div class="p-0"><i class="fa fa-car fa-lg bg-ppl"></i></div>
+                                    </div>
+
+                                    <div class="p-1 col-9">
+                                      <div>
+                                        <span class="text-muted mr-1">Ancillary</span>
+                                        <span>{{ ancillaryItem.originDestinationLocation }} </span>
+                                      </div>
+
+                                      <div>
+                                        <span class="text-muted mr-1">Location</span>
+                                        <span class="">{{ ancillaryItem.classDays }}</span>
+                                      </div>
+                                    </div>
+                                    <div class="col-2 socialm margin-left-auto" ngbDropdown>
+                                      <a
+                                        *ngIf="
+                                          ancillaryItem.product !== 'Package' &&
+                                          ancillaryItem.product !== 'Ancillary' &&
+                                          ancillaryItem.product !== 'Attractions'
+                                        "
+                                        href="javascript:;"
+                                        class="btn btn-sm btn-outline-info round mr-1 mt-1"
+                                        placement="top"
+                                        ngbDropdownToggle
+                                      >
+                                        <i class="ft-search dropdown-toggle"></i>
+                                        <div ngbDropdownMenu class="dropdown-menu" role="menu">
+                                          <a
+                                            class="dropdown-item"
+                                            (click)="
+                                              Online(
+                                                ancillaryItem.serviceRequestNumber,
+                                                ancillaryItem.serviceRequestLine,
+                                                ancillaryItem.product
+                                              )
+                                            "
+                                            *ngIf="
+                                              ancillaryItem.product !== 'Package' &&
+                                              ancillaryItem.product !== 'Ancillary'
+                                            "
+                                          >
+                                            {{ ancillaryItem.product === 'Flight' ? 'Manual' : 'Online' }}
+                                          </a>
+
+                                          <a
+                                            class="dropdown-item"
+                                            (click)="
+                                              offline(
+                                                ancillaryItem.serviceRequestNumber,
+                                                ancillaryItem.serviceRequestLine,
+                                                ancillaryItem.product
+                                              )
+                                            "
+                                            *ngIf="ancillaryItem.product !== 'Package'"
+                                          >
+                                            Offline
+                                          </a>
+
+                                          <a
+                                            class="dropdown-item"
+                                            (click)="
+                                              mptb(
+                                                ancillaryItem.serviceRequestNumber,
+                                                ancillaryItem.serviceRequestLine,
+                                                ancillaryItem.product
+                                              )
+                                            "
+                                            *ngIf="
+                                              ancillaryItem.product !== 'Package' &&
+                                              ancillaryItem.product !== 'Ancillary' &&
+                                              ancillaryItem.product !== 'Hotel'
+                                            "
+                                          >
+                                            Auto
+                                          </a>
+                                        </div>
+                                      </a>
+
+                                      <a
+                                        *ngIf="ancillaryItem.product === 'Ancillary'"
+                                        (click)="
+                                          offline(
+                                            ancillaryItem.serviceRequestNumber,
+                                            ancillaryItem.serviceRequestLine,
+                                            ancillaryItem.product
+                                          )
+                                        "
+                                        href="javascript:;"
+                                        class="btn btn-sm btn-outline-info round mr-1 mt-1"
+                                        placement="top"
+                                        ngbTooltip="offline"
+                                      >
+                                        <i class="ft-search"></i>
+                                      </a>
+                                      <a
+                                        *ngIf="
+                                          ancillaryItem.product === 'Attractions' ||
+                                          ancillaryItem.product === 'Attraction'
+                                        "
+                                        (click)="
+                                          offline(
+                                            ancillaryItem.serviceRequestNumber,
+                                            ancillaryItem.serviceRequestLine,
+                                            ancillaryItem.product
+                                          )
+                                        "
+                                        href="javascript:;"
+                                        class="btn btn-sm btn-outline-info round mr-1 mt-1"
+                                        placement="top"
+                                        ngbTooltip="offline"
+                                      >
+                                        <i class="ft-search"></i>
+                                      </a>
+
+                                      <a
+                                        href="javascript:;"
+                                        class="btn btn-sm btn-outline-info round mr-1 mt-1"
+                                        placement="top"
+                                        ngbTooltip="delete"
+                                      >
+                                        <i class="icon-trash"></i>
+                                      </a>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12">
+                <div class="d-flex flex-row">
+                  <div class="p-1 col-9 offset-1">
+                    <div
+                      *ngIf="packageHolidayList.notAppicableAncillary?.length > 0"
+                      [ngClass]="{
+                        show_filters: isNotAssignedAncillarySelected,
+                        not_filters: !isNotAssignedAncillarySelected
+                      }"
+                    >
+                      <div
+                        class="mb-2 card border rounded-0"
+                        *ngFor="
+                          let notAssignedAncillaryItem of packageHolidayList.notAppicableAncillary;
+                          trackBy: trackByTableFn
+                        "
+                      >
+                        <div class="row">
+                          <div class="col-12">
+                            <div class="card mb-1 mt-1">
+                              <div class="card-body p-1">
+                                <div class="d-flex flex-row align-items-center">
+                                  <div class="p-1 col-1 text-center">
+                                    <div class="p-2"><i class="fa fa-car fa-lg" style="color: #0d58d9"></i></div>
+                                  </div>
+
+                                  <div class="p-1 col-9">
+                                    <div>
+                                      <span class="text-muted mr-1">Ancillary</span>
+                                      <span>{{ notAssignedAncillaryItem.originDestinationLocation }} </span>
+                                    </div>
+                                  </div>
+                                  <div class="col-2 socialm margin-left-auto" ngbDropdown>
+                                    <a
+                                      *ngIf="
+                                        notAssignedAncillaryItem.product !== 'Package' &&
+                                        notAssignedAncillaryItem.product !== 'Ancillary' &&
+                                        notAssignedAncillaryItem.product !== 'Attractions'
+                                      "
+                                      href="javascript:;"
+                                      class="btn btn-sm btn-outline-info round mr-1 mt-1"
+                                      placement="top"
+                                      ngbDropdownToggle
+                                    >
+                                      <i class="ft-search dropdown-toggle"></i>
+                                      <div ngbDropdownMenu class="dropdown-menu" role="menu">
+                                        <a
+                                          class="dropdown-item"
+                                          (click)="
+                                            Online(
+                                              notAssignedAncillaryItem.serviceRequestNumber,
+                                              notAssignedAncillaryItem.serviceRequestLine,
+                                              notAssignedAncillaryItem.product
+                                            )
+                                          "
+                                          *ngIf="
+                                            notAssignedAncillaryItem.product !== 'Package' &&
+                                            notAssignedAncillaryItem.product !== 'Ancillary'
+                                          "
+                                        >
+                                          {{ notAssignedAncillaryItem.product === 'Flight' ? 'Manual' : 'Online' }}
+                                        </a>
+
+                                        <a
+                                          class="dropdown-item"
+                                          (click)="
+                                            offline(
+                                              notAssignedAncillaryItem.serviceRequestNumber,
+                                              notAssignedAncillaryItem.serviceRequestLine,
+                                              notAssignedAncillaryItem.product
+                                            )
+                                          "
+                                          *ngIf="notAssignedAncillaryItem.product !== 'Package'"
+                                        >
+                                          Offline
+                                        </a>
+
+                                        <a
+                                          class="dropdown-item"
+                                          (click)="
+                                            mptb(
+                                              notAssignedAncillaryItem.serviceRequestNumber,
+                                              notAssignedAncillaryItem.serviceRequestLine,
+                                              notAssignedAncillaryItem.product
+                                            )
+                                          "
+                                          *ngIf="
+                                            notAssignedAncillaryItem.product !== 'Package' &&
+                                            notAssignedAncillaryItem.product !== 'Ancillary' &&
+                                            notAssignedAncillaryItem.product !== 'Hotel'
+                                          "
+                                        >
+                                          Auto
+                                        </a>
+                                      </div>
+                                    </a>
+
+                                    <a
+                                      *ngIf="notAssignedAncillaryItem.product === 'Ancillary'"
+                                      (click)="
+                                        offline(
+                                          notAssignedAncillaryItem.serviceRequestNumber,
+                                          notAssignedAncillaryItem.serviceRequestLine,
+                                          notAssignedAncillaryItem.product
+                                        )
+                                      "
+                                      href="javascript:;"
+                                      class="btn btn-sm btn-outline-info round mr-1 mt-1"
+                                      placement="top"
+                                      ngbTooltip="offline"
+                                    >
+                                      <i class="ft-search"></i>
+                                    </a>
+                                    <a
+                                      *ngIf="
+                                        notAssignedAncillaryItem.product === 'Attractions' ||
+                                        notAssignedAncillaryItem.product === 'Attraction'
+                                      "
+                                      (click)="
+                                        offline(
+                                          notAssignedAncillaryItem.serviceRequestNumber,
+                                          notAssignedAncillaryItem.serviceRequestLine,
+                                          notAssignedAncillaryItem.product
+                                        )
+                                      "
+                                      href="javascript:;"
+                                      class="btn btn-sm btn-outline-info round mr-1 mt-1"
+                                      placement="top"
+                                      ngbTooltip="offline"
+                                    >
+                                      <i class="ft-search"></i>
+                                    </a>
+
+                                    <a
+                                      href="javascript:;"
+                                      class="btn btn-sm btn-outline-info round mr-1 mt-1"
+                                      placement="top"
+                                      ngbTooltip="delete"
+                                    >
+                                      <i class="icon-trash"></i>
+                                    </a>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="pull-right mb-2" *ngIf="rfqBtn">
+              <button type="button" (click)="redirectedToItineraryRFQ()" class="btn btn-outline-primary mr-2">
+                <i class="ft-navigation mr-1"></i>
+                Itinerary RFP
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- <ul>
+  <li *ngFor="let item of items; let i = index">
+    <span *ngIf="items[i-1]?.value != item?.value ">Current item: {{ item.name }} ({{ item.value }})</span>
+    <span *ngIf="i > 0 && item.value !== items[i-1].value">Previous item value is not equal: {{ items[i-1].name }} ({{ items[i-1].value }})</span>
+    <span *ngIf="i < items.length - 1 && item.value !== items[i+1].value">Next item value is not equal: {{ items[i+1].name }} ({{ items[i+1].value }})</span>
+  </li>
+</ul> -->
+
+<ngx-spinner
+  bdColor="rgba(0, 0, 0, 0.8)"
+  size="medium"
+  color="#fff"
+  type="ball-clip-rotate-multiple"
+  [fullScreen]="true"
+  *ngIf="requestCreationLoading"
+>
+  <p style="color: white">Loading...</p>
+</ngx-spinner>

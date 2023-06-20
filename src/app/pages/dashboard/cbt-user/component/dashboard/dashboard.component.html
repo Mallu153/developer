@@ -1,0 +1,94 @@
+<app-myrequestsbtn></app-myrequestsbtn>
+<!-- <section>
+  <div class="row">
+    <div class="col-md-9">
+      <app-requests-calendar></app-requests-calendar>
+    </div>
+    <div class="col-md-3">
+     <div class="row">
+      <div class="col-xl-12 col-lg-12 col-12">
+        <div class="card  hvr-float-shadow ">
+          <div class="card-content">
+            <div class="card-body">
+              <div class="media">
+                <div class="media-body text-left">
+                  <h3 class="card-text danger">{{ creditLimitCounts === undefined|| creditLimitCounts?.available_balance === 0?0: creditLimitCounts?.available_balance }} /  {{ creditLimitCounts=== undefined|| creditLimitCounts?.total_credit_limit === 0?0: creditLimitCounts?.total_credit_limit  }}</h3>
+                  <span >Credit Limit</span>
+                </div>
+                <div class="media-right align-self-center">
+                  <i class="fa fa-star danger font-large-2 float-right" aria-hidden="true"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-12 col-lg-12 col-12">
+        <div class="card  hvr-float-shadow ">
+          <div class="card-content">
+            <div class="card-body">
+              <div class="media">
+                <div class="media-body text-left">
+                  <h3 class="card-text warning">
+                    {{ unIssuedSalesOrders?.pendingCount === null?0:unIssuedSalesOrders?.pendingCount }} /{{ unIssuedSalesOrders?.pendingAmount === null?0:unIssuedSalesOrders?.pendingAmount }}
+
+                  </h3>
+                  <span >Unissued Sales Orders</span>
+                </div>
+                <div class="media-right align-self-center">
+                  <img src="assets/img/cbt-img/sla-icon21.png" alt="Unissued Sales Orders" class="float-right " height="55" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+     </div>
+     <div class="row">
+      <div class="col-xl-12 col-lg-12 col-12">
+        <div class="card  hvr-float-shadow">
+          <div class="card-content">
+            <div class="card-body">
+              <div class="media">
+                <div class="media-body text-left">
+                  <h3 class="card-text success">{{ unInvoicedTicketCounts?.linesCount === null?0:unInvoicedTicketCounts?.linesCount }} /  {{ unInvoicedTicketCounts?.linesAmount=== null?0:unInvoicedTicketCounts?.linesAmount }}</h3>
+                  <span >Uninvoiced Tickets</span>
+                </div>
+                <div class="media-right align-self-center">
+                  <img src="assets/img/cbt-img/sla-icon1.png" alt="Uninvoiced Tickets" class="float-right " height="55" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-12 col-lg-12 col-12">
+        <div class="card  hvr-float-shadow">
+          <div class="card-content">
+            <div class="card-body">
+              <div class="media">
+                <div class="media-body text-left">
+                  <h3 class="card-text primary">423 / 200</h3>
+                  <span >Avaiting </span>
+                </div>
+                <div class="media-right align-self-center">
+                  <img src="assets/img/cbt-img/waiting1.png" alt="Avaiting" class="float-right" height="60" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+     </div>
+
+    </div>
+
+
+  </div>
+
+</section> -->
+
+<app-mybookings [isMobile]="isMobile"></app-mybookings>
+<app-myquotes [user]="user" [isMobile]="isMobile"></app-myquotes>
+<app-myrequests [isMobile]="isMobile"></app-myrequests>
+

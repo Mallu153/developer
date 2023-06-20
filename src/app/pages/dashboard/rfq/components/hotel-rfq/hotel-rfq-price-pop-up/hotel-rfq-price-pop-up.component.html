@@ -1,0 +1,69 @@
+
+<div class=" my-class"  *ngIf="priceApiResponseData&&priceApiResponseData.length >0">
+  <div class="modal-header">
+    <h4 class="modal-title py-1" *ngIf="rfqId">Option Received for RFQ #{{rfqId.rfqId}}</h4>
+    <h4 class="modal-title py-1" *ngIf="unicIDOptions">Option Received from {{selectedSupplierName}} for  RFQ #{{unicIDOptions.rfqId}} & SR-Line {{unicIDOptions.srLine}}</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="table-responsive">
+      <table class="table m-0">
+        <thead>
+          <tr class="refresh">
+            <th scope="col">Supplier</th>
+            <th scope="col">Room Name / Room Price</th>
+            <th scope="col">Hotel </th>
+            <th scope="col">Check In / Check Out </th>
+            <th scope="col">Adt / Chd </th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let hotel_price of priceApiResponseData; let i=index;trackBy: trackByFn">
+
+            <td (click)="offline(hotel_price.productId,hotel_price.backChannel,hotel_price.bookingId,hotel_price.bookingReferenceNo)" class="text-primary cursor-pointer">
+              {{hotel_price.serviceRequestId}}- {{hotel_price.serviceRequestLineId}}-{{hotel_price.rfqId}}-{{hotel_price.bookingId}}-{{selectedSupplierName}}
+            </td>
+            <td>
+             <div *ngFor="let hotel_room_data of hotel_price.hotelRoomsInfo">
+                  {{hotel_room_data.roomName}}   {{hotel_room_data.totalAmount}}
+             </div>
+            </td>
+
+            <td>
+              <div *ngFor="let hotel_details_data of hotel_price.hotelsInfo">
+                {{hotel_details_data.hotelCityName}}
+           </div>
+             </td>
+             <td>
+              <div *ngFor="let hotel_room_data of hotel_price.hotelRoomsInfo">
+                <span *ngIf="hotel_room_data.checkInDate ===hotel_room_data.checkInDate || hotel_room_data.checkOutDate === hotel_room_data.checkOutDate">
+                  {{hotel_room_data.checkInDate}} / {{hotel_room_data.checkOutDate}}
+                </span>
+
+           </div>
+              </td>
+              <td>
+                <div *ngFor="let hotel_room_data of hotel_price.hotelRoomsInfo">
+                  <div *ngIf="hotel_room_data?.adults">
+                    ADT-{{hotel_room_data?.adults}}
+                  </div>
+                  <div *ngIf="hotel_room_data?.childs">
+                    CHD-{{hotel_room_data?.childs}}
+                  </div>
+             </div>
+                </td>
+                <td>
+                  <button class="btn btn-link" (click)="onSaveQuote(hotel_price.bookingId,hotel_price.productId,hotel_price.bookingReferenceNo)">Add to Quote</button>
+                 </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light" (click)="activeModal.close('Close click')">Close</button>
+  </div>
+</div>

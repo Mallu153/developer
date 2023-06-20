@@ -1,0 +1,1885 @@
+<section class="section-flight">
+  <div class="card">
+    <div class="card-content">
+      <div class="card-body py-1 px-2">
+        <div class="section__body">
+          <form [formGroup]="flightForm">
+            <div class="form-container">
+              <div class="form-body" style="overflow: initial">
+                <div class="form-row align-items-center mb-1">
+                  <div class="col-12 col-lg-12 col-md-12">
+                    <ul class="list-unstyled mb-0 text-left position-relative sm-mt-2">
+                      <li class="d-inline-block mr-2" *ngIf="keys?.includes(oneWay)">
+                        <div class="form-group radio">
+                          <input
+                            type="radio"
+                            name="tripTypeId"
+                            value="1"
+                            [(ngModel)]="tripTypeId"
+                            (change)="onFlightTypeChange($event.target, 'change')"
+                            formControlName="tripTypeId"
+                            id="oneWay"
+                          />
+                          <label for="oneWay">One Way</label>
+                        </div>
+                      </li>
+                      <li class="d-inline-block mr-2" *ngIf="keys?.includes(roundTrip)">
+                        <div class="form-group radio">
+                          <input
+                            type="radio"
+                            name="tripTypeId"
+                            (change)="onFlightTypeChange($event.target, 'change')"
+                            formControlName="tripTypeId"
+                            value="69"
+                            id="round"
+                          />
+                          <label for="round">Round</label>
+                        </div>
+                      </li>
+                      <li class="d-inline-block mr-2" *ngIf="keys?.includes(multiCity)">
+                        <div class="form-group radio">
+                          <input
+                            type="radio"
+                            name="tripTypeId"
+                            (change)="onFlightTypeChange($event.target, 'change')"
+                            value="11"
+                            formControlName="tripTypeId"
+                            id="multiCity"
+                          />
+                          <label for="multiCity">Multi City</label>
+                        </div>
+                      </li>
+                      <!-- <li class="d-inline-block mr-2 float-right">
+                  <a class="p-0 ml-3" style="display: inline-block" (click)="openGetSrMailBox()"
+                    ><i class="ft-mail text-info"></i
+                  ></a>
+                </li> -->
+
+                <li  class="segment-line-status-name  d-inline-block mr-2 float-right mobile-none" *ngIf="updateDataservicerequestLine?.lineStatus">
+                  {{updateDataservicerequestLine?.lineStatus}}
+                </li>
+                      <li class="d-inline-block mr-2 float-right mobile-none" *ngIf="keys?.includes(flexStopsKey)">
+                        <a
+                          class="p-0 ml-3 mobile-none"
+                          style="display: inline-block"
+                          [popoverOnHover]="false"
+                          [popover]="isCollapsedtypeOfFlightsFlexshow"
+                          ><i class="ft-zap text-info"></i
+                        ></a>
+                        <popover-content
+                          #isCollapsedtypeOfFlightsFlexshow
+                          placement="bottom-left"
+                          [animation]="true"
+                          [closeOnClickOutside]="true"
+                          [closeOnMouseOutside]="false"
+                        >
+                          <!-- class="popover fade show bs-popover-bottom ml-4"
+                  style="
+                    position: absolute;
+                    top: 106px;
+                    margin-top: 5px;
+                    right: -63px !important;
+                    left: auto;
+                    will-change: transform;
+                    transform: translate(-50px, -84px);
+                    max-width: 886px;
+                    width: 310px;
+                    z-index: 9999;
+                  " -->
+                          <div id="typeofflightsflex" class="mobile-none">
+                            <div class="arrow" style="right: 25px"></div>
+                            <div style="padding: 15px">
+                              <div *ngFor="let control of authorizedAux; trackBy: trackByFn">
+                                <ul class="list-unstyled mb-0 ml-1">
+                                  <li class="d-inline-block mr-2 mb-2">
+                                    <div class="checkbox checkbox-primary">
+                                      <input
+                                        type="checkbox"
+                                        id="{{ 'color-checkbox-2' + control.name }}"
+                                        [ngModel]="control.value"
+                                        (ngModelChange)="
+                                          control.value = $event; flightForm?.get('flexStops')?.setValue(parse())
+                                        "
+                                        [ngModelOptions]="{ standalone: true }"
+                                      />
+                                      <label for="{{ 'color-checkbox-2' + control.name }}"
+                                        ><span>{{ control.name }}</span></label
+                                      >
+                                    </div>
+                                  </li>
+                                </ul>
+                              </div>
+                            </div>
+                          </div>
+                        </popover-content>
+                      </li>
+
+                      <li class="d-inline-block mr-2 float-right mobile-none" *ngIf="typeOfFlight === 'Connecting'">
+                        <div class="form-group">
+                          <select
+                            class="form-control square"
+                            style="padding: 0 6px; height: 22px"
+                            formControlName="connectingDetails"
+                            id="exampleFormControlSelect1"
+                          >
+                            <option value="1 Stop">1</option>
+                            <option value="2 Stop">2</option>
+                            <option value="3 or more stops">3</option>
+                          </select>
+                        </div>
+                      </li>
+                      <li class="d-inline-block mr-2 float-right mobile-none" *ngIf="keys?.includes(connecting)">
+                        <div class="form-group radio">
+                          <input
+                            type="radio"
+                            name="typeOfFlight"
+                            value="Connecting"
+                            (change)="changeTypeOfFlight($event)"
+                            formControlName="typeOfFlight"
+                            id="Connecting"
+                          />
+                          <label for="Connecting">Connecting</label>
+                        </div>
+                      </li>
+                      <li class="d-inline-block mr-2 float-right mobile-none" *ngIf="keys?.includes(direct)">
+                        <div class="form-group radio">
+                          <input
+                            type="radio"
+                            name="typeOfFlight"
+                            value="Direct"
+                            (change)="changeTypeOfFlight($event)"
+                            formControlName="typeOfFlight"
+                            id="stopOver"
+                          />
+                          <label for="stopOver">Direct</label>
+                        </div>
+                      </li>
+                      <li class="d-inline-block mr-2 float-right mobile-none" *ngIf="keys?.includes(nonsop)">
+                        <div class="form-group radio">
+                          <input
+                            type="radio"
+                            name="typeOfFlight"
+                            [(ngModel)]="typeOfFlight"
+                            value="Non Stop"
+                            (change)="changeTypeOfFlight($event)"
+                            formControlName="typeOfFlight"
+                            id="directFlight"
+                          />
+                          <label for="directFlight">Non Stop</label>
+                        </div>
+                      </li>
+
+                    </ul>
+
+                  </div>
+                </div>
+              </div>
+
+              <div formArrayName="serviceRequestSegment" class="p-0 position-relative">
+                <ul class="nav position-abs">
+                  <li class="nav-item mobile-none">
+                    <a class="nav-link px-1">
+                      <i class="icon-plane text-primary" style="font-size: 20px"></i>
+                    </a>
+                  </li>
+                  <li class="nav-item mobile-none" placement="left" ngbTooltip="Add Flight" *ngIf="isEdit">
+                    <a class="nav-link px-1"
+                      ><i class="ft-plus-square text-primary" (click)="resetFormData()" style="font-size: 20px"></i
+                    ></a>
+                  </li>
+                </ul>
+                <div
+                  *ngFor="let flight of flights().controls; let i = index; trackBy: trackByFn"
+                  [formGroupName]="i"
+                  class="row p-2 form-flight-container mb-0 ng-pristine ng-invalid ng-star-inserted ng-touched"
+                >
+                  <div class="form-row-city align-items-top shadow-sm mb-3 srchbar">
+                    <div class="fm-from position-relative">
+                      <div class="form-group citygroup city-drop-down flight-up">
+                        <label for="from" class="d-flex"
+                          >From
+                          <a
+                            class="p-0 ml-3 mobile-none"
+                            *ngIf="keys?.includes(flexFromKey)"
+                            style="display: inline-block; margin-left: auto !important"
+                            (click)="
+                              rowsControlsFlexForm[i].isCollapsedFlexFrom =
+                                !rowsControlsFlexForm[i]?.isCollapsedFlexFrom
+                            "
+                            [attr.aria-controls]="'FlexForm_' + i"
+                            ><i class="ft-zap text-info"></i
+                          ></a>
+                        </label>
+                        <input
+                          id="from_{{ i }}"
+                          type="text"
+                          #typeaheadInstance="ngbTypeahead"
+                          formControlName="fromCode"
+                          class="trav_inputField ng-pristine ng-invalid is-invalid ng-touched"
+                          placeholder="Enter From"
+                          (keydown)="typeaheadKeydown($event)"
+                          [resultTemplate]="searchResultTemplate"
+                          (selectItem)="bindValueOfFromControl($event, i, 'fromCode')"
+                          [inputFormatter]="formatter"
+                          [ngbTypeahead]="onSearchLocation"
+                          [ngClass]="{
+                            'is-invalid':
+                              flights().controls[i].get('fromCode').errors &&
+                              ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                flights().controls[i].get('fromCode').touched)
+                          }"
+                        />
+                        <p class="citymakeRelative px-0" *ngIf="flight.value.fromCode">
+                          <span
+                            class="truncate airPortName"
+                            title="{{ flight.value.fromCode?.code }},{{
+                              flight.value.fromCode?.name === null || flight.value.fromCode?.name === undefined
+                                ? null
+                                : flight.value.fromCode?.name + ',' + flight.value.fromCode?.country
+                            }}"
+                          >
+                            {{ flight.value.fromCode?.code }},
+                            {{
+                              flight.value.fromCode?.name === null || flight.value.fromCode?.name === undefined
+                                ? null
+                                : flight.value.fromCode?.name + ',' + flight.value.fromCode?.country
+                            }}
+                          </span>
+                        </p>
+                        <div
+                          class="invalid-feedback"
+                          *ngIf="
+                            flights().controls[i].get('fromCode').errors?.required &&
+                            ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                              flights().controls[i].get('fromCode').touched)
+                          "
+                        >
+                          required
+                        </div>
+                        <ng-template #searchResultTemplate let-r="result" let-t="term">
+                          <div class="row">
+                            <div class="col-md-1 mt-2" [ngSwitch]="r.type">
+                              <span *ngSwitchCase="'A'"><i class="fas fa-plane-departure fa-lg"></i></span>
+                              <span *ngSwitchCase="'C'"><i class="fa fa-map-marker fa-lg" aria-hidden="true"></i></span>
+                              <span *ngSwitchCase="'R'"><i class="fas fa-train fa-lg"></i></span>
+                              <span *ngSwitchCase="'B'"><i class="fas fa-bus fa-lg"></i></span>
+                              <span *ngSwitchCase="'H'"><i class="fas fa-helicopter fa-lg"></i></span>
+                              <span *ngSwitchCase="'P'"><i class="fas fa-ship fa-lg"></i></span>
+                              <span *ngSwitchDefault><i class="fas fa-plane-departure fa-lg"></i></span>
+                            </div>
+                            <div class="col-md-8">
+                              <!-- <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight> -->
+                              <div class="font-small-3 text-bold-600 airport-name">{{ r.name?.toLowerCase() }}</div>
+                              <div class="text-muted font-small-2">{{ r.city }}, {{ r.country }}</div>
+                            </div>
+                            <div class="col-md-3 text-right">
+                              <span class="text-bold-600">{{ r.code }}</span>
+                            </div>
+                          </div>
+                        </ng-template>
+                      </div>
+                    </div>
+                    <span class="cityswipCircle" (click)="reserve(i, flight.value)"> </span>
+                    <div
+                      id="FlexForm_{{ i }}"
+                      [ngbCollapse]="rowsControlsFlexForm[i]?.isCollapsedFlexFrom"
+                      class="popover fade show bs-popover-bottom ml-4"
+                      style="
+                        position: absolute;
+                        top: 99px;
+                        margin-top: 21px;
+                        left: 0px;
+                        will-change: transform;
+                        transform: translate(-50px, -84px);
+                        max-width: 806px;
+                        width: 320px;
+                      "
+                    >
+                      <div class="text-right">
+                        <div
+                          (click)="
+                            rowsControlsFlexForm[i].isCollapsedFlexFrom = !rowsControlsFlexForm[i]?.isCollapsedFlexFrom
+                          "
+                          [attr.aria-expanded]="!rowsControlsFlexForm[i]?.isCollapsedFlexFrom"
+                          class="pointer"
+                          [attr.aria-controls]="'isCollapsedFlexFrom' + i"
+                        >
+                          <i class="ft-x" aria-hidden="true" style="font-size: 18px"></i>
+                        </div>
+                      </div>
+                      <div class="arrow" style="right: 12px"></div>
+                      <div class="row" style="padding: 15px">
+                        <div class="col-12 col-md-12">
+                          <div class="form-group">
+                            <label for="flexfrom"> Flex From </label>
+                            <div class="form-control square form-control-custom">
+                              <span class="selected-item" *ngFor="let item of selectedFlexFromItems[i]">
+                                {{ item }}
+                                <span class="close-selected" (click)="closeFlex(item, 'flexFrom', i)">&nbsp;x</span>
+                              </span>
+                              <input
+                                id="flexfrom_{{ i }}"
+                                type="text"
+                                placeholder="Enter From"
+                                (selectItem)="onSelectedItemsFlex($event, 'flexFrom', i); flexFromInput.value = ''"
+                                #flexFromInput
+                                class="multiSelectInputNoBorder"
+                                formControlName="flexFromCode"
+                                (keydown)="typeaheadKeydown($event)"
+                                [resultTemplate]="searchResultTemplate"
+                                [inputFormatter]="formatter"
+                                [ngbTypeahead]="onSearchLocation"
+                              />
+                              <ng-template #searchResultTemplate let-r="result" let-t="term">
+                                <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+                              </ng-template>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="fm-from position-relative">
+                      <div class="form-group citygroup city-drop-down flight-down">
+                        <label for="from" class="d-flex"
+                          >To
+                          <a
+                            class="p-0 ml-3 mobile-none"
+                            *ngIf="keys?.includes(flexToKey)"
+                            style="display: inline-block; margin-left: auto !important"
+                            (click)="
+                              rowsControlsFlexTo[i].isCollapsedFlexTo = !rowsControlsFlexTo[i]?.isCollapsedFlexTo
+                            "
+                            [attr.aria-controls]="'FlexTo_' + i"
+                            ><i class="ft-zap text-info"></i
+                          ></a>
+                        </label>
+                        <input
+                          id="from_2_{{ i }}"
+                          type="text"
+                          #typeaheadInstance="ngbTypeahead"
+                          formControlName="toCode"
+                          class="trav_inputField ng-pristine ng-invalid is-invalid ng-touched"
+                          (keydown)="typeaheadKeydown($event)"
+                          [resultTemplate]="searchResultTemplateTo"
+                          placeholder="Enter To"
+                          (selectItem)="bindValueOfToControl($event, i, 'toCode')"
+                          [inputFormatter]="formatter"
+                          [ngbTypeahead]="onSearchLocation"
+                          [ngClass]="{
+                            'is-invalid':
+                              flights().controls[i].get('toCode').errors &&
+                              ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                flights().controls[i].get('toCode').touched)
+                          }"
+                        />
+                        <p class="citymakeRelative px-0" *ngIf="flight.value.toCode">
+                          <span
+                            class="truncate airPortName"
+                            title="{{ flight.value.toCode?.code }},{{
+                              flight.value.toCode?.name === null || flight.value.toCode?.name === undefined
+                                ? null
+                                : flight.value.toCode?.name + ',' + flight.value.toCode?.country
+                            }}"
+                          >
+                            {{ flight.value.toCode?.code }},
+                            {{
+                              flight.value.toCode?.name === null || flight.value.toCode?.name === undefined
+                                ? null
+                                : flight.value.toCode?.name + ',' + flight.value.toCode?.country
+                            }}
+                          </span>
+                        </p>
+                        <div
+                          class="invalid-feedback"
+                          *ngIf="
+                            flights().controls[i].get('toCode').errors?.required &&
+                            ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                              flights().controls[i].get('toCode').touched)
+                          "
+                        >
+                          required
+                        </div>
+                        <div
+                          class="invalid-feedback"
+                          *ngIf="flights().controls[i].get('toCode').errors?.confirmedValidator"
+                        >
+                          From & To airports cannot be the same
+                        </div>
+                        <!-- <span class="invalid-feedback airport-text" *ngIf="!rowsControlsForToAirports[i]?.isToCollapsedCheck">
+                    From & To airports cannot be the same
+                  </span> -->
+
+                        <ng-template #searchResultTemplateTo let-r="result" let-t="term">
+                          <div class="row">
+                            <div class="col-md-1 mt-2" [ngSwitch]="r.type">
+                              <span *ngSwitchCase="'A'"><i class="fas fa-plane-arrival fa-lg"></i></span>
+                              <span *ngSwitchCase="'C'"><i class="fa fa-map-marker fa-lg" aria-hidden="true"></i></span>
+                              <span *ngSwitchCase="'R'"><i class="fas fa-train fa-lg"></i></span>
+                              <span *ngSwitchCase="'B'"><i class="fas fa-bus fa-lg"></i></span>
+                              <span *ngSwitchCase="'H'"><i class="fas fa-helicopter fa-lg"></i></span>
+                              <span *ngSwitchCase="'P'"><i class="fas fa-ship fa-lg"></i></span>
+                              <span *ngSwitchDefault><i class="fas fa-plane-arrival fa-lg"></i></span>
+                            </div>
+                            <div class="col-md-8">
+                              <!-- <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight> -->
+                              <div class="font-small-3 text-bold-600 airport-name">{{ r.name?.toLowerCase() }}</div>
+                              <div class="text-muted font-small-2">{{ r.city }}, {{ r.country }}</div>
+                            </div>
+                            <div class="col-md-3 text-right">
+                              <span class="text-bold-600">{{ r.code }}</span>
+                            </div>
+                          </div>
+                        </ng-template>
+                      </div>
+                    </div>
+                    <div
+                      id="FlexTo_{{ i }}"
+                      [ngbCollapse]="rowsControlsFlexTo[i]?.isCollapsedFlexTo"
+                      class="popover fade show bs-popover-bottom ml-4"
+                      style="
+                        position: absolute;
+                        top: 99px;
+                        margin-top: 18px;
+                        left: 310px;
+                        will-change: transform;
+                        transform: translate(-50px, -84px);
+                        max-width: 806px;
+                        width: 320px;
+                      "
+                    >
+                      <div class="text-right">
+                        <div
+                          (click)="rowsControlsFlexTo[i].isCollapsedFlexTo = !rowsControlsFlexTo[i]?.isCollapsedFlexTo"
+                          [attr.aria-expanded]="!rowsControlsFlexTo[i]?.isCollapsedFlexTo"
+                          class="pointer"
+                          [attr.aria-controls]="'isCollapsedFlexTo' + i"
+                        >
+                          <i class="ft-x" aria-hidden="true" style="font-size: 18px"></i>
+                        </div>
+                      </div>
+                      <div class="arrow" style="right: 12px"></div>
+                      <div class="row" style="padding: 15px">
+                        <div class="col-12 col-md-12">
+                          <div class="form-group">
+                            <label for="flexfrom">Flex To </label>
+                            <div class="form-control square form-control-custom">
+                              <span class="selected-item" *ngFor="let item of selectedFlexToItems[i]">
+                                {{ item }}
+                                <span class="close-selected" (click)="closeFlex(item, 'flexTo', i)">&nbsp;x</span>
+                              </span>
+                              <input
+                                id="flexfrom_1{{ i }}"
+                                type="text"
+                                (selectItem)="onSelectedItemsFlexTo($event, 'flexTo', i); flexToInput.value = ''"
+                                #flexToInput
+                                class="multiSelectInputNoBorder"
+                                placeholder="Enter To"
+                                formControlName="flexToCode"
+                                (keydown)="typeaheadKeydown($event)"
+                                [resultTemplate]="searchResultTemplate"
+                                [inputFormatter]="formatter"
+                                [ngbTypeahead]="onSearchLocation"
+                              />
+
+                              <ng-template #searchResultTemplate let-r="result" let-t="term">
+                                <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+                              </ng-template>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="trav-dates position-relative">
+                      <div class="form-group citygroup date-icon">
+                        <label for="dp" class="d-flex"
+                          >Departure
+                          <a
+                            class="p-0 mobile-none"
+                            *ngIf="keys?.includes(flexDepatureKey)"
+                            style="display: inline-block"
+                            (click)="
+                              rowsControlsForDepature[i].isCollapsedDepature =
+                                !rowsControlsForDepature[i]?.isCollapsedDepature
+                            "
+                            [attr.aria-controls]="'collapsedepature_' + i"
+                            ><i
+                              class="ft-zap text-info"
+                              style="padding: 0px 4px; align-items: center; display: flex"
+                            ></i
+                          ></a>
+                        </label>
+
+                        <div class="form-group mobile-none">
+                          <div class="input-group">
+                            <input
+                              class="form-control square border-0"
+                              outsideDays="hidden"
+                              (click)="d.toggle()"
+                              placeholder="yyyy-mm-dd"
+                              name="dp"
+                              [displayMonths]="displayMonths"
+                              [navigation]="navigation"
+                              ngbDatepicker
+                              #d="ngbDatepicker"
+                              formControlName="depatureDate"
+                              (ngModelChange)="onChangeCheckFlightTypeDepature(i)"
+                              [ngClass]="{
+                                'is-invalid':
+                                  flights().controls[i].get('depatureDate').errors &&
+                                  ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                    flights().controls[i].get('depatureDate').touched)
+                              }"
+                            />
+                            <div
+                              class="invalid-feedback"
+                              *ngIf="
+                                flights().controls[i].get('depatureDate').errors?.required &&
+                                ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                  flights().controls[i].get('depatureDate').touched)
+                              "
+                            >
+                              required
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="form-group mobile-only">
+                          <div class="input-group">
+                            <input
+                              class="form-control square border-0"
+                              outsideDays="hidden"
+                              (click)="d2.toggle()"
+                              placeholder="yyyy-mm-dd"
+                              name="dp"
+                              (ngModelChange)="onChangeCheckFlightTypeDepature(i)"
+                              ngbDatepicker
+                              #d2="ngbDatepicker"
+                              formControlName="depatureDate"
+                              [ngClass]="{
+                                'is-invalid':
+                                  flights().controls[i].get('depatureDate').errors &&
+                                  ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                    flights().controls[i].get('depatureDate').touched)
+                              }"
+                            />
+                            <div
+                              class="invalid-feedback"
+                              *ngIf="
+                                flights().controls[i].get('depatureDate').errors?.required &&
+                                ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                  flights().controls[i].get('depatureDate').touched)
+                              "
+                            >
+                              required
+                            </div>
+                          </div>
+                        </div>
+                        <!--  <input
+                    type="date"
+                    class="form-control  square dates-border-none"
+                    name="departureDate"
+                    id="departureDate"
+                    formControlName="depatureDate"
+                    [ngClass]="{
+                      'is-invalid':
+                        flights().controls[i].get('depatureDate').errors &&
+                        ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                          flights().controls[i].get('depatureDate').touched)
+                    }"
+                  />
+
+                  <div
+                    class="invalid-feedback"
+                    *ngIf="
+                      flights().controls[i].get('depatureDate').errors?.required &&
+                      ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                        flights().controls[i].get('depatureDate').touched)
+                    "
+                  >
+                    required
+                  </div> -->
+                      </div>
+                      <div
+                        id="collapsedepature_{{ i }}"
+                        [ngbCollapse]="rowsControlsForDepature[i]?.isCollapsedDepature"
+                        class="popover fade show bs-popover-bottom"
+                        style="
+                          position: absolute;
+                          top: 109px;
+                          left: -80px;
+                          will-change: transform;
+                          transform: translate(-50px, -84px);
+                          max-width: 886px;
+                          width: 486px;
+                        "
+                      >
+                        <div class="text-right">
+                          <div
+                            (click)="
+                              rowsControlsForDepature[i].isCollapsedDepature =
+                                !rowsControlsForDepature[i]?.isCollapsedDepature
+                            "
+                            [attr.aria-expanded]="!rowsControlsForDepature[i]?.isCollapsedDepature"
+                            class="pointer"
+                            [attr.aria-controls]="'isCollapsedDepature' + i"
+                          >
+                            <i class="ft-x" aria-hidden="true" style="font-size: 18px"></i>
+                          </div>
+                        </div>
+                        <div class="arrow" style="right: 238px"></div>
+                        <div formArrayName="flexDepature">
+                          <div
+                            *ngFor="let fd of depature(i).controls; let flexDepatureIndex = index"
+                            [formGroupName]="flexDepatureIndex"
+                          >
+                            <div class="row align-items-center" style="padding: 15px 15px 0 15px">
+                              <div class="col-12 col-md-5">
+                                <div class="form-group">
+                                  <label for="dp" class="d-flex"> Departure Date </label>
+                                  <input
+                                    type="date"
+                                    class="form-control square"
+                                    formControlName="flexDepatureDate"
+                                    name="FlexdepartureDate"
+                                    id="FlexdepartureDate"
+                                  />
+                                  <!-- (change)="onChangeDateValidations(i)" -->
+                                </div>
+                              </div>
+                              <div class="col-12 col-md-4 p-0">
+                                <div class="form-group timeouter mb-0">
+                                  <label for="depatureTime">Departure Time</label>
+                                  <ngb-timepicker
+                                    name="flexDepatureTime"
+                                    [spinners]="false"
+                                    id="flexDepatureTime"
+                                    formControlName="flexDepatureTime"
+                                  >
+                                  </ngb-timepicker>
+                                </div>
+                              </div>
+                              <div class="col-12 col-md-3 p-0">
+                                <button (click)="addFlexDepature(i)" type="button" class="btn p-0 ml-2">
+                                  <i class="ft-plus-circle" aria-hidden="true" style="font-size: 28px"></i>
+                                </button>
+                                <button
+                                  (click)="removeflexDepature(i, flexDepatureIndex)"
+                                  type="button"
+                                  class="btn p-0 ml-2"
+                                >
+                                  <i class="ft-minus-circle" aria-hidden="true" style="font-size: 28px"></i>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="trav-dates position-relative return-date" *ngIf="initialRound">
+                      <div class="form-group citygroup">
+                        <label for="dp" class="d-flex"
+                          >Return
+                          <a
+                            class="p-0 mobile-none"
+                            *ngIf="keys?.includes(flexReturnKey)"
+                            style="display: inline-block"
+                            (click)="
+                              rowsControlsForreturn[i].isCollapsedreturn = !rowsControlsForreturn[i]?.isCollapsedreturn
+                            "
+                            [attr.aria-controls]="'collapsereturn_' + i"
+                            ><i
+                              class="ft-zap text-info"
+                              style="padding: 0px 4px; align-items: center; display: flex"
+                            ></i
+                          ></a>
+                        </label>
+                        <!-- <input
+                    type="date"
+                    class="form-control  square dates-border-none"
+                    formControlName="returnDate"
+                    name="returnDate"
+                    id="returnDate"
+                  /> -->
+                        <div class="form-group mobile-none">
+                          <div class="input-group">
+                            <input
+                              class="form-control square border-0"
+                              outsideDays="hidden"
+                              (click)="desktopd1.toggle()"
+                              placeholder="yyyy-mm-dd"
+                              name="dp"
+                              [displayMonths]="displayMonths"
+                              [navigation]="navigation"
+                              ngbDatepicker
+                              #desktopd1="ngbDatepicker"
+                              formControlName="returnDate"
+                              [minDate]="flight?.value?.depatureDate"
+                            />
+                          </div>
+                        </div>
+
+                        <div class="form-group mobile-only">
+                          <div class="input-group">
+                            <input
+                              class="form-control square border-0"
+                              outsideDays="hidden"
+                              (click)="mobiled2.toggle()"
+                              placeholder="yyyy-mm-dd"
+                              name="dp"
+                              ngbDatepicker
+                              #mobiled2="ngbDatepicker"
+                              formControlName="returnDate"
+                              [minDate]="flight?.value?.depatureDate"
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      <div
+                        id="collapsereturn_{{ i }}"
+                        [ngbCollapse]="rowsControlsForreturn[i]?.isCollapsedreturn"
+                        class="popover fade show bs-popover-bottom"
+                        style="
+                          position: absolute;
+                          top: 110px;
+                          left: -100px;
+                          will-change: transform;
+                          transform: translate(-50px, -84px);
+                          max-width: 886px;
+                          width: 486px;
+                        "
+                      >
+                        <div class="text-right">
+                          <div
+                            (click)="
+                              rowsControlsForreturn[i].isCollapsedreturn = !rowsControlsForreturn[i]?.isCollapsedreturn
+                            "
+                            [attr.aria-expanded]="!rowsControlsForreturn[i]?.isCollapsedreturn"
+                            class="pointer"
+                            [attr.aria-controls]="'isCollapsedreturn' + i"
+                          >
+                            <i class="ft-x" aria-hidden="true" style="font-size: 18px"></i>
+                          </div>
+                        </div>
+                        <div class="arrow" style="right: 240px"></div>
+                        <div formArrayName="flexReturn">
+                          <div
+                            *ngFor="let fr of Returndate(i).controls; let flexReturnIndex = index"
+                            [formGroupName]="flexReturnIndex"
+                          >
+                            <div class="row align-items-center" style="padding: 15px 15px 0 15px">
+                              <div class="col-12 col-md-5">
+                                <div class="form-group">
+                                  <label for="dp" class="d-flex"> Return Date </label>
+                                  <input
+                                    type="date"
+                                    class="form-control square"
+                                    formControlName="flexReturnDate"
+                                    name="flexReturnDate"
+                                    id="flexReturnDate"
+                                  />
+                                </div>
+                              </div>
+                              <div class="col-12 col-md-4 p-0">
+                                <div class="form-group timeouter">
+                                  <label for="depatureTime">Return Time</label>
+                                  <ngb-timepicker
+                                    name="flexReturnTime"
+                                    [spinners]="false"
+                                    id="flexReturnTime"
+                                    formControlName="flexReturnTime"
+                                  >
+                                  </ngb-timepicker>
+                                </div>
+                              </div>
+                              <div class="col-12 col-md-3 p-0">
+                                <button (click)="addFlexReturn(i)" type="button" class="btn p-0 ml-2">
+                                  <i class="ft-plus-circle" aria-hidden="true" style="font-size: 28px"></i>
+                                </button>
+                                <button
+                                  (click)="removeflexReturn(i, flexReturnIndex)"
+                                  type="button"
+                                  class="btn p-0 ml-2"
+                                >
+                                  <i class="ft-minus-circle" aria-hidden="true" style="font-size: 28px"></i>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-2 position-relative trav-clas">
+                      <div class="form-group">
+                        <label for="from" class="d-flex pt-top"
+                          >Class
+                          <a
+                            class="p-0 ml-3 mobile-none"
+                            *ngIf="keys?.includes(flexClassKey)"
+                            style="display: inline-block"
+                            (click)="
+                              rowsControlsFlexClass[i].isCollapsedFlexClass =
+                                !rowsControlsFlexClass[i]?.isCollapsedFlexClass
+                            "
+                            [attr.aria-controls]="'FlexClass_' + i"
+                            ><i class="ft-zap text-info"></i
+                          ></a>
+                        </label>
+                        <ng-select
+                          [items]="masterClassList"
+                          id="class"
+                          formControlName="className"
+                          bindValue="code"
+                          bindLabel="name"
+                        >
+                        </ng-select>
+                      </div>
+                    </div>
+                    <div
+                      id="FlexClass_{{ i }}"
+                      [ngbCollapse]="rowsControlsFlexClass[i]?.isCollapsedFlexClass"
+                      class="popover fade show bs-popover-bottom"
+                      style="
+                        position: absolute;
+                        top: 99px;
+                        margin-top: 30px;
+                        margin-left: 650px;
+                        left: 0px;
+                        will-change: transform;
+                        transform: translate(-50px, -84px);
+                        max-width: 806px;
+                        width: 320px;
+                      "
+                    >
+                      <div class="text-right">
+                        <div
+                          (click)="
+                            rowsControlsFlexClass[i].isCollapsedFlexClass =
+                              !rowsControlsFlexClass[i]?.isCollapsedFlexClass
+                          "
+                          [attr.aria-expanded]="!rowsControlsFlexClass[i]?.isCollapsedFlexClass"
+                          class="pointer"
+                          [attr.aria-controls]="'isCollapsedFlexClass' + i"
+                        >
+                          <i class="ft-x" aria-hidden="true" style="font-size: 18px"></i>
+                        </div>
+                      </div>
+                      <div class="arrow" style="right: 12px"></div>
+                      <div class="row" style="padding: 15px">
+                        <div class="col-12 col-md-12">
+                          <div class="form-group">
+                            <label for="flexClass">Flex Class </label>
+                            <ng-select
+                              [items]="masterClassList"
+                              formControlName="flexClassName"
+                              [multiple]="true"
+                              id="class"
+                              bindValue="code"
+                              bindLabel="name"
+                            >
+                            </ng-select>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-2 mt-0">
+                      <div class="d-flex align-items-center">
+                        <p
+                          *ngIf="keys?.includes(moreBtnKey)"
+                          class="pointer m-0 more-font-size font-weight-bold mobile-none"
+                          (click)="rowsControlsForMultiCity[i].isCollapsed = !rowsControlsForMultiCity[i]?.isCollapsed"
+                          [attr.aria-controls]="'collapse_' + i"
+                        >
+                          <i class="ft-chevron-right"></i>
+                          {{ !rowsControlsForMultiCity[i]?.isCollapsed ? 'Less' : 'More' }}
+                        </p>
+
+                        <button
+                          *ngIf="tripTypeId === '11' && !isEdit"
+                          (click)="addFlight(i)"
+                          type="button"
+                          class="text-primary btn p-0 ml-2"
+                        >
+                          <i class="ft-plus-circle" style="font-size: 28px"></i>
+                        </button>
+
+                        <button
+                          *ngIf="tripTypeId === '11' && !isEdit"
+                          (click)="removeFlight(i)"
+                          type="button"
+                          class="text-primary btn p-0 ml-2"
+                        >
+                          <i class="ft-minus-circle" style="font-size: 28px"></i>
+                        </button>
+                      </div>
+                    </div>
+                   <!--  <div *ngIf="isEdit && flights()?.value?.length > 1">
+                      <button class="btn btn-outline-info mr-2"   *ngIf="isEdit && keys?.includes(flightAutoBtn)" (click)="flightoffers(i)">Auto</button>
+                      <button class="btn btn-outline-info mr-2" *ngIf="isEdit && keys?.includes(flightManualBtn)"  (click)="Online(i)">Manual</button>
+                      <button class="btn btn-outline-info"   *ngIf="isEdit && keys?.includes(flightOfflineBtn)" (click)="offline(i)">Offline</button>
+                    </div> -->
+                    <div class="col-md-3 socialm margin-left-auto mobile-none" ngbDropdown *ngIf="isEdit && flights()?.value?.length > 1">
+                      <a
+                        href="javascript:;"
+                        class="btn btn-sm btn-outline-info round mr-1 mt-1"
+                        placement="top"
+                        ngbDropdownToggle
+                      >
+                        <i class="ft-search dropdown-toggle"></i>
+                        <div ngbDropdownMenu class="dropdown-menu" role="menu">
+                          <a
+                            class="dropdown-item"
+                            *ngIf="isEdit && keys?.includes(flightManualBtn)"
+                            (click)="Online(i)"
+                          >
+                          Pro
+                          </a>
+                          <a
+                            class="dropdown-item"
+                            *ngIf="isEdit && keys?.includes(flightOfflineBtn)"
+                            (click)="offline(i)"
+                          >
+                            Offline
+                          </a>
+                          <a
+                            class="dropdown-item"
+                            *ngIf="isEdit && keys?.includes(flightAutoBtn)"
+                            (click)="flightoffers(i)"
+                          >
+                            Auto
+                          </a>
+                        </div>
+                      </a>
+
+                    </div>
+                  </div>
+
+                  <div
+                    class="form-row align-items-center col-12 p-0"
+                    id="collapse_{{ i }}"
+                    [ngbCollapse]="rowsControlsForMultiCity[i]?.isCollapsed"
+                  >
+                    <div class="col-12 col-md-1">
+                      <div class="form-group">
+                        <label for="rbd">RBD</label>
+                        <ng-select
+                          [items]="masterRbdList"
+                          class="custom"
+                          id="rbd"
+                          formControlName="rbd"
+                          bindValue="code"
+                          bindLabel="name"
+                        >
+                        </ng-select>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-1 position-relative">
+                      <div class="form-group">
+                        <label for="from" class="d-flex"
+                          >AirLine
+                          <a
+                            class="p-0 mobile-none"
+                            *ngIf="keys?.includes(flexAirlineKey)"
+                            style="display: inline-block; margin-left: auto"
+                            (click)="
+                              rowsControlsFlexAirline[i].isCollapsedFlexAirline =
+                                !rowsControlsFlexAirline[i]?.isCollapsedFlexAirline
+                            "
+                            [attr.aria-controls]="'flexAirLine_' + i"
+                            ><i
+                              class="ft-zap text-info"
+                              style="font-size: 16px; padding: 0px 4px; align-items: center; display: flex"
+                            ></i
+                          ></a>
+                        </label>
+                        <input
+                          id="airline"
+                          type="text"
+                          #typeaheadInstance="ngbTypeahead"
+                          class="form-control square"
+                          (keydown)="typeaheadKeydown($event)"
+                          [resultTemplate]="searchResultTemplateAirLine"
+                          [inputFormatter]="formatterAirline"
+                          formControlName="airlineCode"
+                          [ngbTypeahead]="onSearchPoint"
+                        />
+
+                        <ng-template #searchResultTemplateAirLine let-r="result" let-t="term">
+                          <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+                        </ng-template>
+                      </div>
+                    </div>
+                    <div
+                      id="flexAirLine_{{ i }}"
+                      [ngbCollapse]="rowsControlsFlexAirline[i]?.isCollapsedFlexAirline"
+                      class="popover fade show bs-popover-bottom ml-4"
+                      style="
+                        position: absolute;
+                        top: 9px;
+                        margin-top: 100px;
+                        left: 0px;
+                        will-change: transform;
+                        transform: translate(-50px, -84px);
+                        max-width: 806px;
+                        width: 320px;
+                      "
+                    >
+                      <div class="text-right">
+                        <div
+                          (click)="
+                            rowsControlsFlexAirline[i].isCollapsedFlexAirline =
+                              !rowsControlsFlexAirline[i]?.isCollapsedFlexAirline
+                          "
+                          [attr.aria-expanded]="!rowsControlsFlexAirline[i]?.isCollapsedFlexAirline"
+                          class="pointer"
+                          [attr.aria-controls]="'isCollapsedFlexAirline' + i"
+                        >
+                          <i class="ft-x" aria-hidden="true" style="font-size: 18px"></i>
+                        </div>
+                      </div>
+                      <div class="arrow" style="right: 43px"></div>
+                      <div class="row" style="padding: 15px">
+                        <div class="col-12 col-md-12">
+                          <div class="form-group">
+                            <label for="flexAirLine">Flex AirLine </label>
+                            <div class="form-control square form-control-custom">
+                              <span class="selected-item" *ngFor="let item of selectedFlexAirLineItems[i]">
+                                {{ item }}
+                                <span class="close-selected" (click)="closeFlex(item, 'flexAirline', i)">&nbsp;x</span>
+                              </span>
+                              <input
+                                id="flexAirLine"
+                                style="width: 100%"
+                                type="text"
+                                (selectItem)="
+                                  onSelectedItemsFlexAirLine($event, 'flexAirline', i); flexAirlineInput.value = ''
+                                "
+                                #flexAirlineInput
+                                class="multiSelectInputNoBorder"
+                                (keydown)="typeaheadKeydown($event)"
+                                [resultTemplate]="searchResultTemplate"
+                                formControlName="flexAirLineCode"
+                                [inputFormatter]="formatterAirline"
+                                [ngbTypeahead]="onSearchAirLineMulitiselect"
+                              />
+
+                              <ng-template #searchResultTemplate let-r="result" let-t="term">
+                                <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+                              </ng-template>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <ul class="list-unstyled mb-0 ml-1 mt-3">
+                      <li class="d-inline-block mr-2 mb-2">
+                        <div class="checkbox checkbox-primary">
+                          <input type="checkbox" id="{{ 'color-checkbox-1' + i }}" formControlName="validateCarrier" />
+                          <label for="{{ 'color-checkbox-1' + i }}"><span>Validate Carrier</span></label>
+                        </div>
+                      </li>
+                    </ul>
+                    <div class="col-12 col-md-2">
+                      <div class="form-group">
+                        <label for="bdfrom" class="form-label">Budget From</label>
+                        <input type="number" class="form-control square" formControlName="budgetFrom" id="bdfrom" />
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-2">
+                      <div class="form-group">
+                        <label for="bdto" class="form-label">Budget To</label>
+                        <input type="number" class="form-control square" formControlName="budgetTo" id="bdto" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mt-1 full-right card srchbarright mobile-none">
+                  <app-products-navigations
+                    [activeId]="1"
+                    [flightLink]="flightLink"
+                    [hotelLink]="hotelLink"
+                    [ancillaryLink]="ancillaryLink"
+                    [holidayLink]="holidayLink"
+                    [activityLink]="activityLink"
+                  ></app-products-navigations>
+                  <!--<app-task-status-configuration
+              *ngIf="teamList && teamList.length > 0 && teamMembersList && teamMembersList.length > 0"
+              [teamList]="teamList"
+              [teamMembersList]="teamMembersList"
+              [form]="flight"
+            ></app-task-status-configuration>-->
+                </div>
+              </div>
+              <div class="col-12 col-md-12 p-0">
+                <div class="form-row align-items-center srchbar">
+                  <div class="col-12 col-md-6 d-flex adtinput">
+                    <div class="form-group mr-3">
+                      <label for="adt">Adt</label>
+                      <input
+                        type="number"
+                        id="adt"
+                        [ngClass]="{ 'is-invalid': (submitted || f.noofADT.touched) && f.noofADT.errors }"
+                        formControlName="noofADT"
+                        class="form-control form-control-sm square"
+                        name="adt"
+                        (keypress)="numberOnly($event)"
+                      />
+                      <div *ngIf="(submitted || f.noofADT.touched) && f.noofADT.errors" class="invalid-feedback">
+                        <div *ngIf="f.noofADT.errors.required">required</div>
+                      </div>
+                    </div>
+
+                    <div class="form-group mr-3">
+                      <label for="chd">Chd</label>
+                      <input
+                        type="number"
+                        id="chd"
+                        formControlName="noofCHD"
+                        class="form-control form-control-sm square"
+                        name="chd"
+                        (keypress)="numberOnly($event)"
+                      />
+                    </div>
+
+                    <div class="form-group">
+                      <label for="inf">Inf</label>
+                      <input
+                        type="number"
+                        id="inf"
+                        formControlName="noofINF"
+                        class="form-control form-control-sm square"
+                        name="inf"
+                        (keypress)="numberOnly($event)"
+                      />
+                    </div>
+
+                    <div class="form-group mb-0" *ngIf="keys?.includes(paxKey)">
+                      <button
+                        type="button"
+                        (click)="openPersonModal()"
+                        class="btn btn-sm btn-icon p-0 m-2"
+                        style="margin-top: 19px !important"
+                      >
+                        <i class="icon-user-follow" style="font-size: 30px; margin-top: 3px" aria-hidden="true"></i>
+                      </button>
+                      <!-- <button
+                  *ngIf="passengersList && passengersList?.length > 0"
+                  type="button"
+                  class="btn btn-sm btn-icon p-0 mx-2 mt-2"
+                  (click)="collapsePassengers.toggle()"
+                  [attr.aria-expanded]="isCollapsedSelectedPersons"
+                  aria-controls="collapseExample"
+                >
+                  <i class="icon-user" aria-hidden="true" style="font-size: 25px; margin-top: 3px"></i>
+                  {{ passengersList?.length }}
+                  {{ isCollapsedSelectedPersons ? 'show' : 'hide' }}
+                </button> -->
+                      <button
+                        class="btn btn-sm btn-icon mx-2 mt-2 text-primary font-weight-bold"
+                        *ngIf="passengersList && passengersList?.length > 0"
+                        (click)="collapsePassengers.toggle()"
+                        [attr.aria-expanded]="isCollapsedSelectedPersons"
+                        aria-controls="collapseExample6756"
+                      >
+                        +Pax Info ({{ passengersList?.length }})
+                      </button>
+                    </div>
+                  </div>
+                  <div class="col-md-6" style="margin-left: auto">
+                    <button
+                      type="button"
+                      *ngIf="isEdit && keys?.includes(addonskey)"
+                      class="btn btn-outline-info mr-1 mb-0 pull-right mobile-none"
+                      style="width: 150px"
+                      (click)="openScrollableContent(longContent)"
+                    >
+                      Add-ons
+                    </button>
+
+                    <div class="lpo--detalils mr-2" *ngIf="keys?.includes(lpoKey)">
+                      <span
+                        class="btn btn-link text-info pull-right shadow-none"
+                        style="width: 150px"
+                        (click)="openSm(content)"
+                      >
+                        LPO Details
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row p-0 m-0" #collapsePassengers="ngbCollapse" [(ngbCollapse)]="isCollapsedSelectedPersons">
+                <div class="col-12 col-lg-12 col-md-12 px-0">
+                  <h4 class="card-title text-left" *ngIf="passengersList && passengersList?.length > 0">
+                    Added Passengers
+                  </h4>
+                  <div class="table-responsive table">
+                    <div class="outer">
+                      <div class="inner">
+                        <table class="table m-0" *ngIf="passengersList && passengersList?.length > 0">
+                          <thead>
+                            <tr class="refresh">
+                              <th scope="col">S NO</th>
+                              <th scope="col">Pax Type</th>
+                              <th scope="col">First Name</th>
+                              <th scope="col">Last Name</th>
+                              <th scope="col">Email</th>
+                              <th scope="col">Mobile Number</th>
+                              <th scope="col">Dob</th>
+                              <th scope="col">Action</th>
+                            </tr>
+                          </thead>
+                          <tbody *ngIf="passengersList && passengersList?.length > 0">
+                            <tr
+                              *ngFor="
+                                let j of passengersList | slice: (page - 1) * pageSize:page * pageSize;
+                                index as i;
+                                trackBy: trackByFn
+                              "
+                            >
+                              <td scope="row" class="pt-3 wrap-text">{{ (page - 1) * pageSize + i + 1 }}</td>
+                              <td scope="row" class="pt-3 wrap-text">{{ j?.paxType?.name }}</td>
+                              <td scope="row" class="pt-3 wrap-text">{{ j?.firstName }}</td>
+                              <td scope="row" class="pt-3 wrap-text">{{ j?.lastName }}</td>
+                              <td scope="row" class="pt-3 wrap-text">{{ j?.email }}</td>
+                              <td scope="row" class="pt-3 wrap-text">{{ j?.phone }}</td>
+                              <td scope="row" class="pt-3 wrap-text">{{ j?.dob | date: 'dd-MMM-yyyy' }}</td>
+                              <td scope="row" class="pt-3 wrap-text" *ngIf="!isEdit">
+                                <i class="ft-trash-2 pointer" (click)="delete(i)"></i>
+                              </td>
+                              <td scope="row" class="pt-3 wrap-text" *ngIf="isEdit">
+                                <i class="ft-trash-2 pointer" (click)="inActivePassengers(i, j.requestLinePaxId)"></i>
+                              </td>
+                            </tr>
+                          </tbody>
+                          <div class="d-flex justify-content-between p-2">
+                            <ngb-pagination
+                              [collectionSize]="passengersList?.length"
+                              [(page)]="page"
+                              [maxSize]="5"
+                              [boundaryLinks]="true"
+                              [pageSize]="pageSize"
+                              class="d-flex justify-content-center"
+                            >
+                            </ngb-pagination>
+                          </div>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                class="card shadow-sm p-2 form-flight-container mb-3 ng-star-inserted ng-untouched ng-pristine ng-invalid"
+                #collapse="ngbCollapse"
+                [(ngbCollapse)]="isCollapsed1"
+              >
+                <div class="col-12 col-md-12 text-right">
+                  <div
+                    (click)="collapse.toggle()"
+                    [attr.aria-expanded]="!isCollapsed1"
+                    class="pointer"
+                    aria-controls="collapseExample1"
+                  >
+                    x
+                  </div>
+                  <div formArrayName="dealCode">
+                    <div
+                      *ngFor="let deal of deals().controls; let dealIndex = index"
+                      [formGroupName]="dealIndex"
+                      class="form-group"
+                      class="form-flight-container"
+                    >
+                      <div class="form-row align-items-center">
+                        <div class="col-12 col-md-2">
+                          <div class="form-group text-left">
+                            <label for="airlineCode">AirLine</label>
+                            <input
+                              id="airlineCode"
+                              type="text"
+                              #typeaheadInstance="ngbTypeahead"
+                              class="form-control square"
+                              (keydown)="typeaheadKeydown($event)"
+                              [resultTemplate]="searchResultTemplate"
+                              [inputFormatter]="formatterAirline"
+                              formControlName="airlineCode"
+                              [ngbTypeahead]="onSearchPoint"
+                            />
+
+                            <ng-template #searchResultTemplate let-r="result" let-t="term">
+                              <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+                            </ng-template>
+                          </div>
+                        </div>
+
+                        <div class="col-12 col-md-2">
+                          <div class="form-group text-left">
+                            <label for="dealCode">Deal Code</label>
+
+                            <input
+                              type="text"
+                              id="dealCode"
+                              formControlName="dealCode"
+                              class="form-control square"
+                              name="dealCode"
+                            />
+                          </div>
+                        </div>
+
+                        <div class="d-flex">
+                          <button (click)="addDeal()" *ngIf="!isEdit" type="button" class="btn mt-1 p-0">
+                            <i class="ft-plus-circle" aria-hidden="true" style="font-size: 28px"></i>
+                          </button>
+
+                          <button
+                            (click)="removeDeal(dealIndex)"
+                            *ngIf="!isEdit"
+                            type="button"
+                            class="btn p-0 ml-2 mt-1"
+                          >
+                            <i class="ft-minus-circle" aria-hidden="true" style="font-size: 28px"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="card shadow-sm p-2 form-flight-container mb-3 ng-star-inserted ng-untouched ng-pristine ng-invalid"
+                #collapsepoints="ngbCollapse"
+                [(ngbCollapse)]="isCollapsedpoints"
+              >
+                <div class="col-12 col-md-12 text-right">
+                  <div
+                    (click)="collapsepoints.toggle()"
+                    [attr.aria-expanded]="!isCollapsedpoints"
+                    class="pointer"
+                    aria-controls="collapseExamplepoints"
+                  >
+                    x
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="col-12 col-md-3">
+                    <div class="form-group">
+                      <label for="expandableParemeters">ExpandableParemeters</label>
+                      <ng-select
+                        id="expandableParemeters"
+                        [items]="masterEPList"
+                        bindLabel="name"
+                        bindValue="id"
+                        formControlName="expandableParametersCode"
+                        [multiple]="true"
+                        [closeOnSelect]="false"
+                      >
+                      </ng-select>
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-3">
+                    <div class="form-group">
+                      <label for="trasitPoint">Trasit Point</label>
+                      <div class="form-control square form-control-custom">
+                        <span class="selected-item" *ngFor="let item of selectedTransitPointItems">
+                          {{ item }}
+                          <span class="close-selected" (click)="close(item, 'transitPoints')">&nbsp;x</span>
+                        </span>
+                        <input
+                          id="trasitPoint"
+                          type="text"
+                          (selectItem)="onSelectedItems($event, 'transitPoints')"
+                          #transitPointInput
+                          class="multiSelectInputNoBorder"
+                          (keydown)="typeaheadKeydown($event)"
+                          [resultTemplate]="searchResultTemplate"
+                          [inputFormatter]="formatter"
+                          formControlName="transitPointCode"
+                          [ngbTypeahead]="onSearchLocation"
+                        />
+
+                        <ng-template #searchResultTemplate let-r="result" let-t="term">
+                          <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+                        </ng-template>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-3">
+                    <div class="form-group">
+                      <label for="exludePoint">Exclude Point</label>
+                      <div class="form-control square form-control-custom">
+                        <span class="selected-item" *ngFor="let item of selectedExludedPoints">
+                          {{ item }}
+                          <span class="close-selected" (click)="close(item, 'exludedPoint')">&nbsp;x</span>
+                        </span>
+                        <input
+                          id="exludePoint"
+                          style="width: 100%"
+                          type="text"
+                          (selectItem)="onSelectedItems($event, 'exludedPoint')"
+                          #excludedPointInput
+                          class="multiSelectInputNoBorder"
+                          (keydown)="typeaheadKeydown($event)"
+                          [resultTemplate]="searchResultTemplate"
+                          [inputFormatter]="formatter"
+                          formControlName="excludePointCode"
+                          [ngbTypeahead]="onSearchLocation"
+                        />
+
+                        <ng-template #searchResultTemplate let-r="result" let-t="term">
+                          <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+                        </ng-template>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-3">
+                    <div class="form-group">
+                      <label for="passengerType">Passenger Type</label>
+                      <ng-select
+                        id="passengerType"
+                        [items]="masterPaxTypeList"
+                        bindLabel="name"
+                        bindValue="id"
+                        formControlName="passengerTypeId"
+                        placeholder="Passenger Type"
+                      >
+                      </ng-select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--<div class="row offercards pointer">
+          <div class="col-xl-2 col-lg-2 col-12">
+            <div class="card">
+              <div class="card-content">
+                <div class="card-body text-center" (click)="collapse.toggle()" [attr.aria-expanded]="!isCollapsed1"
+                  aria-controls="collapseExample1">
+                  <h4 class="mb-1 info">DEALS</h4>
+                  <i class="fa fa-bullhorn info font-large-2 text-center"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-2 col-lg-6 col-12">
+            <div class="card">
+              <div class="card-content">
+                <div class="card-body text-center" (click)="collapsepoints.toggle()"
+                  [attr.aria-expanded]="!isCollapsedpoints">
+                  <h4 class="mb-1 info">POINTS</h4>
+                  <i class="fa fa-cubes info font-large-2 text-center"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-2 col-lg-2 col-12">
+            <div class="card">
+              <div class="card-content">
+                <div class="card-body text-center">
+                  <h4 class="mb-1 info">TAGS</h4>
+                  <i class="fa fa-tags info font-large-2 text-center"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-2 col-lg-6 col-12">
+            <div class="card">
+              <div class="card-content">
+                <div class="card-body text-center">
+                  <h4 class="mb-1 info">FLIGHT</h4>
+                  <i class="fa fa-plane info font-large-2 text-center"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-2 col-lg-6 col-12">
+            <div class="card">
+              <div class="card-content">
+                <div class="card-body text-center">
+                  <h4 class="mb-1 info">HOTEL</h4>
+                  <i class="fa fa-bed info font-large-2 text-center"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xl-2 col-lg-6 col-12">
+            <div class="card">
+              <div class="card-content">
+                <div class="card-body text-center">
+                  <h4 class="mb-1 info">CAR</h4>
+                  <i class="fa fa-car info font-large-2 text-center"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>-->
+            </div>
+            <hr />
+            <div class="form-row align-items-center justify-content-end hrline">
+              <div class="col-md-12 text-right mt-1">
+                <div class="pull-left d-flex">
+                  <button
+                    type="button"
+                    class="btn btn-info mr-2 flex-btn mobile-none"
+                    style="letter-spacing: 1px"
+                    *ngIf="isEdit && !hideFlightSuggestions[0] && keys?.includes(flightFlexBtn)"
+                    (click)="OnClickExplode()"
+                  >
+                    Flex
+                    <span></span>
+                  </button>
+                  <span
+
+                    *ngIf="isEdit && keys?.includes(flightSuggestionBtn)"
+                    class=" ml-2 mr-2 mobile-none  icon-check-font cursor-pointer text-primary"
+                    (click)="showflightSuggestionsInfo(0)"
+                  >
+                    <i class="fas fa-robot mr-1"></i> <!-- Suggest -->
+                  </span>
+                  <button
+                    type="button"
+                    (click)="redirectToFlightRfq()"
+                    *ngIf="isEdit && !hideFlightSuggestions[0] && keys?.includes(flightRFQBtn)"
+                    class="btn btn-info ml-2 mr-2 mobile-none"
+                  >
+                    <i class="ft-navigation"></i> RFP
+                  </button>
+                  <button
+                    type="button"
+                    *ngIf="isEdit && !hideFlightSuggestions[0] && keys?.includes(flightUpdateBtn)"
+                    (click)="onUpdateFlightForm()"
+                    class="btn btn-light btn-f-w"
+                  >
+                    <i class="ft-bookmark"></i> Update
+                  </button>
+
+                  <i
+                    class="ft-shield ml-2 mt-1 icon-check-font cursor-pointer"
+                    (click)="openPolicyPopup()"
+                    *ngIf="isEdit && policyList?.length > 0"
+                    [ngClass]="{
+                      'text-success': policyList[0]?.policyIsQualified === 'Yes',
+                      'text-danger': policyList[0]?.policyIsQualified === 'No'
+                    }"
+                  ></i>
+                  <button
+                    type="button"
+                    *ngIf="!isEdit && keys?.includes(flightSaveBtn)"
+                    (click)="onSubmitFlightForm()"
+                    class="btn btn-primary btn-mobile"
+                  >
+                    <i class="ft-bookmark"></i> Save
+                  </button>
+                  <button
+                    type="button"
+                    *ngIf="!isEdit && keys?.includes(flightCbtSaveBtn)"
+                    (click)="onSubmitFlightForm()"
+                    class="btn btn-primary btn-mobile"
+                  >
+                    <i class="ft-bookmark mr-2"></i>
+                    SEARCH FLIGHTS
+                  </button>
+                  <button
+                    type="button"
+                    *ngIf="isEdit && keys?.includes(flightCbtUpdateBtn)"
+                    (click)="onUpdateFlightForm()"
+                    class="btn btn-primary btn-mobile"
+                  >
+                    <i class="ft-bookmark mr-2"></i>
+                    SEARCH FLIGHTS
+                  </button>
+                </div>
+
+                <div class="pull-right m-pl-none" *ngIf="!hideFlightSuggestions[0]">
+                  <button
+                    type="button"
+                    *ngIf="isEdit "
+                    (click)="showPriceLine()"
+                    class="btn btn-outline-info ml-2 btn-f-w"
+                  >
+                    Price
+                  </button>
+                  <button
+                    type="button"
+                    *ngIf="isEdit && keys?.includes(flightAutoBtn)"
+                    (click)="flightoffers()"
+                    class="btn btn-outline-info ml-2 btn-f-w"
+                  >
+                    Auto
+                  </button>
+                  <!--   <button type="button" *ngIf="isEdit" (click)="MPTB()" class="btn btn-outline-info ml-2">MPTB</button> -->
+                  <button
+                    type="button"
+                    *ngIf="isEdit && keys?.includes(flightManualBtn)"
+                    (click)="Online()"
+                    class="btn btn-outline-info ml-2 mobile-none"
+                  >
+                   Pro
+                  </button>
+                  <button
+                    *ngIf="isEdit && keys?.includes(flightOfflineBtn)"
+                    type="button"
+                    (click)="offline()"
+                    class="btn btn-outline-info ml-2 mobile-none"
+                  >
+                    Offline
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<div [hidden]="!hideFlightSuggestions[0]" *ngIf="flightSuggestionsData && flightSuggestionsData?.length === 0">
+  <h5>no data found in the system</h5>
+</div>
+<app-flight-suggestions-list
+  [hidden]="!hideFlightSuggestions[0]"
+  [flightSuggestionsList]="flightSuggestionsData"
+  *ngIf="flightSuggestionsData && flightSuggestionsData.length > 0"
+></app-flight-suggestions-list>
+
+<!-- <app-service-request-id-lines-list *ngIf="isEdit"></app-service-request-id-lines-list> -->
+
+<!--LPO DETAILS -->
+<ng-template #content let-modal>
+  <div class="modal-header py-1">
+    <h4 class="modal-title">LPO Details</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.close('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="flightForm">
+      <div class="form-row">
+        <div class="col-md-4 col-12">
+          <div class="form-group mb-2">
+            <label for="lpo_Number">LPO Number</label>
+            <input
+              type="text"
+              id="lpo_Number"
+              placeholder="Enter LPO Number"
+              class="form-control square"
+              name="lpo_Number"
+              formControlName="lpoNumber"
+            />
+          </div>
+        </div>
+        <div class="col-md-4 col-12">
+          <div class="form-group mb-2">
+            <label for="lpo_date">LPO Date</label>
+            <input type="date" id="lpo_date" class="form-control square" name="lpo_date" formControlName="lPoDate" />
+          </div>
+        </div>
+        <div class="col-md-4 col-12">
+          <div class="form-group mb-2">
+            <label for="lpo_amount">LPO Amount</label>
+            <input
+              type="number"
+              id="lpo_amount"
+              placeholder="Enter LPO Amount"
+              class="form-control square"
+              name="lpo_amount"
+              formControlName="lpoAmount"
+            />
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</ng-template>
+<!--LPO DETAILS END-->
+
+<!--FLIGHT ADD-ONS DETAILS -->
+<ng-template #longContent let-modal>
+  <div class="modal-header py-1">
+    <h4 class="modal-title">Add-Ons</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.close('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body mb-2">
+    <form [formGroup]="flightForm">
+      <div class="addons-cl">
+        <div formArrayName="addOns">
+          <div *ngFor="let a of flightAddons().controls; let addonsIndex = index" [formGroupName]="addonsIndex">
+            <div class="form-row">
+              <div class="col-md-2 col-12">
+                <div class="form-group mb-2">
+                  <label for="addons">Addons</label>
+                  <input
+                    type="text"
+                    id="addons"
+                    (keydown)="typeaheadKeydown($event)"
+                    [resultTemplate]="searchResultAddonsTemplate"
+                    #typeaheadInstance="ngbTypeahead"
+                    class="form-control square"
+                    name="addons"
+                    formControlName="addOnType"
+                    [inputFormatter]="flightAddonsformatter"
+                    [ngbTypeahead]="onSearchFlightAddons"
+                    appendTo="body"
+                  />
+                  <ng-template #searchResultAddonsTemplate let-r="result" let-t="term">
+                    <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+                  </ng-template>
+                </div>
+              </div>
+
+              <div formGroupName="requiredRoute" class="col-md-2 col-12">
+                <div class="form-group mb-2">
+                  <label for="Routes">Routes</label>
+
+                  <ng-select
+                    [multiple]="true"
+                    [items]="addonsRoutes"
+                    groupBy="selectedAllGroup"
+                    [selectableGroup]="true"
+                    [selectableGroupAsModel]="false"
+                    appendTo="body"
+                    class="custom"
+                    bindLabel="bindLableRoute"
+                    placeholder="Select"
+                    [multiple]="true"
+                    [closeOnSelect]="false"
+                    formControlName="routes"
+                  >
+                    <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                      <input
+                        id="item-{{ index }}"
+                        type="checkbox"
+                        [ngModel]="item$?.selected"
+                        [ngModelOptions]="{ standalone: true }"
+                      />
+                      {{ item.selectedAllGroup }}
+                    </ng-template>
+                    <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                      <input
+                        id="item-{{ index }}"
+                        type="checkbox"
+                        name="item-{{ index }}"
+                        [ngModel]="item$?.selected"
+                        [ngModelOptions]="{ standalone: true }"
+                      />
+                      {{ item.route }}
+                    </ng-template>
+
+                    <ng-template ng-multi-label-tmp let-items="items">
+                      <div class="ng-value" *ngFor="let item of items | slice: 0:0">
+                        <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                      </div>
+                      <div class="ng-value" *ngIf="items?.length > 0">
+                        <span class="ng-value-label"> {{ items?.length }} selected</span>
+                      </div>
+                    </ng-template>
+                  </ng-select>
+                </div>
+              </div>
+              <div formGroupName="requiredPassenger" class="col-md-2 col-12">
+                <div class="form-group mb-2">
+                  <label for="Pax">Pax</label>
+
+                  <ng-select
+                    [multiple]="true"
+                    [items]="addonsPassengers"
+                    groupBy="selectedAllGroup"
+                    [selectableGroup]="true"
+                    [selectableGroupAsModel]="false"
+                    bindLabel="bindLablePaxType"
+                    placeholder="Select"
+                    appendTo="body"
+                    class="custom"
+                    [multiple]="true"
+                    [closeOnSelect]="true"
+                    formControlName="passengers"
+                  >
+                    <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                      <input
+                        id="item-{{ index }}"
+                        type="checkbox"
+                        [ngModel]="item$?.selected"
+                        [ngModelOptions]="{ standalone: true }"
+                      />
+                      {{ item.selectedAllGroup }}
+                    </ng-template>
+                    <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                      <input
+                        id="item-{{ index }}"
+                        type="checkbox"
+                        name="item-{{ index }}"
+                        [ngModel]="item$?.selected"
+                        [ngModelOptions]="{ standalone: true }"
+                      />
+                      {{ item.paxType }}
+                    </ng-template>
+
+                    <ng-template ng-multi-label-tmp let-items="items">
+                      <div class="ng-value" *ngFor="let item of items | slice: 0:0">
+                        <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                      </div>
+                      <div class="ng-value" *ngIf="items?.length > 0">
+                        <span class="ng-value-label"> {{ items?.length }} selected</span>
+                      </div>
+                    </ng-template>
+                  </ng-select>
+                </div>
+              </div>
+              <div class="col-md-2 col-12">
+                <div class="form-group mb-2">
+                  <label for="Remarks">Remarks</label>
+                  <input
+                    type="text"
+                    id="Remarks"
+                    placeholder="Enter Remarks"
+                    class="form-control square"
+                    name="Remarks"
+                    formControlName="remarks"
+                  />
+                </div>
+              </div>
+              <div class="d-flex ml-1" style="margin-top: 1.9rem !important">
+                <ul class="list-unstyled mb-0">
+                  <li class="d-inline-block mr-2 mb-2">
+                    <div class="checkbox checkbox-primary">
+                      <input type="checkbox" id="{{ 'checkbox2' + addonsIndex }}" formControlName="required" />
+                      <label for="{{ 'checkbox2' + addonsIndex }}" placement="bottom" ngbTooltip="Required"
+                        ><span>Req</span></label
+                      >
+                    </div>
+                  </li>
+                  <li class="d-inline-block mr-2 mb-2">
+                    <div class="checkbox checkbox-primary">
+                      <input type="checkbox" id="{{ 'checkbox3' + addonsIndex }}" formControlName="extraCost" />
+                      <label for="{{ 'checkbox3' + addonsIndex }}"><span>E.Cost</span></label>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div class="d-flex align-items-center">
+                <div (click)="addAddons()" type="button" class="text-primary mt-2 p-0">
+                  <i class="ft-plus-circle" aria-hidden="true" style="font-size: 28px"></i>
+                </div>
+                <div (click)="removeAddons(addonsIndex)" type="button" class="text-primary p-0 ml-2 mt-2">
+                  <i class="ft-minus-circle" aria-hidden="true" style="font-size: 28px"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</ng-template>
+<!--FLIGHT ADD-ONS DETAILS END -->
+<!-- <app-product-pricing [hidden]="!isPriceShow"></app-product-pricing> -->
+<app-multiple-product-forms [hidden]="!isPriceShow"></app-multiple-product-forms>

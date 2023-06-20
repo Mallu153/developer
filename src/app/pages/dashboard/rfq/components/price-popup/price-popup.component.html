@@ -1,0 +1,70 @@
+
+<div  *ngIf="priceApiResponseData && priceApiResponseData.length >0">
+  <div class="modal-header">
+    <h4 class="modal-title py-1" *ngIf="rfqId">Option Received for RFQ #{{rfqId?.rfqId}}</h4>
+    <h4 class="modal-title py-1" *ngIf="unicIDOptions">Option Received from {{selectedSupplierName}} for  RFQ #{{unicIDOptions.rfqId}} & SR-Line {{unicIDOptions.srLine}}</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="table-responsive">
+      <table class="table m-0">
+        <thead>
+          <tr class="refresh">
+            <th scope="col">Supplier</th>
+            <th scope="col">Price</th>
+            <th scope="col">Route</th>
+            <th scope="col">Flight Duration </th>
+            <th scope="col">AirLine </th>
+            <th scope="col"> </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let price of priceApiResponseData; let i=index;trackBy: trackByFn">
+            <td>
+
+              <span class="text-primary cursor-pointer" (click)="offline(price?.BookingData?.BookingID,price?.PriceData)">
+              {{price?.BookingData?.ServiceRequestId}}-{{price?.BookingData?.ServiceRequestLineId}}-{{price?.BookingData?.RfqId}}- {{price?.BookingData?.BookingID}}-{{price?.BookingData?.SupplierName}}
+              </span>
+            </td>
+            <td>
+
+
+              <div *ngFor="let priceData of price.PriceData | groupByWithSum:'PAXType':'TotalAmount'">
+                 {{priceData.key}} - {{priceData.sum}}
+              </div>
+
+            </td>
+              <td >
+                  <div *ngFor="let s of price?.BookingData?.SegmentData">
+                    {{s?.segment_board_point}} - {{s?.segment_off_point}} - {{s?.segment_airline_operating}} - {{s?.segment_airline_no}} - {{s?.segment_class_designator}} - {{s?.segment_rbd_code}}
+                  </div>
+
+              </td>
+           <td>
+
+              <div *ngFor="let s of price?.BookingData?.SegmentData">
+                {{s?.segment_depart_date_full | date: 'dd-MMM-yy' }} - {{s?.segment_depart_time?.substring(0, 2)}}:{{s?.segment_depart_time?.substring(2, 4)}} - {{s?.segment_arrival_date_full| date: 'dd-MMM-yy' }} - {{s?.segment_arrival_time?.substring(0, 2)}}:{{s?.segment_arrival_time?.substring(2, 4)}}
+              </div>
+
+           </td>
+           <td>
+
+              <div *ngFor="let s of price?.BookingData?.SegmentData">
+                {{s?.segment_airline_marketing }}
+              </div>
+
+           </td>
+             <td>
+              <button class="btn btn-link" (click)="onSaveQuote(price?.BookingData?.BookingID,price?.BookingData?.ProductId,price?.BookingData?.BookingReferenceNo)">Add to Quote</button>
+             </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light" (click)="activeModal.close('Close click')">Close</button>
+  </div>
+</div>

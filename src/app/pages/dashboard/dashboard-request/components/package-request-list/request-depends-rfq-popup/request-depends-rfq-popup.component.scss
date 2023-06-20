@@ -1,0 +1,62 @@
+.modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 1rem 1rem;
+
+  //border-bottom: none !important;
+  /* border-bottom: 1px solid #e0e0e0; */
+ /*  border-top-left-radius: calc(0.35rem - 1px);
+  border-top-right-radius: calc(0.35rem - 1px); */
+}
+.model-border{
+  border-radius: 10px;
+
+}
+::ng-deep .my-class .modal-dialog {
+  /* max-width: 95% !important; */
+  max-width: 1490px !important;
+  min-width: 971px !important;
+  width: 95% !important;
+
+}
+
+
+
+
+.tbl-container{
+  max-width: fit-content;
+  max-height: fit-content;
+}
+.tbl-fixed{
+  overflow-x: scroll;
+  overflow-y: scroll;
+  height: fit-content;
+  max-height: 70vh;
+  margin-top: 40px;
+}
+
+table{
+ min-width: max-content;
+ border-collapse:collapse;
+}
+
+
+table th{
+  position: sticky;
+  top:0px;
+  /* background-image: linear-gradient(to right, #efdeff 0%, #cdb7e2 51%, #efdeff 100%); */
+  background: #D5F1FD;
+  color:  #226CC5;
+  text-align: center;
+  border: 1px solid #f5f5f5;
+  font-weight: 500;
+  font-size: 13px !important;
+}
+
+table td{
+/* background: #fff; */
+text-align: center;
+border: 1px solid #f5f5f5;
+}
+

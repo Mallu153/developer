@@ -1,0 +1,42 @@
+<div class="container-fluid">
+  <div class="modal-header">
+    <h4 class="modal-title">Select Ancillary</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <!--  <div class="card">
+      <div class="card-content">
+        <div class="card-body"> -->
+
+    <!--  </div>
+      </div>
+    </div> -->
+    <div class="form-row">
+      <div class="form-group col-md-2 col-3 mb-2" *ngIf="!serviceTypes">
+        <p>Loading...</p>
+      </div>
+      <div class="form-group col-md-2 col-3 mb-2" *ngFor="let service of serviceTypes">
+        <label for="name" > {{ service.departmentName }}</label>
+        <select
+          id="qtype"
+          name="status"
+          class="form-control square ml-1"
+          (change)="OnChangeService($event.target.value)"
+        >
+          <option value="">Choose</option>
+          <option [value]="ser.serviceTypeId" *ngFor="let ser of service.services">
+            {{ ser.serviceTypeName }}
+          </option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="activeModal.dismiss('Cross click')">Close</button>
+    <!--  <button type="button" class="btn btn-primary" (click)="onSubmit()">Submit</button> -->
+  </div>
+</div>

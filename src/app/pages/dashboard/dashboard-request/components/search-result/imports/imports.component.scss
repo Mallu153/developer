@@ -1,0 +1,20 @@
+:host ::ng-deep .ng-select.ng-invalid.ng-touched .ng-select-container {
+  border-color: #f55252;
+}
+:host ::ng-deep .ng-select.ng-invalid.ng-touched .ng-arrow-wrapper .ng-arrow {
+  border-color: #f55252 transparent transparent;
+}
+:host ::ng-deep .ng-select.ng-invalid.ng-touched .ng-select-container .ng-placeholder {
+  color: #f55252;
+}
+/* .btn-primary {
+  color: #fff;
+  background-color: #2f8be6;
+  border-color: #2f8be6;
+} */
+.required-asterisk {
+  color: red;
+  font-weight: bold;
+  margin-left: 3px;
+  font-size: 1.2em;
+}

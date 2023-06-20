@@ -1,0 +1,33 @@
+<section id="myRequestsBtn">
+  <button type="button" *ngIf="keys?.includes(flightBtn)" class="btn btn-outline-info mr-1 mb-1"
+    (click)="onCreateRequestForCbt('flight')">
+    <i class="icon-plane mr-1"></i>
+    <span class="d-none d-sm-inline-block"> Flight</span>
+
+  </button>
+  <button type="button" *ngIf="keys?.includes(hotelBtn)" class="btn btn-outline-info mr-1 mb-1"
+    (click)="onCreateRequestForCbt('hotel')"><i class="fa fa-bed mr-1"></i>
+
+    <span class="d-none d-sm-inline-block"> Hotel</span>
+  </button>
+  <button type="button" *ngIf="keys?.includes(ancillaryBtn)" class="btn btn-outline-info mr-1 mb-1"
+    (click)="onAncillarySelect()"><i class="fa fa-car mr-1"></i>
+
+    <span class="d-none d-sm-inline-block"> Ancillary</span>
+  </button>
+  <button type="button" *ngIf="keys?.includes(packageBtn)" class="btn btn-outline-info mr-1 mb-1"
+    (click)="onCreateRequestForCbt('holidays')"><i class="icon-bulb mr-1"></i>
+
+    <span class="d-none d-sm-inline-block"> Package</span>
+  </button>
+  <button type="button" *ngIf="keys?.includes(activitiesBtn)" class="btn btn-outline-info mr-1 mb-1"
+    (click)="onCreateRequestForCbt('activities')"><i class="ft-map-pin mr-1"></i>
+    <span class="d-none d-sm-inline-block"> Activities</span>
+  </button>
+  <button type="button" *ngIf="keys?.includes(amendmentsBtn)" class="btn btn-outline-info  mr-1 mb-1"
+    (click)="onCreateRequestForCbtAmendments()"><i class="ft-git-pull-request mr-1"></i>
+    <span class="d-none d-sm-inline-block"> Amendments</span>
+
+  </button>
+
+</section>

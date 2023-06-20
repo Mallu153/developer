@@ -1,0 +1,47 @@
+
+<div class=" my-class"  *ngIf="priceApiResponseData&&priceApiResponseData.length >0">
+  <div class="modal-header">
+    <h4 class="modal-title py-1" *ngIf="rfqId">Option Received for RFQ #{{rfqId?.rfqId}}</h4>
+    <h4 class="modal-title py-1" *ngIf="unicIDOptions">Option Received from {{selectedSupplierName}} for  RFQ #{{unicIDOptions.rfqId}} & SR-Line {{unicIDOptions.srLine}}</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="table-responsive">
+      <table class="table m-0">
+        <thead>
+          <tr class="refresh">
+            <th scope="col">Supplier</th>
+            <th scope="col">Service Type </th>
+            <th scope="col"> Price</th>
+            <th scope="col"> Pax</th>
+            <th scope="col"> </th>
+
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let anx of priceApiResponseData; let i=index; trackBy: trackByFn">
+
+            <td (click)="offline(anx.productId,anx.bookingChannel,anx.bookingId,anx.bookingReferenceNo)" class="text-primary cursor-pointer">
+              {{anx.serviceRequestNo}}- {{anx.serviceRequestLineNo}}-{{anx.rfqId}}-{{anx.bookingId}}-{{selectedSupplierName}}
+            </td>
+            <td>{{anx.serviceRequestTypeName}}</td>
+            <td>{{anx.totalAmount}} </td>
+            <td>
+              <div *ngFor="let pax of anx.passengersInfo | groupBy: 'paxType' ; let paxIndex=index;" >
+                <span> {{pax.key}} - {{pax.value}}</span>
+              </div>
+            </td>
+            <td>
+              <button class="btn btn-link" (click)="onSaveQuote(anx.bookingId,anx.productId,anx.bookingReferenceNo)">Add to Quote</button>
+             </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light" (click)="activeModal.close('Close click')">Close</button>
+  </div>
+</div>

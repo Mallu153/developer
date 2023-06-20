@@ -1,0 +1,7 @@
+<div class="row" *ngIf="microAccountData&&microAccountData.length>0">
+  <div class="col-12">
+    <button type="button" class="pull-right btn  btn-outline-primary mr-2" *ngIf="view_type_str !== 'table'" (click)="microTable()"><i class="ft-list  mr-1"></i>Table</button>
+    <button type="button" class="pull-right btn btn-outline-primary mr-2"  *ngIf="view_type_str !== 'timeline'"(click)="microTimeLine()"><i class="ft-list  mr-1"></i>Time Line</button>
+  </div>
+</div>
+<app-micro-account-view *ngIf="microAccountData&&microAccountData.length>0" [micro_accountData]="microAccountData"></app-micro-account-view>

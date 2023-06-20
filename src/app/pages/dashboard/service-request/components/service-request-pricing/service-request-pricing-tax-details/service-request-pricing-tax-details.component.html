@@ -1,0 +1,50 @@
+<div class="row">
+  <div class="col-sm-12 col-md-12 col-lg-12">
+    <div class="card">
+      <!--   <div class="card-header">
+        <h4 class="card-title">Price details</h4>
+      </div> -->
+      <div class="card-content">
+        <div class="card-body">
+          <div class="modal-header">
+            <h4 class="modal-title">Tax details</h4>
+            <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col" sortable="name">Tax</th>
+                    <!-- <th scope="col" sortable="name" >Description</th> -->
+                    <th scope="col" sortable="name">From - To</th>
+                    <!-- <th scope="col" sortable="name" >To</th> -->
+                    <th scope="col" sortable="name">Slab %</th>
+                    <th scope="col" sortable="name">Slab Amnt</th>
+                    <th scope="col" sortable="name">Calculated Amnt</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let price of pricingData.taxBreakup">
+                    <td>{{ price.taxName }}</td>
+                    <!-- <td>{{price.taxDescription}}</td> -->
+                    <td>{{ price.budgetFrom }} - {{ price.budgetTo }}</td>
+                    <!-- <td>{{price.budgetTo}}</td> -->
+                    <td>{{ price.slabPercentage }}</td>
+                    <td>{{ price.slabAmount }}</td>
+                    <td>{{ price.calculatedAmount }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="activeModal.dismiss('Cross click')">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

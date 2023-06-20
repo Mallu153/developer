@@ -1,0 +1,280 @@
+<section id="simple-table" *ngIf="rows && rows?.length > 0">
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title">
+            Retail Booking Report {{ dateOfjourney }}
+            <i class="float-right ft-filter cursor-pointer" *ngIf="showFilterIcon" (click)="selectBox(0)"></i>
+          </h4>
+        </div>
+        <div class="card-body">
+          <fieldset class="form-group">
+            <label
+              >Show
+              <select
+                name="users-list-select"
+                class="form-control form-control-sm d-inline-block width-100 p-right-25 pl-4 mx-1"
+                (click)="updateLimit($event)"
+              >
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+              </select>
+              entries</label
+            >
+          </fieldset>
+          <ngx-datatable
+            [rows]="rows"
+            [rowHeight]="'auto'"
+            #tableRowDetails
+            class="bootstrap core-bootstrap"
+            [limit]="limitRef"
+            [columnMode]="ColumnMode.force"
+            [headerHeight]="50"
+            [footerHeight]="50"
+            [scrollbarH]="true"
+            [sorts]="[{ prop: 'booking_created_date', dir: 'desc' }]"
+          >
+            <!-- <ngx-datatable-column name="#" [width]="35">
+              <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-row="row">
+                {{ rowIndex + 1 }}
+              </ng-template>
+            </ngx-datatable-column> -->
+
+            <ngx-datatable-column [width]="30" name="#" prop="product_name">
+              <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                <!-- <div >
+                  {{ value }}
+                </div> -->
+                <span [ngSwitch]="row.product_name">
+                  <span *ngSwitchCase="'Flight'"><i class="icon-plane"></i> </span>
+                  <span *ngSwitchCase="'Hotel'"><i class="fa fa-bed"></i></span>
+                  <span *ngSwitchCase="'Ancillary'"><i class="fa fa-car"></i></span>
+                  <span *ngSwitchCase="'Attraction'"><i class="ft-map-pin"></i></span>
+                </span>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column [width]="200" name="Lead Passenger" prop="passenger_name">
+              <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                <ng-template #paxContent>
+                  <span> {{ row.booking_contact_email }} {{ row.booking_contact_mobile }}</span>
+                </ng-template>
+                <span
+                  class="d-none d-md-block d-lg-block d-xl-block"
+                  *ngIf="row.passenger_name && row.passenger_type"
+                  placement="right"
+                  [ngbTooltip]="paxContent"
+                >
+                  {{ row.passenger_name }} ({{ row.passenger_type }})
+                </span>
+                <span class="d-block d-sm-none" *ngIf="row.passenger_name && row.passenger_type">
+                  {{ row.passenger_name }} ({{ row.passenger_type }})
+                </span>
+
+                <span class="d-block d-sm-none text-muted"> {{ row.booking_contact_mobile }}</span>
+                <span class="d-block text-muted"> {{ row.sub_reference_for_2 }}</span>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column [width]="120" name="DOJ / Check In / Service Date" prop="sub_reference_date">
+              <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                <div>
+                  {{ value }}
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column [width]="160" name="PNR / Booking" prop="supplier_reference">
+              <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                <div>
+                  <span
+                    class="text-primary cursor-pointer mr-2"
+                    (click)="
+                      refernceNumberToRedirect(
+                        row.product_id,
+                        row.booking_channel,
+                        row.booking_id,
+                        row.supplier_reference,
+                        row.booking_reference_no
+                      )
+                    "
+                  >
+                    {{ value }}
+                  </span>
+                  <span *ngIf="hidePnrIcon">
+                    <i
+                      *ngIf="row.product_name === 'Flight'"
+                      (click)="
+                        createServiceRequest(
+                          row.booking_id,
+                          row.booking_customer_name,
+                          row.booking_contact_name,
+                          row.supplier_reference,
+                          row.booking_contact_mobile,
+                          row.product_id,
+                          row.booking_channel,
+                          row.booking_reference_no,
+                          'flight'
+                        )
+                      "
+                      class="fa fa-pencil-square-o fa-lg cursor-pointer"
+                    ></i>
+                    <i
+                      *ngIf="row.product_name === 'Hotel'"
+                      (click)="
+                        createServiceRequest(
+                          row.booking_id,
+                          row.booking_customer_name,
+                          row.booking_contact_name,
+                          row.supplier_reference,
+                          row.booking_contact_mobile,
+                          row.product_id,
+                          row.booking_channel,
+                          row.booking_reference_no,
+                          'hotel'
+                        )
+                      "
+                      class="fa fa-pencil-square-o fa-lg cursor-pointer"
+                    ></i>
+                  </span>
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Status" prop="line_status" [width]="100"></ngx-datatable-column>
+
+            <ngx-datatable-column [width]="150" name="Balance Amount" prop="total_amount">
+              <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                <div class="long--text">
+                  <span
+                    class="badge badge-pill"
+                    [ngClass]="{
+                      'bg-light-danger': value <= row.total_fare && value != 0,
+                      'bg-light-info': value > row.total_fare && value != 0,
+                      'bg-light-success': value == 0
+                    }"
+                  >
+                    {{ value }}</span
+                  >
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column [width]="150" name="Amount" prop="total_fare">
+              <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                <div class="long--text">
+                  {{ value }}
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column [width]="150" name="Receipt Amount" prop="receipt_amount">
+              <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                <div class="long--text">
+                  {{ value }}
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column [width]="150" name="Payment Amount" prop="payment_amount">
+              <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                <div class="long--text">
+                  {{ value }}
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column [width]="220" name="Customer" prop="booking_customer_name">
+              <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                <div class="long--text">
+                  {{ value }}
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Airline/ City" prop="sub_reference_for_1" [width]="150"></ngx-datatable-column>
+
+            <ngx-datatable-column
+              name="PNR / Booking Date"
+              prop="supplier_reference_date"
+              [width]="170"
+            ></ngx-datatable-column>
+
+            <ngx-datatable-column [width]="160" name="Booking Reference" prop="booking_reference_no">
+              <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                <div
+                  class="text-primary cursor-pointer"
+                  (click)="
+                    refernceNumberToRedirect(
+                      row.product_id,
+                      row.booking_channel,
+                      row.booking_id,
+                      row.supplier_reference,
+                      row.booking_reference_no
+                    )
+                  "
+                >
+                  {{ value }}
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+            <!--  <ngx-datatable-column name="Service Request" prop="service_request" [width]="160"></ngx-datatable-column>
+            <ngx-datatable-column name="Service Request Line" prop="service_request_line" [width]="190"></ngx-datatable-column> -->
+            <ngx-datatable-column [width]="160" name="Service Request" prop="service_request">
+              <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                <div class="text-primary">
+                  <button
+                    class="btn btn-link p-0"
+                    style="box-shadow: none !important"
+                    (click)="getLinesBySrRequest(row)"
+                  >
+                    {{ row.service_request }} - {{ row.service_request_line }}
+                  </button>
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column [width]="220" name="Supplier" prop="booking_supplier_name">
+              <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                <div class="long--text">
+                  {{ value }}
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column [width]="220" name="Contact" prop="booking_contact_name">
+              <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                <div class="long--text">
+                  {{ value }}
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column [width]="200" name="PNR / Booking By" prop="booking_user_name">
+              <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                <div class="long--text">
+                  {{ value }}
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column [width]="170" name="PNR / Booking Date" prop="booking_created_date">
+              <ng-template ngx-datatable-cell-template let-value="value">
+                {{ value }}
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column [width]="200" name=" PNR Office ID" prop="booking_office_id">
+              <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                <div class="long--text">
+                  {{ value }}
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+          </ngx-datatable>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

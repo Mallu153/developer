@@ -1,0 +1,328 @@
+<form class="needs-validation" [formGroup]="dynamicFieldForm" *ngIf="processedArray && processedArray?.length > 0">
+  <ng-container *ngFor="let subArray of processedArray; let mainIndex = index">
+    <div class="form-row">
+      <ng-container *ngFor="let control of subArray; let subIndex = index">
+        <div
+          class="col-{{ control?.ui?.mobileColumn }} offset-{{ control?.ui?.mobileOffset }} col-md-{{
+            control?.ui?.desktopColumn
+          }} offset-md-{{ control?.ui?.desktopOffset }} mb-1"
+        >
+          <div [ngSwitch]="control.type" class="form-group">
+            <div class="" *ngSwitchCase="'text'">
+              <label
+                >{{ control?.ui?.label }}
+                <span *ngIf="control?.ui?.info"
+                  ><i class="icon-info" triggers="mouseenter:mouseleave" ngbPopover="{{ control?.ui?.info }}"></i
+                ></span>
+              </label>
+              <input
+                type="text"
+                [formControlName]="control.name"
+                class="form-control square"
+                placeholder="{{ control?.ui?.placeholder }}"
+                name="{{ control.name }}"
+                id="{{ control.name }}"
+                [ngClass]="{
+                  'is-invalid': submitted && f[control.name].invalid,
+                  'is-valid': submitted && !f[control.name].invalid
+                }"
+              />
+              <div *ngIf="submitted && f[control.name].errors" class="invalid-feedback">
+                <div *ngIf="f[control.name].errors?.required" class="invalid">
+                  Please provide a valid {{ control?.ui?.label }}.
+                </div>
+                <div *ngIf="f[control.name].errors?.minlength" class="invalid">
+                  Minimum length is
+                  <strong>{{ control?.validators?.minLength }}</strong
+                  >.
+                </div>
+                <div *ngIf="f[control.name].errors?.maxlength" class="invalid">
+                  Maximum length is
+                  <strong>{{ control?.validators?.maxLength }}</strong
+                  >.
+                </div>
+              </div>
+
+              <!-- <div
+                            *ngIf="dynamicFieldForm.get(control.name).dirty || dynamicFieldForm.get(control.name).touched ">
+                            {{control?.ui?.label}} required
+                          </div> -->
+            </div>
+            <div class="" *ngSwitchCase="'email'">
+              <label
+                >{{ control?.ui?.label }}
+                <span *ngIf="control?.ui?.info"
+                  ><i class="icon-info" triggers="mouseenter:mouseleave" ngbPopover="{{ control?.ui?.info }}"></i></span
+              ></label>
+              <input
+                type="text"
+                [formControlName]="control.name"
+                class="form-control square"
+                placeholder="{{ control?.ui?.placeholder }}"
+                name="{{ control.name }}"
+                id="{{ control.name }}"
+                [ngClass]="{
+                  'is-invalid': submitted && f[control.name].invalid,
+                  'is-valid': submitted && !f[control.name].invalid
+                }"
+              />
+              <div *ngIf="submitted && f[control.name].errors" class="invalid-feedback">
+                <div *ngIf="f[control.name].errors?.required" class="invalid">
+                  Please provide a valid {{ control?.ui?.label }}.
+                </div>
+                <div *ngIf="f[control.name].errors?.email" class="invalid">Please provide a valid e-mail.</div>
+              </div>
+            </div>
+            <div class="" *ngSwitchCase="'number'">
+              <label
+                >{{ control?.ui?.label }}
+                <span *ngIf="control?.ui?.info"
+                  ><i class="icon-info" triggers="mouseenter:mouseleave" ngbPopover="{{ control?.ui?.info }}"></i></span
+              ></label>
+              <input
+                type="number"
+                [formControlName]="control.name"
+                class="form-control square"
+                placeholder="{{ control?.ui?.placeholder }}"
+                name="{{ control.name }}"
+                id="{{ control.name }}"
+                [ngClass]="{
+                  'is-invalid': submitted && f[control.name].invalid,
+                  'is-valid': submitted && !f[control.name].invalid
+                }"
+              />
+              <div *ngIf="submitted && f[control.name].errors" class="invalid-feedback">
+                <div *ngIf="f[control.name].errors?.required" class="invalid">
+                  Please provide a valid {{ control?.ui?.label }}.
+                </div>
+                <div *ngIf="f[control.name].errors?.min" class="invalid">
+                  Minimum is
+                  <strong>{{ control?.validators?.min }}</strong
+                  >.
+                </div>
+                <div *ngIf="f[control.name].errors?.max" class="invalid">
+                  Maximum is
+                  <strong>{{ control?.validators?.max }}</strong
+                  >.
+                </div>
+              </div>
+            </div>
+            <div class="" *ngSwitchCase="'password'">
+              <label
+                >{{ control?.ui?.label }}
+                <span *ngIf="control?.ui?.info"
+                  ><i class="icon-info" triggers="mouseenter:mouseleave" ngbPopover="{{ control?.ui?.info }}"></i></span
+              ></label>
+              <input
+                type="password"
+                [formControlName]="control.name"
+                class="form-control square"
+                placeholder="{{ control?.ui?.placeholder }}"
+                name="{{ control.name }}"
+                id="{{ control.name }}"
+                [ngClass]="{
+                  'is-invalid': submitted && f[control.name].invalid,
+                  'is-valid': submitted && !f[control.name].invalid
+                }"
+              />
+              <div *ngIf="submitted && f[control.name].errors" class="invalid-feedback">
+                <div *ngIf="submitted && (f[control.name].invalid || f[control.name].errors?.required)" class="invalid">
+                  Please provide a valid {{ control?.ui?.label }}.
+                </div>
+              </div>
+            </div>
+            <div class="" *ngSwitchCase="'date'">
+              <label
+                >{{ control?.ui?.label }}
+                <span *ngIf="control?.ui?.info"
+                  ><i class="icon-info" triggers="mouseenter:mouseleave" ngbPopover="{{ control?.ui?.info }}"></i></span
+              ></label>
+              <input
+                type="date"
+                [formControlName]="control.name"
+                class="form-control square"
+                name="{{ control.name }}"
+                id="{{ control.name }}"
+                [ngClass]="{
+                  'is-invalid': submitted && f[control.name].invalid,
+                  'is-valid': submitted && !f[control.name].invalid
+                }"
+              />
+              <div *ngIf="submitted && f[control.name].errors" class="invalid-feedback">
+                <div *ngIf="submitted && (f[control.name].invalid || f[control.name].errors?.required)" class="invalid">
+                  Please provide a valid {{ control?.ui?.label }}.<br />
+                  {{ control.validators.minDate ? 'min date is ' + control.validators.minDate + '.' : '' }}
+                  {{ control.validators.maxDate ? 'max date is ' + control.validators.maxDate + '.' : '' }}
+                </div>
+              </div>
+            </div>
+            <div *ngSwitchCase="'radio'">
+              <div class="">
+                <label class="w-100 mb-1"
+                  >{{ control?.ui?.label }}
+                  <span *ngIf="control?.ui?.info"
+                    ><i
+                      class="icon-info"
+                      triggers="mouseenter:mouseleave"
+                      ngbPopover="{{ control?.ui?.info }}"
+                    ></i></span
+                ></label>
+                <label *ngFor="let val of control.source">
+                  <input
+                    type="radio"
+                    name="{{ control.name }}"
+                    [formControlName]="control.name"
+                    id="radio{{ val.id }}"
+                    [value]="val.id"
+                    [ngClass]="{
+                      'is-invalid': submitted && f[control.name].invalid,
+                      'is-valid': submitted && !f[control.name].invalid
+                    }"
+                  />
+
+                  {{ val.name }}
+                </label>
+                <div *ngIf="submitted && f[control.name].errors" class="invalid-feedback">
+                  <div
+                    *ngIf="submitted && (f[control.name].invalid || f[control.name].errors?.required)"
+                    class="invalid"
+                  >
+                    Please provide a valid {{ control?.ui?.label }}.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div *ngSwitchCase="'select'">
+              <div class="">
+                <label
+                  >{{ control?.ui?.label }}
+                  <span *ngIf="control?.ui?.info"
+                    ><i
+                      class="icon-info"
+                      triggers="mouseenter:mouseleave"
+                      ngbPopover="{{ control?.ui?.info }}"
+                    ></i></span
+                ></label>
+                <!--  <ng-select [items]="control.source" bindValue="id"   bindLabel="name" placeholder="Select city" [formControlName]="control.name"
+                          *ngIf="!control.oce; else oce"
+                          [ngClass]="{ 'is-invalid': submitted && f[control.name].invalid, 'is-valid': submitted &&  !f[control.name].invalid }">
+                          </ng-select> -->
+                <select
+                  class="form-control square"
+                  [formControlName]="control.name"
+                  *ngIf="!control.oce; else oce"
+                  [ngClass]="{
+                    'is-invalid': submitted && f[control.name].invalid,
+                    'is-valid': submitted && !f[control.name].invalid
+                  }"
+                >
+                  <option value="">Choose</option>
+                  <option [value]="d.id" *ngFor="let d of control.source">
+                    {{ d?.name }}
+                  </option>
+                </select>
+                <div *ngIf="submitted && f[control.name].errors" class="invalid-feedback">
+                  <div
+                    *ngIf="submitted && (f[control.name].invalid || f[control.name].errors?.required)"
+                    class="invalid"
+                  >
+                    Please provide a valid {{ control?.ui?.label }}.
+                  </div>
+                </div>
+                <ng-template #oce>
+                  <select
+                    class="form-control square"
+                    [formControlName]="control.name"
+                    (change)="onSelectChange($event, control, mainIndex, subIndex)"
+                    [ngClass]="{
+                      'is-invalid': submitted && f[control.name].invalid,
+                      'is-valid': submitted && !f[control.name].invalid
+                    }"
+                  >
+                    <option value="">Choose</option>
+                    <option [value]="d.id" *ngFor="let d of control.source">
+                      {{ d?.name }}
+                    </option>
+                    <!--  <option value="Mr">Mr</option>
+                              <option value="Mrs">Mrs</option>
+                              <option value="Miss">Miss</option>
+                              <option value="Dr">Dr</option> -->
+                  </select>
+                  <!-- <div *ngIf="submitted && f[control.name].errors" class="invalid-feedback">
+                              <div *ngIf="submitted && (f[control.name].invalid || f[control.name].errors?.required)" class="invalid">Please provide a valid {{control?.ui?.label}}.</div>
+                            </div> -->
+                </ng-template>
+              </div>
+            </div>
+
+            <div class="" *ngSwitchCase="'checkbox'">
+              <label class="w-100 mb-1"
+                >{{ control?.ui?.label }}
+                <span *ngIf="control?.ui?.info"
+                  ><i class="icon-info" triggers="mouseenter:mouseleave" ngbPopover="{{ control?.ui?.info }}"></i></span
+              ></label>
+              <!--  <label class="custom-control custom-checkbox" *ngFor="let val of control.source">
+                            <input type="checkbox" class="custom-control-input" name="{{control.name}}" [formControlName]="control.name"
+                            id="{{val.text}}" value="{{val.text}}"
+                            [ngClass]="{ 'is-invalid': submitted && f[control.name].invalid, 'is-valid': submitted &&  !f[control.name].invalid }">
+                            <label class="custom-control-label" for="custom-check-1"><span> {{val.text}}</span></label>
+
+                          </label> -->
+              <label *ngFor="let val of control.source">
+                <!-- <input type="checkbox"  name="{{control.name}}" [formControlName]="control.name"
+                              id="{{val.text}}" value="{{val.text}}"
+                              [ngClass]="{ 'is-invalid': submitted && f[control.name].invalid, 'is-valid': submitted &&  !f[control.name].invalid }"
+                              > -->
+                <input
+                  type="checkbox"
+                  name="{{ control.name }}"
+                  id="checkbox-{{ val.id }}"
+                  [value]="val.id"
+                  [checked]="val?.checked"
+                  [ngClass]="{
+                    'is-invalid': submitted && f[control.name].invalid,
+                    'is-valid': submitted && !f[control.name].invalid
+                  }"
+                  (change)="onCheckChange($event, control)"
+                />
+                {{ val.name }}
+              </label>
+              <div *ngIf="submitted && f[control.name].errors" class="invalid-feedback">
+                <div *ngIf="submitted && (f[control.name].invalid || f[control.name].errors?.required)" class="invalid">
+                  Please provide a valid {{ control?.ui?.label }}.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </ng-container>
+  <!-- <div class="form-row nchild">
+                  <div
+                    class="col-{{ control?.ui?.mobileColumn }} offset-{{
+                      control?.ui?.mobileOffset
+                    }} col-md-{{ control?.ui?.desktopColumn }} offset-md-{{
+                      control?.ui?.desktopOffset
+                    }} mb-1"
+                    *ngFor="let control of serverDataList"
+                  >
+
+
+                  </div>
+                </div> -->
+  <!--  <div class="form-row">
+                  <div class="offset-md-9 col-md-3">
+                    <button
+                    class="btn btn-primary square float-right"
+                    type="submit"
+                    (click)="onSubmit()"
+                  >
+                  <i class="fa fa-spinner fa-spin" *ngIf="loading"></i>
+                    Next
+
+                  </button>
+                  </div>
+                </div> -->
+</form>

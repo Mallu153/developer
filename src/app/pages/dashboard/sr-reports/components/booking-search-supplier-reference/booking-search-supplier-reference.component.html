@@ -1,0 +1,343 @@
+<section id="basic-hidden-label-form-layouts" [hidden]="showFilters">
+  <div class="row match-height">
+    <div class="col-lg-12 col-md-12 col-12">
+      <div class="card">
+        <div class="card-header py-1 mt-1 cursor-pointer">
+          <h4 class="card-title">
+            Filters
+          </h4>
+        </div>
+
+        <div class="card-content">
+          <div class="card-body">
+            <form class="form" [formGroup]="bookingSearchForm">
+              <div class="form-row">
+                <div class="col-md-3 col-12">
+                  <div class="form-group mb-2">
+                    <label for="booking_customer_id"> Customer</label>
+                    <ng-select [items]="customer$ | async" class="custom" bindLabel="businessName"
+                      [minTermLength]="minLengthcustomerTerm" bindValue="customerId" multiple="true"
+                      placeholder="Customer" [loading]="customerLoading"
+                      typeToSearchText="Please enter {{ minLengthcustomerTerm }} or more characters"
+                      [typeahead]="customerInput$" formControlName="booking_customer_id"
+                      (change)="onChangeCustomer($event)">
+                      <ng-template ng-multi-label-tmp let-items="items">
+                        <div class="ng-value" *ngFor="let item of items | slice: 0:0">
+                          <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                        </div>
+                        <div class="ng-value" *ngIf="items?.length > 0">
+                          <span class="ng-value-label">
+                            {{ items?.length }}
+                            selected
+                          </span>
+                        </div>
+                      </ng-template>
+                    </ng-select>
+                  </div>
+                </div>
+                <div class="col-md-3 col-12">
+                  <div class="form-group mb-2">
+                    <label for="booking_contact_id"> Contact</label>
+                    <ng-select [searchable]="true" class="custom" [items]="contactData" bindValue="id"
+                      bindLabel="fullName" [multiple]="true" placeholder="Contact" formControlName="booking_contact_id">
+                      <ng-template ng-multi-label-tmp let-items="items">
+                        <div class="ng-value" *ngFor="let item of items | slice: 0:0">
+                          <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                        </div>
+                        <div class="ng-value" *ngIf="items?.length > 0">
+                          <span class="ng-value-label">{{ items?.length }} selected</span>
+                        </div>
+                      </ng-template>
+                    </ng-select>
+                  </div>
+                </div>
+                <div class="col-md-3 col-12">
+                  <div class="form-group mb-2">
+                    <label for="supplier_reference">PNR / Booking</label>
+                    <ng-select [items]="suplierReference$ | async" bindLabel="supplier_reference" class="custom"
+                      placeholder="PNR / Booking" [minTermLength]="minLengthsuplierReferenceTerm"
+                      bindValue="supplier_reference" multiple="true" [loading]="suplierReferenceLoading"
+                      typeToSearchText="Please enter {{ minLengthsuplierReferenceTerm }} or more characters"
+                      [typeahead]="suplierReferenceInput$" formControlName="supplier_reference">
+                      <ng-template ng-multi-label-tmp let-items="items">
+                        <div class="ng-value" *ngFor="let item of items | slice: 0:0">
+                          <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                        </div>
+                        <div class="ng-value" *ngIf="items?.length > 0">
+                          <span class="ng-value-label">
+                            {{ items?.length }}
+                            selected
+                          </span>
+                        </div>
+                      </ng-template>
+                    </ng-select>
+                  </div>
+                </div>
+                <div class="col-md-3 col-12">
+                  <div class="form-group mb-2">
+                    <label for="product_id">Product</label>
+                    <ng-select [items]="product$ | async" bindLabel="name" [minTermLength]="minLengthproductTerm"
+                      bindValue="id" multiple="true" placeholder="Product" class="custom" [loading]="productLoading"
+                      typeToSearchText="Please enter {{ minLengthproductTerm }} or more characters"
+                      [typeahead]="productInput$" formControlName="product_id">
+                      <ng-template ng-multi-label-tmp let-items="items">
+                        <div class="ng-value" *ngFor="let item of items | slice: 0:0">
+                          <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                        </div>
+                        <div class="ng-value" *ngIf="items?.length > 0">
+                          <span class="ng-value-label">
+                            {{ items?.length }}
+                            selected
+                          </span>
+                        </div>
+                      </ng-template>
+                    </ng-select>
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="form-row">
+
+
+
+                <div class="col-md-2 col-12">
+                  <div class="form-group mb-2">
+                    <label for="service_request">Service Request</label>
+
+                    <ng-select [items]="serviceRequest$ | async" bindLabel="service_request" bindValue="service_request"
+                      class="custom" [minTermLength]="minLengthServiceRequestTerm" multiple="true"
+                      placeholder="Service Request" [loading]="serviceRequestLoading"
+                      typeToSearchText="Please enter {{ minLengthServiceRequestTerm }} or more characters"
+                      [typeahead]="serviceRequestInput$" formControlName="service_request">
+                      <ng-template ng-multi-label-tmp let-items="items">
+                        <div class="ng-value" *ngFor="let item of items | slice: 0:0">
+                          <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                        </div>
+                        <div class="ng-value" *ngIf="items?.length > 0">
+                          <span class="ng-value-label">
+                            {{ items?.length }}
+                            selected
+                          </span>
+                        </div>
+                      </ng-template>
+                    </ng-select>
+                  </div>
+                </div>
+                <div class="col-md-2 col-12">
+                  <div class="form-group mb-2">
+                    <label for="booking_supplier_id"> Supplier</label>
+                    <ng-select [items]="supplier$ | async" bindLabel="businessName"
+                      [minTermLength]="minLengthsupplierTerm" bindValue="customerId" class="custom" multiple="true"
+                      placeholder="Supplier" [loading]="supplierLoading"
+                      typeToSearchText="Please enter {{ minLengthsupplierTerm }} or more characters"
+                      [typeahead]="supplierInput$" formControlName="booking_supplier_id">
+                      <ng-template ng-multi-label-tmp let-items="items">
+                        <div class="ng-value" *ngFor="let item of items | slice: 0:0">
+                          <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                        </div>
+                        <div class="ng-value" *ngIf="items?.length > 0">
+                          <span class="ng-value-label">
+                            {{ items?.length }}
+                            selected
+                          </span>
+                        </div>
+                      </ng-template>
+                    </ng-select>
+                  </div>
+                </div>
+
+                <div class="col-md-2 col-12">
+                  <div class="form-group mb-2">
+                    <label for="booking_created_from_date">Booking Created From </label>
+                    <input type="date" id="booking_created_from_date" class="form-control square"
+                      name="booking_created_from_date" formControlName="booking_created_from_date" />
+                  </div>
+                </div>
+                <div class="col-md-2 col-12">
+                  <div class="form-group mb-2">
+                    <label for="booking_created_to_date">Booking Created To </label>
+                    <input type="date" id="booking_created_to_date" class="form-control square"
+                      name="booking_created_to_date" formControlName="booking_created_to_date"
+                      [min]="bookingSearchForm.value.booking_created_from_date" />
+                  </div>
+                </div>
+
+                <div class="col-md-2 col-12">
+                  <div class="form-group">
+                    <label for="sub_reference_from_date">DOJ / Check In / Service Date From</label>
+                    <input type="date" class="form-control square" id="sub_reference_from_date"
+                      name="sub_reference_from_date" formControlName="sub_reference_from_date" />
+                  </div>
+                </div>
+                <div class="col-md-2 col-12">
+                  <div class="form-group">
+                    <label for="sub_reference_to_date">DOJ / Check In / Service Date To</label>
+                    <input type="date" class="form-control square" id="sub_reference_to_date"
+                      name="sub_reference_to_date" formControlName="sub_reference_to_date"
+                      [min]="bookingSearchForm.value.sub_reference_from_date" />
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="form-row">
+
+
+
+
+
+              </div>
+              <div class="form-row" #morecollapse="ngbCollapse" [(ngbCollapse)]="ismoreFieldsCollapsed">
+
+
+
+                <div class="col-md-3 col-12">
+                  <div class="form-group mb-2">
+                    <label for="product_id">Passenger Type</label>
+                    <ng-select [items]="passengerType$ | async" bindLabel="name" class="custom"
+                      [minTermLength]="minLengthpassengerTypeTerm" bindValue="code" multiple="true"
+                      placeholder="Passenger Type" [loading]="passengerTypeLoading"
+                      typeToSearchText="Please enter {{ minLengthpassengerTypeTerm }} or more characters"
+                      [typeahead]="passengerTypeInput$" formControlName="passenger_type">
+                      <ng-template ng-multi-label-tmp let-items="items">
+                        <div class="ng-value" *ngFor="let item of items | slice: 0:0">
+                          <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                        </div>
+                        <div class="ng-value" *ngIf="items?.length > 0">
+                          <span class="ng-value-label">
+                            {{ items?.length }}
+                            selected
+                          </span>
+                        </div>
+                      </ng-template>
+                    </ng-select>
+                  </div>
+                </div>
+                <div class="col-md-3 col-12">
+                  <div class="form-group mb-2">
+                    <label for="passenger_name">Passenger Name</label>
+                    <input type="text" id="passenger_name" class="form-control square"
+                      placeholder="Enter Passenger Name" name="passenger_name" formControlName="passenger_name" />
+                  </div>
+                </div>
+                <div class="col-md-3 col-12">
+                  <div class="form-group mb-2">
+                    <label for="passenger_mobile">Passenger Mobile Number</label>
+                    <input type="number" id="passenger_mobile" class="form-control square"
+                      placeholder=" Passenger Mobile Number" name="passenger_mobile"
+                      formControlName="passenger_mobile" />
+                  </div>
+                </div>
+                <div class="col-md-3 col-12">
+                  <div class="form-group mb-2">
+                    <label for="passenger_email">Passenger Email</label>
+                    <input type="email" id="passenger_email" class="form-control square"
+                      placeholder="Enter Passenger Email" name="passenger_email" formControlName="passenger_email" />
+                  </div>
+                </div>
+
+                <div class="col-md-3 col-12">
+                  <div class="form-group mb-2">
+                    <label for="booking_reference_no">Booking Reference Number</label>
+                    <ng-select [items]="bookingReferenceNo$ | async" bindLabel="booking_reference_no"
+                      bindValue="booking_reference_no" [trackByFn]="trackByFn"
+                      [minTermLength]="minLengthBookingReferenceNoTerm" multiple="true"
+                      placeholder="Booking Reference Number" class="custom" [loading]="bookingReferenceNoLoading"
+                      typeToSearchText="Please enter {{ minLengthBookingReferenceNoTerm }} or more characters"
+                      [typeahead]="bookingReferenceNoLoadingInput$" formControlName="booking_reference_no">
+                      <ng-template ng-multi-label-tmp let-items="items">
+                        <div class="ng-value" *ngFor="let item of items | slice: 0:0">
+                          <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                        </div>
+                        <div class="ng-value" *ngIf="items?.length > 0">
+                          <span class="ng-value-label">
+                            {{ items?.length }}
+                            selected
+                          </span>
+                        </div>
+                      </ng-template>
+                    </ng-select>
+                  </div>
+                </div>
+
+                <div class="col-md-3 col-12">
+                  <div class="form-group mb-2">
+                    <label for="service_request_line">Service Request Line</label>
+
+                    <ng-select [items]="serviceRequestLine$ | async" bindLabel="service_request_line"
+                      bindValue="service_request_line" [minTermLength]="minLengthServiceRequestLineTerm" multiple="true"
+                      placeholder="Service Request Line" class="custom" [loading]="serviceRequestLineLoading"
+                      typeToSearchText="Please enter {{ minLengthServiceRequestLineTerm }} or more characters"
+                      [typeahead]="serviceRequestLineInput$" formControlName="service_request_line">
+                      <ng-template ng-multi-label-tmp let-items="items">
+                        <div class="ng-value" *ngFor="let item of items | slice: 0:0">
+                          <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                        </div>
+                        <div class="ng-value" *ngIf="items?.length > 0">
+                          <span class="ng-value-label">
+                            {{ items?.length }}
+                            selected
+                          </span>
+                        </div>
+                      </ng-template>
+                    </ng-select>
+                  </div>
+                </div>
+
+                <div class="col-md-2 col-12">
+                  <div class="form-group mb-2">
+                    <label for="status">Status</label>
+                    <ng-select [items]="lineStatus" bindLabel="name" bindValue="name" [multiple]="true"
+                      placeholder="Status" class="custom" formControlName="line_status">
+                      <ng-template ng-multi-label-tmp let-items="items">
+                        <div class="ng-value" *ngFor="let item of items | slice: 0:0">
+                          <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                        </div>
+                        <div class="ng-value" *ngIf="items?.length > 0">
+                          <span class="ng-value-label">
+                            {{ items?.length }}
+                            selected
+                          </span>
+                        </div>
+                      </ng-template>
+                    </ng-select>
+                  </div>
+                </div>
+
+              </div>
+
+
+
+
+
+
+
+            </form>
+
+            <div class="pull-right mb-2">
+              <button type="button" (click)="onApplyFilters()" class="btn btn-primary mr-2">
+                <i class="ft-search mr-1"></i>
+
+                {{ loading === true ? ' Loading.. ' : 'Search' }}
+              </button>
+              <button type="button" class="btn btn-secondary mr-2" (click)="resetForm()">
+                <i class="ft-x mr-1"></i>Reset
+              </button>
+              <button type="button" class="btn btn-link" (click)="morecollapse.toggle()"
+                [attr.aria-expanded]="!ismoreFieldsCollapsed" aria-controls="collapseExample12">
+                {{ !ismoreFieldsCollapsed ? 'Less' : 'More' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<app-booking-report-supplier-reference *ngIf="bookingData&&bookingData?.length>0"
+  [customerAndContactDeatils]="selectCustomerDeatils" (selectedItem)="onItemSelection($event)"
+  [SupplierReportsData]="bookingData"></app-booking-report-supplier-reference>

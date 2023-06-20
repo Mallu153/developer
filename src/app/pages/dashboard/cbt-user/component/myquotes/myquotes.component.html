@@ -1,0 +1,106 @@
+<div class="row">
+  <div class="col-md-12 col-12">
+    <div class="card shopping-cart">
+      <div class="card-header pb-2">
+        <h4 class="card-title mb-1">Active Quotes</h4>
+      </div>
+      <div class="card-content">
+        <div class="card-body p-0">
+          <ngx-datatable #openQuotesTable class="bootstrap core-bootstrap" [rows]="openQuotes" [headerHeight]="50"
+            [columnMode]="columnMode" [footerHeight]="50" [rowHeight]="'auto'" [scrollbarH]="true"
+            [externalPaging]="true" [count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size"
+            (page)="setPage($event)" (sort)="onSort($event)">
+            <ngx-datatable-row-detail [rowHeight]="130" #myDetailRow (toggle)="onDetailToggle($event)">
+              <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
+                <div class="row mx-1 border">
+                  <div class="col-6 text-left text-bold-600">Best Option </div>
+                  <div class="col-6 text-right">: {{ row?.totalPrice | currency }}</div>
+                  <div class="col-5 text-left text-bold-600">Created Date </div>
+                  <div class="col-7 text-right">: {{row.createdDate | date: 'medium'}}</div>
+                  <div class="col-5 text-left text-bold-600">Submitted Date </div>
+                  <div class="col-7 text-right">: {{row.submittedDate | date: 'medium'}}</div>
+                  <div class="col-12 d-flex justify-content-around border-top border-primary">
+                    <a class="my-1" (click)="openQuoteChat(row)"><i
+                        class="ft-message-square text-success font-medium-1 my-1"></i></a>
+                    <a class="my-1"><i class="ft-phone text-success font-medium-1 ml-2 "></i></a>
+                    <a class="ml-2 my-1">
+                      <img src="assets/img/cbt-img/meeting-icon.png" alt="" class="" height="15" /></a>
+                  </div>
+
+                </div>
+              </ng-template>
+            </ngx-datatable-row-detail>
+            <ngx-datatable-column [width]="50" [resizeable]="false" [sortable]="false" [draggable]="false"
+              [canAutoResize]="false">
+              <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+                <a [class.datatable-icon-right]="!expanded" [class.datatable-icon-down]="expanded"
+                  title="Expand/Collapse Row" (click)="toggleExpandRow(row)" class="desktop-hidden">
+                </a>
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="SR#" prop="srId">
+              <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                <a (click)="gotoQuotesOptions(row, 'line')" class="text-info">
+                  <span [ngSwitch]="row.product">
+                    <span *ngSwitchCase="'Flight'"><i class="icon-plane"></i> </span>
+                    <span *ngSwitchCase="'Hotel'"><i class="fa fa-bed"></i></span>
+                    <span *ngSwitchCase="'Ancillary'"><i class="fa fa-car"></i></span>
+                    <span *ngSwitchCase="'Attraction'"><i class="ft-map-pin"></i></span>
+                  </span>
+                  <span>
+                    - {{ row.srLineId
+                    }}
+                  </span>
+                  <span *ngIf="openQuotes[rowIndex - 1]?.srId != row.srId"> - {{ row.srId }}</span>
+                </a>
+              </ng-template>
+            </ngx-datatable-column>
+            <!-- <ngx-datatable-column name="Product" prop="product" [width]="100">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                <span> {{row.product}}</span>
+              </ng-template>
+            </ngx-datatable-column> -->
+            <ngx-datatable-column name="No. Options" prop="linesCount" [width]="160">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                <div class="ml-3">
+                  <button class="btn btn-sm btn-outline-primary"
+                    (click)="gotoQuotesOptions(row, 'sr')">
+                    {{ row.linesCount }}
+                  </button>
+                </div>
+
+              </ng-template>
+            </ngx-datatable-column>
+            <ng-container *ngIf="!isMobile">
+              <ngx-datatable-column name="Best Option" prop="totalPrice" [width]="200">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <span> {{ row.totalPrice | currency }}</span>
+                </ng-template>
+              </ngx-datatable-column>
+
+              <ngx-datatable-column name="Created On" prop="createdDate" [width]="250">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <span> {{row.createdDate | date: 'medium'}}</span>
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Submitted Date" prop="submittedDate" [width]="250">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <span> {{row.submittedDate | date: 'medium'}}</span>
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Actions" [sortable]="false">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <a (click)="openQuoteChat(row)"><i class="ft-message-square text-success font-medium-1"></i></a>
+                  <a><i class="ft-phone text-success font-medium-1 ml-2"></i></a>
+                  <a class="ml-2">
+                    <img src="assets/img/cbt-img/meeting-icon.png" alt="" class="" height="15" /></a>
+                </ng-template>
+              </ngx-datatable-column>
+            </ng-container>
+
+          </ngx-datatable>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

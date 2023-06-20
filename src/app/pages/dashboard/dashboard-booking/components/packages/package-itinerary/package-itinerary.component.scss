@@ -1,0 +1,146 @@
+/* .product-icon-blk i{
+  background-color: #2f8be6;
+  padding: 1rem;
+  color: #fff;
+  font-size: 24px;
+  min-width: 65px;
+  border-radius: 100%;
+} */
+.package-itinerary-date {
+  border: #2f8be6 solid 1px;
+  padding: 0.5rem 1rem;
+  color: #2f8be6;
+  min-width: 100px;
+  position: relative;
+}
+.package-itinerary-date span {
+  display: inline-block;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.package-itinerary-date span:last-child {
+  display: block;
+  font-size: 10px;
+  font-weight: 600;
+}
+.hotel-to {
+  background-color: #fff;
+  border: #2f8be6 solid 1px;
+  padding: 10px;
+  color: #2f8be6;
+  margin: 0px -10px;
+  font-size: 10px;
+  font-weight: 600;
+  z-index: 9;
+  border-radius: 100%;
+}
+
+.selectAll {
+  float: right !important;
+}
+
+.itinerary-list-item {
+  /* background: rgba(237,237,237,0.8);
+background: -moz-linear-gradient(top, rgba(237,237,237,0.8) 0%, rgba(246,246,246,0.91) 53%, rgba(255,255,255,1) 100%);
+background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(237,237,237,0.8)), color-stop(53%, rgba(246,246,246,0.91)), color-stop(100%, rgba(255,255,255,1)));
+background: -webkit-linear-gradient(top, rgba(237,237,237,0.8) 0%, rgba(246,246,246,0.91) 53%, rgba(255,255,255,1) 100%);
+background: -o-linear-gradient(top, rgba(237,237,237,0.8) 0%, rgba(246,246,246,0.91) 53%, rgba(255,255,255,1) 100%);
+background: -ms-linear-gradient(top, rgba(237,237,237,0.8) 0%, rgba(246,246,246,0.91) 53%, rgba(255,255,255,1) 100%);
+background: linear-gradient(to bottom, rgba(237,237,237,0.8) 0%, rgba(246,246,246,0.91) 53%, rgba(255,255,255,1) 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ededed', endColorstr='#ffffff', GradientType=0 );*/
+  box-shadow: -4px 4px 8px 0 rgba(25, 42, 70, 0.11);
+  background-color: #fff;
+
+}
+.itinerary-list-item .package-location {
+  font-size: 1rem;
+  font-weight: 500;
+}
+.itinerary-list-item .package-itinerary-date-span {
+  font-size: 0.9rem;
+}
+.itinerary-list-item .package-request-info {
+  display: block;
+  font-size: 0.8rem;
+  color: #ccc;
+  font-weight: 500;
+}
+.itinerary-list-item .product-icon-blk > i {
+  color: #fff;
+
+    border-radius: 50px;
+    -moz-border-radius: 50px;
+    -webkit-border-radius: 50px;
+    text-align: center;
+    display: inline-block;
+    padding: 8px;
+    width: 40px;
+    height: 40px;
+}
+.itinerary-list-item .product-icon-blk > i.fa-plane-bg {
+  background-color: #9dcdfd;
+  /* -webkit-box-shadow : 0 0 12px 0 #B583FF;
+          box-shadow : 0 0 12px 0 #B583FF; */
+}
+.itinerary-list-item .product-icon-blk > i.fa-bed-bg {
+  background-color: rgb(208, 195, 130);
+  /*  -webkit-box-shadow : 0 0 12px 0 #6CD975;
+          box-shadow : 0 0 12px 0 #6CD975; */
+}
+.itinerary-list-item .product-icon-blk > i.fa-map-marker {
+  background-color: rgb(129, 218, 164);
+  /*  -webkit-box-shadow : 0 0 12px 0 #8F9DB8;
+          box-shadow : 0 0 12px 0 #8F9DB8; */
+          font-size: 20px;
+    padding-top: 9px;
+}
+.itinerary-list-item .product-icon-blk > i.ancillary {
+  background-color: #c1a0d4;
+  /*  -webkit-box-shadow : 0 0 12px 0 #75890c;
+          box-shadow : 0 0 12px 0 #75890c; */
+}
+
+.package-passenger-icon {
+  width: 18px;
+  height: 18px;
+}
+.package-passenger-info-block {
+  margin-top: 5px;
+  box-shadow: inset 0px 0px 3px 0px rgba(25, 42, 70, 0.75);
+  padding: 5px;
+}
+
+.btn-dwn {
+  border-radius: 20px;
+  width: 25px;
+  height: 25px;
+  font-size: 17px;
+  line-height: 7px;
+  padding: 2px;
+  border: 1px solid #c7c7c7;
+}
+.checkbox input[type=checkbox]:checked ~ label:after {
+  border-top-style: none;
+  border-right-style: none;
+  transform: rotate(-45deg);
+  height: 0.6rem;
+  width: 1rem;
+  border-color: #2F8BE6;
+  border-radius: 0;
+  border-width: 2px;
+  top: 6px;
+  left: 5px;
+}
+.checkbox label:before, .checkbox label:after {
+  content: "";
+  height: 25px;
+  width: 25px;}
+  .pas-count{
+    background: rgb(166, 199, 232);
+    background: linear-gradient(90deg, rgb(225, 249, 255) 0%, rgb(205, 228, 252) 100%);
+    padding:3px 5px 3px 5px;
+    border-radius: 30px; font-weight: 600;
+  }
+  .package-passenger-icon{background-color: #ffffff; border: 6px solid #ffffff; border-radius: 30px; width: 30px; height: 30px;}
+  .packli{line-height: 40px; font-weight: 600;}

@@ -1,0 +1,1949 @@
+<section class="section-flight">
+  <div class="card">
+    <div class="card-content">
+      <div class="card-body py-1 px-2">
+
+        <div class="section__body">
+          <div class="text-right mb-2 font-small-3">
+            <a href="javascript:;" (click)="coallpseAll($event)">{{ pkgAccOpenCloseID }}</a>
+          </div>
+          <form [formGroup]="flightForm">
+            <div class="form-container">
+              <div formArrayName="serviceRequestSegment" class="p-0 position-relative">
+                <!-- <ul class="nav position-abs">
+            <li class="nav-item">
+              <a class="nav-link px-1">
+                <i class="icon-bulb text-primary"></i>
+              </a>
+            </li>
+            <li class="nav-item" placement="left" ngbTooltip="Add Holiday" *ngIf="isEdit">
+              <a class="nav-link px-2"><i class="ft-plus-square text-primary" (click)="resetFormData()"></i></a>
+            </li>
+          </ul> -->
+                <!--  row -->
+                <div *ngFor="let flight of flights().controls; let i = index; trackBy: trackByFn" [formGroupName]="i"
+                  class="p-0 form-flight-container mb-0 ng-pristine ng-invalid ng-star-inserted ng-touched"
+                  [ngClass]="{ 'package-block-open': hidemePackage[i], 'package-block-closed': !hidemePackage[i] }">
+                  <div class="package-close-open-block">
+                    <i class="package-close-open-icon fa cursor-pointer" aria-hidden="true"
+                      (click)="showProductDetailsInfo(i)"></i>
+                    <span *ngIf="!hidemePackage[i]">
+                      <span *ngIf="
+                          flight.value?.fromCode?.code && flight.value?.toCode?.code && flight.value?.depatureDate;
+                          else templateNoPackageDetails
+                        ">
+                        {{ flight.value.fromCode.name }} ({{ flight.value.fromCode.code }}) -
+                        {{ flight.value.toCode.name }} ({{ flight.value.toCode.code }}) -
+                        {{ flight.value.className }}
+                        -
+                        <span *ngIf="flight.value?.depatureDate">{{
+                          flight.value?.depatureDate?.year +
+                          '-' +
+                          flight.value?.depatureDate?.month +
+                          '-' +
+                          flight.value?.depatureDate?.day | date: 'mediumDate'
+                          }}</span>
+                        -
+                        {{ flight.value.holidayDays + ' day(s)' }}
+                        -
+
+                        <span *ngIf="flight?.value?.attractions[0]?.attractionName; else noAttractionCount">
+                          {{ flight.value.attractions.length + ' attraction line(s)' }}
+                        </span>
+                        <ng-template #noAttractionCount>
+                          {{ 0 + ' attraction line(s)' }}
+                        </ng-template>
+                        -
+
+                        <span *ngIf="flight?.value?.addons[0]?.addOnType; else noAddonsCount">
+                          {{ flight.value.addons.length + ' addon line(s)' }}
+                        </span>
+                        <ng-template #noAddonsCount>
+                          {{ 0 + ' addon line(s)' }}
+                        </ng-template>
+                      </span>
+                      <ng-template #templateNoPackageDetails> Please enter line details </ng-template>
+                    </span>
+                  </div>
+
+                  <div *ngIf="hidemePackage[i]" [hidden]="!hidemePackage[i]">
+                    <div class="col-12 col-md-12 p-0">
+                      <div class="form-row align-items-center srchbar">
+                        <div class="col-12 col-md-6 d-flex adtinput">
+                          <div class="form-group mr-3" *ngIf="i === 0">
+                            <label for="adt">Adt</label>
+                            <input type="number" id="adt" [ngClass]="{
+                                'is-invalid':
+                                  flights().controls[i].get('noofAdt').errors &&
+                                  ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                    flights().controls[i].get('noofAdt').touched)
+                              }" formControlName="noofAdt" class="form-control form-control-sm square" name="adt"
+                              (ngModelChange)="onChangePax(i)" (keypress)="numberOnly($event)" />
+                            <div class="invalid-feedback" *ngIf="
+                                flights().controls[i].get('noofAdt').errors?.required &&
+                                ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                  flights().controls[i].get('noofAdt').touched)
+                              ">
+                              required
+                            </div>
+                          </div>
+
+                          <div class="form-group mr-3" *ngIf="i === 0">
+                            <label for="chd">Chd</label>
+                            <input type="number" id="chd" formControlName="noofChd" (ngModelChange)="onChangePax(i)"
+                              class="form-control form-control-sm square" name="chd" (keypress)="numberOnly($event)" />
+                          </div>
+
+                          <div class="form-group" *ngIf="i === 0">
+                            <label for="inf">Inf</label>
+                            <input type="number" id="inf" formControlName="noofInf" (ngModelChange)="onChangePax(i)"
+                              class="form-control form-control-sm square" name="inf" (keypress)="numberOnly($event)" />
+                          </div>
+
+                          <div class="form-group mb-0" *ngIf="i === 0 && keys?.includes(holidayPackagePaxAdd)">
+                            <button type="button" (click)="openPersonModal(i)" class="btn btn-sm btn-icon p-0 m-2"
+                              style="margin-top: 19px !important">
+                              <i class="icon-user-follow" style="font-size: 30px; margin-top: 3px"
+                                aria-hidden="true"></i>
+                            </button>
+
+                            <button class="btn btn-sm btn-icon mx-2 mt-2 text-primary font-weight-bold" *ngIf="
+                                flights().at(i)?.value?.holidayPersonList &&
+                                flights()?.at(i)?.value?.holidayPersonList?.length > 0
+                              " (click)="
+                                rowsControlsPassengersDetails[i].isCollapsedPassengers =
+                                  !rowsControlsPassengersDetails[i]?.isCollapsedPassengers
+                              " [attr.aria-controls]="'passengers_collapse_' + i">
+                              +Pax Info ({{ flights().at(i).value.holidayPersonList?.length }})
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row p-0 m-0" id="passengers_collapse_{{ i }}"
+                      [ngbCollapse]="rowsControlsPassengersDetails[i]?.isCollapsedPassengers">
+                      <div class="col-12 col-lg-12 col-md-12 px-0">
+                        <h4 class="card-title text-left" *ngIf="
+                            flights().at(i).value.holidayPersonList &&
+                            flights().at(i).value.holidayPersonList?.length > 0
+                          ">
+                          Added Passengers
+                        </h4>
+                        <div class="table-responsive table">
+                          <div class="outer">
+                            <div class="inner">
+                              <table class="table m-0" *ngIf="
+                                  flights().at(i).value.holidayPersonList &&
+                                  flights().at(i).value.holidayPersonList?.length > 0
+                                ">
+                                <thead>
+                                  <tr class="refresh">
+                                    <th scope="col">S NO</th>
+                                    <th scope="col">Pax Type</th>
+                                    <th scope="col">First Name</th>
+                                    <th scope="col">Last Name</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Mobile Number</th>
+                                    <th scope="col">Dob</th>
+                                    <th scope="col">Action</th>
+                                  </tr>
+                                </thead>
+                                <tbody *ngIf="
+                                    flights().at(i).value.holidayPersonList &&
+                                    flights().at(i).value.holidayPersonList?.length > 0
+                                  ">
+                                  <tr *ngFor="
+                                      let j of flights().at(i).value.holidayPersonList
+                                        | slice: (page - 1) * pageSize:page * pageSize;
+                                      index as holidayIndex; trackBy: trackByFn
+                                    ">
+                                    <td scope="row" class="pt-3 wrap-text">
+                                      {{ (page - 1) * pageSize + holidayIndex + 1 }}
+                                    </td>
+                                    <td scope="row" class="pt-3 wrap-text">{{ j?.paxCode }}</td>
+                                    <td scope="row" class="pt-3 wrap-text">{{ j?.firstName }}</td>
+                                    <td scope="row" class="pt-3 wrap-text">{{ j?.lastName }}</td>
+                                    <td scope="row" class="pt-3 wrap-text">{{ j?.email }}</td>
+                                    <td scope="row" class="pt-3 wrap-text">{{ j?.phone }}</td>
+                                    <td scope="row" class="pt-3 wrap-text">{{ j?.dob | date: 'dd-MMM-yyyy' }}</td>
+                                    <td scope="row" class="pt-3 wrap-text" *ngIf="!isEdit">
+                                      <i class="ft-trash-2 pointer" (click)="holidayPaxdelete(i, holidayIndex)"></i>
+                                    </td>
+                                    <td scope="row" class="pt-3 wrap-text" *ngIf="isEdit">
+                                      <i class="ft-trash-2 pointer"
+                                        (click)="inActivePassengers(i, holidayIndex, j, j.requestLinePaxId)"></i>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-row-city align-items-top shadow-sm mb-3 srchbar">
+                      <div class="fm-from position-relative">
+                        <div class="form-group citygroup city-drop-down hotel-up">
+                          <label for="from" class="d-flex">Origin
+                            <a class="p-0 ml-3 mobile-none" *ngIf="keys?.includes(holidayPackageFlexFrom)"
+                              style="display: inline-block; margin-left: auto !important" (click)="
+                                rowsControlsFlexForm[i].isCollapsedFlexFrom =
+                                  !rowsControlsFlexForm[i]?.isCollapsedFlexFrom
+                              " [attr.aria-controls]="'FlexForm_' + i"><i class="ft-zap text-info"></i></a>
+                          </label>
+                          <input id="from_{{ i }}" type="text" #typeaheadInstance="ngbTypeahead"
+                            formControlName="fromCode"
+                            class="trav_inputField ng-pristine ng-invalid is-invalid ng-touched" placeholder="Origin"
+                            (keydown)="typeaheadKeydown($event)" [resultTemplate]="searchResultTemplate"
+                            (selectItem)="bindValueOfFromControl($event, i, 'fromCode')" [inputFormatter]="formatter"
+                            [ngbTypeahead]="onSearchLocation" [ngClass]="{
+                              'is-invalid':
+                                flights().controls[i].get('fromCode').errors &&
+                                ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                  flights().controls[i].get('fromCode').touched)
+                            }" />
+                          <p class="citymakeRelative px-0" *ngIf="flight.value.fromCode">
+                            <span class="truncate airPortName" title="{{ flight.value.fromCode?.code }},{{
+                                flight.value.fromCode?.name === null || flight.value.fromCode?.name === undefined
+                                  ? null
+                                  : flight.value.fromCode?.name + ',' + flight.value.fromCode?.country
+                              }}">
+                              {{ flight.value.fromCode?.code }},
+                              {{
+                              flight.value.fromCode?.name === null || flight.value.fromCode?.name === undefined
+                              ? null
+                              : flight.value.fromCode?.name + ',' + flight.value.fromCode?.country
+                              }}
+                            </span>
+                          </p>
+                          <div class="invalid-feedback" *ngIf="
+                              flights().controls[i].get('fromCode').errors?.required &&
+                              ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                flights().controls[i].get('fromCode').touched)
+                            ">
+                            required
+                          </div>
+                          <ng-template #searchResultTemplate let-r="result" let-t="term">
+                            <div class="row">
+                              <div class="col-md-1 mt-2" [ngSwitch]="r.type">
+                                <span *ngSwitchCase="'A'"><i class="fas fa-plane-departure fa-lg"></i></span>
+                                <span *ngSwitchCase="'C'"><i class="fa fa-map-marker fa-lg"
+                                    aria-hidden="true"></i></span>
+                                <span *ngSwitchCase="'R'"><i class="fas fa-train fa-lg"></i></span>
+                                <span *ngSwitchCase="'B'"><i class="fas fa-bus fa-lg"></i></span>
+                                <span *ngSwitchCase="'H'"><i class="fas fa-helicopter fa-lg"></i></span>
+                                <span *ngSwitchCase="'P'"><i class="fas fa-ship fa-lg"></i></span>
+                                <span *ngSwitchDefault><i class="fas fa-plane-departure fa-lg"></i></span>
+                              </div>
+                              <div class="col-md-8">
+                                <div class="font-small-3 text-bold-600 airport-name">{{ r.name?.toLowerCase() }}</div>
+                                <div class="font-small-2 text-muted">{{ r.city }}, {{ r.country }}</div>
+                              </div>
+                              <div class="col-md-3 text-right">
+                                <span class="text-bold-600">{{ r.code }}</span>
+                              </div>
+                            </div>
+                          </ng-template>
+                        </div>
+                      </div>
+                      <span class="cityswipCircle" (click)="reserve(i, flight.value)"> </span>
+                      <div id="FlexForm_{{ i }}" [ngbCollapse]="rowsControlsFlexForm[i]?.isCollapsedFlexFrom"
+                        class="popover fade show bs-popover-bottom ml-4" style="
+                          position: absolute;
+                          top: 99px;
+                          margin-top: 21px;
+                          left: 0px;
+                          will-change: transform;
+                          transform: translate(-50px, -84px);
+                          max-width: 806px;
+                          width: 320px;
+                        ">
+                        <div class="text-right">
+                          <div (click)="
+                              rowsControlsFlexForm[i].isCollapsedFlexFrom =
+                                !rowsControlsFlexForm[i]?.isCollapsedFlexFrom
+                            " [attr.aria-expanded]="!rowsControlsFlexForm[i]?.isCollapsedFlexFrom" class="pointer"
+                            [attr.aria-controls]="'isCollapsedFlexFrom' + i">
+                            <i class="ft-x" aria-hidden="true" style="font-size: 18px"></i>
+                          </div>
+                        </div>
+                        <div class="arrow" style="right: 12px"></div>
+                        <div class="row" style="padding: 15px">
+                          <div class="col-12 col-md-12">
+                            <div class="form-group">
+                              <label for="flexfrom"> Flex Origin </label>
+                              <div class="form-control square form-control-custom">
+                                <span class="selected-item" *ngFor="let item of selectedFlexFromItems[i]">
+                                  {{ item }}
+                                  <span class="close-selected" (click)="closeFlex(item, 'flexFrom', i)">&nbsp;x</span>
+                                </span>
+                                <input id="flexfrom_{{ i }}" type="text" placeholder="Enter Origin"
+                                  (selectItem)="onSelectedItemsFlex($event, 'flexFrom', i); flexFromInput.value = ''"
+                                  #flexFromInput class="multiSelectInputNoBorder" formControlName="flexFromCode"
+                                  (keydown)="typeaheadKeydown($event)" [resultTemplate]="searchResultTemplateTo"
+                                  [inputFormatter]="formatter" [ngbTypeahead]="onSearchLocation" />
+                                <ng-template #searchResultTemplateTo let-r="result" let-t="term">
+                                  <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+                                </ng-template>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="fm-from position-relative">
+                        <div class="form-group citygroup city-drop-down flight-down">
+                          <label for="from" class="d-flex">Destination
+                            <a class="p-0 ml-3 mobile-none" *ngIf="keys?.includes(holidayPackageFlexTo)"
+                              style="display: inline-block; margin-left: auto !important" (click)="
+                                rowsControlsFlexTo[i].isCollapsedFlexTo = !rowsControlsFlexTo[i]?.isCollapsedFlexTo
+                              " [attr.aria-controls]="'FlexTo_' + i"><i class="ft-zap text-info"></i></a>
+                          </label>
+
+                          <input id="from_2_{{ i }}" type="text" #typeaheadInstance="ngbTypeahead"
+                            formControlName="toCode"
+                            class="trav_inputField ng-pristine ng-invalid is-invalid ng-touched"
+                            (keydown)="typeaheadKeydown($event)" [resultTemplate]="DestinationssearchResultTemplateTo"
+                            placeholder="Destination" (selectItem)="bindValueOfToControl($event, i, 'toCode')"
+                            [inputFormatter]="formatter" [ngbTypeahead]="onSearchLocation" [ngClass]="{
+                              'is-invalid':
+                                flights().controls[i].get('toCode').errors &&
+                                ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                  flights().controls[i].get('toCode').touched)
+                            }" />
+                          <p class="citymakeRelative px-0" *ngIf="flight.value.toCode">
+                            <span class="truncate airPortName" title="{{ flight.value.toCode?.code }},{{
+                                flight.value.toCode?.name === null || flight.value.toCode?.name === undefined
+                                  ? null
+                                  : flight.value.toCode?.name + ',' + flight.value.toCode?.country
+                              }}">
+                              {{ flight.value.toCode?.code }},
+                              {{
+                              flight.value.toCode?.name === null || flight.value.toCode?.name === undefined
+                              ? null
+                              : flight.value.toCode?.name + ',' + flight.value.toCode?.country
+                              }}
+                            </span>
+                          </p>
+                          <div class="invalid-feedback" *ngIf="
+                              flights().controls[i].get('toCode').errors?.required &&
+                              ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                flights().controls[i].get('toCode').touched)
+                            ">
+                            required
+                          </div>
+                          <div class="invalid-feedback mb-2"
+                            *ngIf="flights().controls[i].get('toCode').errors?.confirmedValidator">
+                            Origin & Destinations airports cannot be the same
+                          </div>
+                          <ng-template #DestinationssearchResultTemplateTo let-r="result" let-t="term">
+                            <div class="row">
+                              <div class="col-md-1 mt-2" [ngSwitch]="r.type">
+                                <span *ngSwitchCase="'A'"><i class="fas fa-plane-arrival fa-lg"></i></span>
+                                <span *ngSwitchCase="'C'"><i class="fa fa-map-marker fa-lg"
+                                    aria-hidden="true"></i></span>
+                                <span *ngSwitchCase="'R'"><i class="fas fa-train fa-lg"></i></span>
+                                <span *ngSwitchCase="'B'"><i class="fas fa-bus fa-lg"></i></span>
+                                <span *ngSwitchCase="'H'"><i class="fas fa-helicopter fa-lg"></i></span>
+                                <span *ngSwitchCase="'P'"><i class="fas fa-ship fa-lg"></i></span>
+                                <span *ngSwitchDefault><i class="fas fa-plane-arrival fa-lg"></i></span>
+                              </div>
+                              <div class="col-md-8">
+                                <div class="font-small-3 text-bold-600 airport-name">{{ r.name?.toLowerCase() }}</div>
+                                <div class="font-small-2 text-muted">{{ r.city }}, {{ r.country }}</div>
+                              </div>
+                              <div class="col-md-3 text-right">
+                                <span class="text-bold-600">{{ r.code }}</span>
+                              </div>
+                            </div>
+                          </ng-template>
+                        </div>
+                      </div>
+                      <div id="FlexTo_{{ i }}" [ngbCollapse]="rowsControlsFlexTo[i]?.isCollapsedFlexTo"
+                        class="popover fade show bs-popover-bottom ml-4" style="
+                          position: absolute;
+                          top: 99px;
+                          margin-top: 18px;
+                          left: 310px;
+                          will-change: transform;
+                          transform: translate(-50px, -84px);
+                          max-width: 806px;
+                          width: 320px;
+                        ">
+                        <div class="text-right">
+                          <div (click)="
+                              rowsControlsFlexTo[i].isCollapsedFlexTo = !rowsControlsFlexTo[i]?.isCollapsedFlexTo
+                            " [attr.aria-expanded]="!rowsControlsFlexTo[i]?.isCollapsedFlexTo" class="pointer"
+                            [attr.aria-controls]="'isCollapsedFlexTo' + i">
+                            <i class="ft-x" aria-hidden="true" style="font-size: 18px"></i>
+                          </div>
+                        </div>
+                        <div class="arrow" style="right: 12px"></div>
+                        <div class="row" style="padding: 15px">
+                          <div class="col-12 col-md-12">
+                            <div class="form-group">
+                              <label for="flexfrom">Flex Destinations </label>
+                              <div class="form-control form-control-sm square form-control-custom">
+                                <span class="selected-item" *ngFor="let item of selectedFlexToItems[i]">
+                                  {{ item }}
+                                  <span class="close-selected" (click)="closeFlex(item, 'flexTo', i)">&nbsp;x</span>
+                                </span>
+                                <input id="flexfrom_1{{ i }}" type="text"
+                                  (selectItem)="onSelectedItemsFlexTo($event, 'flexTo', i); flexToInput.value = ''"
+                                  #flexToInput class="multiSelectInputNoBorder" placeholder="Enter Destinations"
+                                  formControlName="flexToCode" (keydown)="typeaheadKeydown($event)"
+                                  [resultTemplate]="searchResultTemplate" [inputFormatter]="formatter"
+                                  [ngbTypeahead]="onSearchLocation" />
+
+                                <ng-template #searchResultTemplate let-r="result" let-t="term">
+                                  <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+                                </ng-template>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="trav-dates trav-dates-100 position-relative date-icon">
+                        <div class="form-group citygroup">
+                          <label for="dp" class="d-flex">Departure
+                            <a class="p-0 mobile-none" *ngIf="keys?.includes(holidayPackageFlexDepature)"
+                              style="display: inline-block" (click)="
+                                rowsControlsForDepature[i].isCollapsedDepature =
+                                  !rowsControlsForDepature[i]?.isCollapsedDepature
+                              " [attr.aria-controls]="'collapsedepature_' + i"><i class="ft-zap text-info"
+                                style="padding: 0px 4px; align-items: center; display: flex"></i></a>
+                          </label>
+
+                          <div class="form-group mobile-none">
+                            <div class="input-group">
+                              <label>
+                                <div class="blackText m-0 package-date-click-div" (click)="d.toggle()">
+                                  <div *ngIf="flight.value?.depatureDate" class="mb-flex">
+                                    <span class="font30">{{
+                                      flight.value?.depatureDate?.year +
+                                      '-' +
+                                      flight.value?.depatureDate?.month +
+                                      '-' +
+                                      flight.value?.depatureDate?.day | date: 'dd'
+                                      }}</span>
+
+                                    <span class="shortYear ml-2 font-small-3">{{
+                                      flight.value?.depatureDate?.year +
+                                      '-' +
+                                      flight.value?.depatureDate?.month +
+                                      '-' +
+                                      flight.value?.depatureDate?.day | date: 'MMM YY'
+                                      }}</span>
+                                    <div class="font-small-3 mt-1 m-mt-0">
+                                      {{
+                                      flight.value?.depatureDate?.year +
+                                      '-' +
+                                      flight.value?.depatureDate?.month +
+                                      '-' +
+                                      flight.value?.depatureDate?.day | date: 'EEEE'
+                                      }}
+                                    </div>
+                                  </div>
+                                </div>
+                              </label>
+                              <input class="form-control form-control-sm square border-0 invisible  "
+                                outsideDays="hidden" placeholder="yyyy-mm-dd" name="dp" [displayMonths]="displayMonths"
+                                [minDate]="flight.value.hiddenDepatureDate" [navigation]="navigation"
+                                (dateSelect)="onChangeDepatureDate(i)" ngbDatepicker #d="ngbDatepicker"
+                                formControlName="depatureDate" [ngClass]="{
+                                  'is-invalid':
+                                    flights().controls[i].get('depatureDate').errors &&
+                                    ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                      flights().controls[i].get('depatureDate').touched)
+                                }" />
+
+                              <div class="invalid-feedback" *ngIf="
+                                  flights().controls[i].get('depatureDate').errors?.required &&
+                                  ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                    flights().controls[i].get('depatureDate').touched)
+                                ">
+                                required
+                              </div>
+                            </div>
+                          </div>
+
+
+
+                          <div class="form-group mobile-only">
+                            <div class="input-group">
+                              <label>
+                                <div class="blackText m-0 package-date-click-div" (click)="d2.toggle()">
+                                  <div *ngIf="flight.value?.depatureDate" class="mb-flex">
+                                    <span class="font30">{{
+                                      flight.value?.depatureDate?.year +
+                                      '-' +
+                                      flight.value?.depatureDate?.month +
+                                      '-' +
+                                      flight.value?.depatureDate?.day | date: 'dd'
+                                      }}</span>
+
+                                    <span class="shortYear ml-2 font-small-3">{{
+                                      flight.value?.depatureDate?.year +
+                                      '-' +
+                                      flight.value?.depatureDate?.month +
+                                      '-' +
+                                      flight.value?.depatureDate?.day | date: 'MMM YY'
+                                      }}</span>
+                                    <div class="font-small-3 mt-1 m-mt-0">
+                                      {{
+                                      flight.value?.depatureDate?.year +
+                                      '-' +
+                                      flight.value?.depatureDate?.month +
+                                      '-' +
+                                      flight.value?.depatureDate?.day | date: 'EEEE'
+                                      }}
+                                    </div>
+                                  </div>
+                                </div>
+                              </label>
+
+                              <input class="form-control square border-0 invisible" outsideDays="hidden"
+                                placeholder="yyyy-mm-dd" name="dp" ngbDatepicker #d2="ngbDatepicker"
+                                formControlName="depatureDate">
+                              <div class="invalid-feedback" *ngIf="
+                                  flights().controls[i].get('depatureDate').errors?.required &&
+                                  ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                    flights().controls[i].get('depatureDate').touched)
+                                ">
+                                required
+                              </div>
+                            </div>
+                          </div>
+
+
+                        </div>
+                        <div id="collapsedepature_{{ i }}"
+                          [ngbCollapse]="rowsControlsForDepature[i]?.isCollapsedDepature"
+                          class="popover fade show bs-popover-bottom" style="
+                            position: absolute;
+                            top: 109px;
+                            left: -80px;
+                            will-change: transform;
+                            transform: translate(-50px, -84px);
+                            max-width: 586px;
+                            width: 486px;
+                          ">
+                          <div class="text-right">
+                            <div (click)="
+                                rowsControlsForDepature[i].isCollapsedDepature =
+                                  !rowsControlsForDepature[i]?.isCollapsedDepature
+                              " [attr.aria-expanded]="!rowsControlsForDepature[i]?.isCollapsedDepature" class="pointer"
+                              [attr.aria-controls]="'isCollapsedDepature' + i">
+                              <i class="ft-x" aria-hidden="true" style="font-size: 18px"></i>
+                            </div>
+                          </div>
+                          <div class="arrow" style="right: 238px"></div>
+                          <div formArrayName="flexDepature">
+                            <div *ngFor="let fd of depature(i).controls; let flexDepatureIndex = index"
+                              [formGroupName]="flexDepatureIndex">
+                              <div class="row align-items-center" style="padding: 15px 15px 0 15px">
+                                <div class="col-12 col-md-5">
+                                  <div class="form-group">
+                                    <label for="dp" class="d-flex"> Departure Date </label>
+                                    <input type="date" class="form-control form-control-sm square"
+                                      formControlName="flexDepatureDate" name="FlexdepartureDate"
+                                      id="FlexdepartureDate" />
+                                    <!-- (change)="onChangeDateValidations(i)" -->
+                                  </div>
+                                </div>
+                                <div class="col-12 col-md-4 p-0">
+                                  <div class="form-group timeouter mb-0">
+                                    <label for="depatureTime">Departure Time</label>
+                                    <ngb-timepicker class="form-control-sm" name="flexDepatureTime" [spinners]="false"
+                                      id="flexDepatureTime" formControlName="flexDepatureTime">
+                                    </ngb-timepicker>
+                                  </div>
+                                </div>
+                                <div class="col-12 col-md-3 p-0">
+                                  <button (click)="addFlexDepature(i)" type="button" class="btn p-0 ml-2">
+                                    <i class="ft-plus-circle" aria-hidden="true" style="font-size: 28px"></i>
+                                  </button>
+                                  <button (click)="removeflexDepature(i, flexDepatureIndex)" type="button"
+                                    class="btn p-0 ml-2">
+                                    <i class="ft-minus-circle" aria-hidden="true" style="font-size: 28px"></i>
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="trav-dates dayswid position-relative">
+                        <div class="form-group citygroup">
+                          <label for="dp" class="d-flex">Days </label>
+                          <div class="form-group">
+                            <div class="input-group">
+                              <input type="number" class="form-control form-control-sm square border-0 hdays"
+                                placeholder="0" name="days"
+                                (input)="onChangeDays(flight.value.holidayDays, i, 'changeDate')"
+                                formControlName="holidayDays" [ngClass]="{
+                                  'is-invalid':
+                                    flights().controls[i].get('holidayDays').errors &&
+                                    ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                      flights().controls[i].get('holidayDays').touched)
+                                }" />
+                              <div class="invalid-feedback" *ngIf="
+                                  flights().controls[i].get('holidayDays').errors?.required &&
+                                  ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                    flights().controls[i].get('holidayDays').touched)
+                                ">
+                                required
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="trav-dates position-relative mot-w return-date">
+                        <div class="form-group citygroup">
+                          <label for="dp" class="d-flex">MOT </label>
+                          <div class="form-group">
+                            <div class="input-group">
+                              <select id="mot" name="mot" class="form-control form-control-sm square border-0"
+                                formControlName="modeOfTransport" [ngClass]="{
+                                  'is-invalid':
+                                    flights().controls[i].get('modeOfTransport').errors &&
+                                    ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                      flights().controls[i].get('modeOfTransport').touched)
+                                }">
+                                <!-- <option value="" >Choose</option> -->
+                                <option value="flightClass">FL</option>
+                                <option value="train">Train</option>
+                                <option value="bus">Bus</option>
+                                <option value="car">Car</option>
+                                <option value="ship/boat/ferry">Ship/Boat/Ferry</option>
+                              </select>
+                              <div class="invalid-feedback" *ngIf="
+                                  flights().controls[i].get('modeOfTransport').errors?.required &&
+                                  ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                    flights().controls[i].get('modeOfTransport').touched)
+                                ">
+                                required
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="trav-dates position-relative" *ngIf="flight.value.modeOfTransport === 'flightClass'">
+                        <div class="form-group citygroup">
+                          <label for="from" class="d-flex">Class
+                            <a class="p-0 ml-3 mobile-none" *ngIf="keys?.includes(holidayPackageFlexClass)"
+                              style="display: inline-block" (click)="
+                                rowsControlsFlexClass[i].isCollapsedFlexClass =
+                                  !rowsControlsFlexClass[i]?.isCollapsedFlexClass
+                              " [attr.aria-controls]="'FlexClass_' + i"><i class="ft-zap text-info"></i></a>
+                          </label>
+                          <ng-select [items]="masterClassList" id="class" formControlName="className" bindValue="code"
+                            bindLabel="name">
+                          </ng-select>
+                        </div>
+                      </div>
+                      <div class="trav-dates position-relative hrating return-date">
+                        <div class="form-group citygroup">
+                          <label for="from" class="d-flex">Hotel Rating </label>
+                          <select id="Rating" name="Rating" class="form-control form-control-sm square border-0"
+                            formControlName="hotelRatings">
+                            <option value="">Choose</option>
+                            <option *ngFor="let hotelsrating of hotelRatingListLov" [value]="hotelsrating.id">
+                              {{ hotelsrating.name }}
+                            </option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="trav-dates position-relative mb-10">
+                        <div class="form-group citygroup">
+                          <label for="propertyType" class="form-label">Property Type</label>
+                          <select id="propertyType" name="propertyType"
+                            class="form-control form-control-sm square border-0" formControlName="propertyType">
+                            <option value="">Choose</option>
+                            <option value="Hotel">Hotel</option>
+                            <option value="Villa">Villa</option>
+                            <option value="ServiceApartment">Service Apartment</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div class="add-remove-package-row px-1" *ngIf="!isEdit || flight.value.requestLineId == ''">
+                        <!-- <a (click)="addFlight(i)" *ngIf="flights().length === i + 1" type="button" class="text-primary">
+                    <i class="ft-plus-circle"></i>
+                  </a> -->
+
+                        <a  (click)="removeFlight(i)" type="button" class="text-primary">
+                          <i class="ft-trash-2"></i>
+                        </a>
+                      </div>
+                    </div>
+
+                    <!-- tabs start here  -->
+                    <div class="col-12 col-md-12 p-0">
+                      <ul ngbNav #nav="ngbNav" [activeId]="active" class="nav-tabs">
+                        <li [ngbNavItem]="0" *ngIf="keys?.includes(hotelTab)">
+                          <a ngbNavLink>Hotel/Rooms</a>
+                          <ng-template ngbNavContent>
+                            <div class="col-12 col-md-12 p-0 mt-2">
+                              <div class="form-row align-items-center srchbar">
+                                <div class="col-12 col-md-6 d-flex adtinput">
+                                  <div class="radio form-check form-check-inline mr-3 diff-h">
+                                    <input class="form-check-input" type="radio" id="inlineRadio1-{{ i }}"
+                                      (change)="onChangeHotelSelection($event.target.value, i)" value="DifferentHotel"
+                                      formControlName="hotelSelection" />
+                                    <label class="form-check-label" for="inlineRadio1-{{ i }}">Different Hotel</label>
+                                  </div>
+                                  <div class="radio form-check form-check-inline diff-h1">
+                                    <input class="form-check-input" type="radio" id="inlineRadio2-{{ i }}"
+                                      (change)="onChangeHotelSelection($event.target.value, i)" value="SpecificHotel"
+                                      formControlName="hotelSelection" />
+                                    <label class="form-check-label" for="inlineRadio2-{{ i }}">Specific Hotel</label>
+                                  </div>
+                                  <!-- *ngIf="flight.value.holidayDays"(change)="onChangeHotelSelection($event.target.value,i)" -->
+                                  <div class="form-group mr-2 diff-h2" [ngClass]="{
+                                      readonly: flight.value.hotelSelection === 'DifferentHotel',
+                                      show: flight.value.hotelSelection === ''
+                                    }">
+                                    <label for="rooms">Rooms</label>
+                                    <input type="number" id="rooms" formControlName="lineRoomCount"
+                                      (input)="onChangeRooms($event, i)"
+                                      class="form-control form-control-sm square mr-2" name="rooms" />
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div formArrayName="hotelSelectionsData" class="hotel-selections-block" *ngIf="
+                                flight.value.hotelSelection === 'DifferentHotel' ||
+                                flight.value.hotelSelection === 'SpecificHotel'
+                              ">
+                              <div *ngFor="let r of hotelSelectionsData(i).controls; let hotelSelectionIndex = index"
+                                [formGroupName]="hotelSelectionIndex">
+                                <div class="form-row mt-3">
+                                  <div class="col-md-3 col-12" *ngIf="flight.value.hotelSelection === 'DifferentHotel'">
+                                    <div class="form-group mb-2">
+                                      <label for="hoteldates">Date</label>
+                                      <ng-select [multiple]="true" [items]="hotelDates[i]" groupBy="dates"
+                                        [selectableGroup]="true" [selectableGroupAsModel]="false"
+                                        bindLabel="hotelSelectedDate" bindValue="hotelSelectedDate" placeholder="Select"
+                                        [multiple]="true" [closeOnSelect]="false" formControlName="hotelDate">
+                                        <ng-template ng-optgroup-tmp let-item="item" let-item$="item$"
+                                          let-index="index">
+                                          <input id="day_item_{{ index }}" type="checkbox" [ngModel]="item$?.selected"
+                                            [ngModelOptions]="{ standalone: true }" />
+                                          {{ item.dates }}
+                                        </ng-template>
+                                        <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                                          <input id="item-{{ index }}" type="checkbox" name="item-{{ index }}"
+                                            [ngModel]="item$?.selected" [ngModelOptions]="{ standalone: true }" />
+                                          {{ item.hotelSelectedDate }}
+                                        </ng-template>
+
+                                        <ng-template ng-multi-label-tmp let-items="items">
+                                          <div class="ng-value" *ngFor="let item of items | slice: 0:0">
+                                            <span class="ng-value-icon right" (click)="clear(item)"
+                                              aria-hidden="true">×</span>
+                                          </div>
+                                          <div class="ng-value" *ngIf="items?.length > 0">
+                                            <span class="ng-value-label">
+                                              {{ items?.length }}
+                                              selected</span>
+                                          </div>
+                                        </ng-template>
+                                      </ng-select>
+                                    </div>
+                                  </div>
+                                  <div class="col-md-3 col-12" *ngIf="
+                                      flight.value.hotelSelection === 'DifferentHotel' ||
+                                      flight.value.hotelSelection === 'SpecificHotel'
+                                    ">
+                                    <div class="form-group mb-2">
+                                      <label for="hotelNames">Hotel Name</label>
+                                      <input type="text" #typeaheadInstance="ngbTypeahead"
+                                        (keydown)="typeaheadKeydown($event)"
+                                        [resultTemplate]="searchResultHotelNameTemplate"
+                                        [inputFormatter]="hotelNameFormatter" [ngbTypeahead]="onSearchHotelName(i)"
+                                        id="hotelName{{ hotelSelectionIndex }}"
+                                        name="hotelName{{ hotelSelectionIndex }}" class="form-control square"
+                                        formControlName="hotelName" />
+
+                                      <ng-template #searchResultHotelNameTemplate let-r="result" let-t="term">
+                                        <ngb-highlight [result]="r.hotelName" [term]="t"></ngb-highlight>
+                                      </ng-template>
+                                    </div>
+                                  </div>
+                                  <div class="col-md-1 col-12" *ngIf="flight.value.hotelSelection === 'DifferentHotel'">
+                                    <div class="form-group mb-2">
+                                      <label for="hotelRoomCount">Room Count</label>
+                                      <input type="number" id="hotelRoomCount"
+                                        (input)="onChangeDifferentHotelSelectionRooms($event, i, hotelSelectionIndex)"
+                                        class="form-control square" name="hotelRoomCount"
+                                        formControlName="hotelRoomCount" />
+                                    </div>
+                                  </div>
+                                  <div class="mt-3" *ngIf="flight.value.hotelSelection === 'DifferentHotel'">
+                                    <button (click)="addHotelSelection(i)" type="button"
+                                      class="text-primary btn p-0 ml-2">
+                                      <i class="ft-plus-circle" style="font-size: 28px"></i>
+                                    </button>
+                                    <button (click)="deleteHotelSelection(i, hotelSelectionIndex)" type="button"
+                                      class="text-primary btn p-0 ml-2">
+                                      <i class="ft-minus-circle" style="font-size: 28px"></i>
+                                    </button>
+                                  </div>
+                                  <div formArrayName="roomLevelsData" class="col-12">
+                                    <div *ngFor="
+                                        let roomLevel of roomLevelsData(i, hotelSelectionIndex).controls;
+                                        let roomLevelIndex = index
+                                      " [formGroupName]="roomLevelIndex">
+                                      <label class="ml-1">Room {{ roomLevelIndex + 1 }}</label>
+                                      <div class="form-row ml-1">
+                                        <div class="form-group mb-2 col-md-3 col-6">
+                                          <label>Type</label>
+                                          <ng-select [items]="roomName$ | async" bindLabel="description"
+                                            bindValue="description" [loading]="roomNameLoading"
+                                            [minTermLength]="minLengthRoomNameTerm" [multiple]="false" typeToSearchText="Please enter {{
+                                              minLengthRoomNameTerm
+                                            }} or more characters" [typeahead]="roomNameLoadingInput$"
+                                            formControlName="roomName">
+                                          </ng-select>
+                                        </div>
+                                        <div class="form-group mb-2 ml-2 col-md-3 col-6">
+                                          <label>Board</label>
+                                          <ng-select [items]="roomType$ | async" bindLabel="board" bindValue="board"
+                                            [loading]="roomTypeLoading" [minTermLength]="minLengthRoomTypeTerm"
+                                            [multiple]="false" typeToSearchText="Please enter {{
+                                              minLengthRoomTypeTerm
+                                            }} or more characters" [typeahead]="roomTypeLoadingInput$"
+                                            formControlName="roomType">
+                                          </ng-select>
+                                        </div>
+                                        <div class="ml-2 d-flex">
+                                          <div class="form-group mb-2">
+                                            <label for="adults">Adt</label>
+                                            <select id="adults" name="adults"
+                                              class="form-control form-control-sm square"
+                                              formControlName="roomAdultCount" style="width: 50px">
+                                              <option value="1">1</option>
+                                              <option value="2">2</option>
+                                              <option value="3">3</option>
+                                              <option value="4">4</option>
+                                              <option value="5">5</option>
+                                              <option value="6">6</option>
+                                              <option value="7">7</option>
+                                              <option value="8">8</option>
+                                              <option value="9">9</option>
+                                              <option value="10">10</option>
+                                              <option value="11">11</option>
+                                              <option value="12">12</option>
+                                            </select>
+                                          </div>
+
+                                          <div class="form-group mb-2 ml-2">
+                                            <label for="childern">Chd</label>
+                                            <select id="Childern1" (change)="
+                                                onChangeDifferentHotelSelectionChild(
+                                                  $event.target.value,
+                                                  i,
+                                                  hotelSelectionIndex,
+                                                  roomLevelIndex
+                                                )
+                                              " name="Childerns1" class="form-control form-control-sm square mr-1"
+                                              formControlName="roomChildCount" style="width: 60px">
+                                              <option value="0">0</option>
+                                              <option value="1">1</option>
+                                              <option value="2">2</option>
+                                              <option value="3">3</option>
+                                              <option value="4">4</option>
+                                              <option value="5">5</option>
+                                              <option value="6">6</option>
+                                              <option value="7">7</option>
+                                              <option value="8">8</option>
+                                              <option value="9">9</option>
+                                              <option value="10">10</option>
+                                            </select>
+                                          </div>
+
+                                          <div formArrayName="roomLevelchildAge" class="child-age-column">
+                                            <div *ngFor="
+                                                let roomLevelchild of roomLevelchildAge(
+                                                  i,
+                                                  hotelSelectionIndex,
+                                                  roomLevelIndex
+                                                ).controls;
+                                                let roomLevelchildAgeIndex = index
+                                              " [formGroupName]="roomLevelchildAgeIndex">
+                                              <div>
+                                                <div class="mb-2">
+                                                  <label for="age">Child&nbsp;{{ roomLevelchildAgeIndex + 1
+                                                    }}&nbsp;age</label><br />
+                                                  <select id="age1" name="age1"
+                                                    class="form-control form-control-sm square"
+                                                    formControlName="roomChildAges">
+                                                    <option value="1">1</option>
+                                                    <option value="2">2</option>
+                                                    <option value="3">3</option>
+                                                    <option value="4">4</option>
+                                                    <option value="5">5</option>
+                                                    <option value="6">6</option>
+                                                    <option value="7">7</option>
+                                                    <option value="8">8</option>
+                                                    <option value="9">9</option>
+                                                    <option value="10">10</option>
+                                                    <option value="11">11</option>
+                                                    <option value="12">12</option>
+                                                  </select>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div formArrayName="roomsData">
+                              <div *ngFor="let r of roomsData(i).controls; let roomIndex = index"
+                                [formGroupName]="roomIndex">
+                                <label class="ml-1">Room {{ roomIndex + 1 }}</label>
+                                <div class="form-row ml-1">
+                                  <div class="form-group col-md-3 col-6 mb-2">
+                                    <label>Type</label>
+
+                                    <ng-select [items]="roomName$ | async" bindLabel="description"
+                                      bindValue="description" [loading]="roomNameLoading"
+                                      [minTermLength]="minLengthRoomNameTerm" [multiple]="false"
+                                      typeToSearchText="Please enter {{ minLengthRoomNameTerm }} or more characters"
+                                      [typeahead]="roomNameLoadingInput$" formControlName="roomName">
+                                    </ng-select>
+                                  </div>
+                                  <div class="form-group col-md-3 col-6 mb-2 ml-2 m-ml-0">
+                                    <label>Board</label>
+                                    <ng-select [items]="roomType$ | async" bindLabel="board" bindValue="board"
+                                      [loading]="roomTypeLoading" [minTermLength]="minLengthRoomTypeTerm"
+                                      [multiple]="false"
+                                      typeToSearchText="Please enter {{ minLengthRoomTypeTerm }} or more characters"
+                                      [typeahead]="roomTypeLoadingInput$" formControlName="roomType">
+                                    </ng-select>
+                                  </div>
+                                  <div class="ml-2 d-flex">
+                                    <div class="form-group mb-2">
+                                      <label for="adults">Adt</label>
+                                      <select id="adults2" name="adults2" class="form-control form-control-sm square"
+                                        formControlName="roomAdultCount" style="width: 50px">
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                        <option value="12">12</option>
+                                      </select>
+                                    </div>
+                                    <div class="form-group mb-2 ml-2">
+                                      <label for="childern">Chd</label>
+                                      <select id="Childern2" (change)="onChangeChild($event.target.value, i, roomIndex)"
+                                        name="Childerns2" class="form-control form-control-sm square"
+                                        formControlName="roomChildCount" style="width: 60px">
+                                        <option value="0">0</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                      </select>
+                                    </div>
+
+                                    <div formArrayName="childAge" class="child-age-column">
+                                      <div *ngFor="let c of childAge(i, roomIndex).controls; let k = index"
+                                        [formGroupName]="k" class="col-md-6">
+                                        <div class="col-md-12">
+                                          <div class="mb-2 col-md-6">
+                                            <label for="age">Child&nbsp;{{ k + 1 }}&nbsp;age</label><br />
+                                            <select id="age2" name="age2" class="form-control-age square"
+                                              style="width: 100px" formControlName="roomChildAges">
+                                              <option value="1">1</option>
+                                              <option value="2">2</option>
+                                              <option value="3">3</option>
+                                              <option value="4">4</option>
+                                              <option value="5">5</option>
+                                              <option value="6">6</option>
+                                              <option value="7">7</option>
+                                              <option value="8">8</option>
+                                              <option value="9">9</option>
+                                              <option value="10">10</option>
+                                              <option value="11">11</option>
+                                              <option value="12">12</option>
+                                            </select>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </ng-template>
+                        </li>
+                        <li [ngbNavItem]="1" *ngIf="keys?.includes(attractionsTab)">
+                          <a ngbNavLink>Activities</a>
+                          <ng-template ngbNavContent>
+                            <div>
+                              <div class="attrctions-cl" id="attractions_collapse_{{ i }}">
+                                <div formArrayName="attractions">
+                                  <div *ngFor="
+                                      let toCodeattractions of flightAttractions(i).controls;
+                                      let attractionsIndex = index
+                                    " [formGroupName]="attractionsIndex">
+                                    <div class="form-row">
+                                      <div class="col-md-2 col-12">
+                                        <div class="form-group mb-2">
+                                          <label for="attractionsDay">Day</label>
+                                          <ng-select [multiple]="true" (change)="attractionsDaySelectShowTheError(i,attractionsIndex)" [items]="attractionsDays[i]"
+                                            groupBy="selectedAllDays" [selectableGroup]="true"
+                                            [selectableGroupAsModel]="false" bindLabel="name" bindValue="id"
+                                            placeholder="Select" [multiple]="true" [closeOnSelect]="false"
+                                            formControlName="attractionDay" >
+                                            <ng-template ng-optgroup-tmp let-item="item" let-item$="item$"
+                                              let-index="index">
+                                              <input id="day_item_{{ index }}" type="checkbox"
+                                                [ngModel]="item$?.selected" [ngModelOptions]="{ standalone: true }" />
+                                              {{ item.selectedAllDays }}
+                                            </ng-template>
+                                            <ng-template ng-option-tmp let-item="item" let-item$="item$"
+                                              let-index="index">
+                                              <input id="item-{{ index }}" type="checkbox" name="item-{{ index }}"
+                                                [ngModel]="item$?.selected" [ngModelOptions]="{ standalone: true }" />
+                                              {{ item.name }}
+                                            </ng-template>
+
+                                            <ng-template ng-multi-label-tmp let-items="items">
+                                              <div class="ng-value" *ngFor="let item of items | slice: 0:0">
+                                                <span class="ng-value-icon right" (click)="clear(item)"
+                                                  aria-hidden="true">×</span>
+                                              </div>
+                                              <div class="ng-value" *ngIf="items?.length > 0">
+                                                <span class="ng-value-label">
+                                                  {{ items?.length }}
+                                                  selected</span>
+                                              </div>
+                                            </ng-template>
+                                          </ng-select>
+                                         <!--
+                                          [ngClass]="{
+                                              'is-invalid':
+                                                flightAttractions(i).controls[attractionsIndex].get('attractionDay')
+                                                  .errors &&
+                                                ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                                  flightAttractions(i).controls[attractionsIndex].get('attractionDay')
+                                                    .touched)
+                                            }"
+                                          <div class="invalid-feedback" *ngIf="
+                                              flightAttractions(i).controls[attractionsIndex].get('attractionDay')
+                                                .errors?.required &&
+                                              ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                                flightAttractions(i).controls[attractionsIndex].get('attractionDay')
+                                                  .touched)
+                                            ">
+                                            Please select your day
+                                          </div> -->
+                                        </div>
+                                      </div>
+                                      <div class="col-md-10">
+                                        <div class="form-group mb-2">
+                                          <label for="attractions">Activities</label>
+                                          <ng-select [multiple]="true" [addTag]="addAttractionsNew"
+                                            [items]="attractionsData[i]" groupBy="selectedAllAttractions"
+                                            [selectableGroup]="true" [selectableGroupAsModel]="false"
+                                            bindLabel="activityName" placeholder="Select" [multiple]="true"
+                                            [closeOnSelect]="false" formControlName="attractionName"
+                                            (change)="onChangeAttractionName(i, attractionsIndex)"
+                                            [ngClass]="{
+                                              'is-invalid':
+                                                flightAttractions(i).controls[attractionsIndex].get('attractionName')
+                                                  .errors &&
+                                                ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                                  flightAttractions(i).controls[attractionsIndex].get('attractionName')
+                                                    .touched)
+                                            }"
+                                            >
+                                            <ng-template ng-tag-tmp let-search="searchTerm">
+                                              <b>create new option</b>: {{ search }}
+                                            </ng-template>
+                                            <ng-template ng-optgroup-tmp let-item="item" let-item$="item$"
+                                              let-index="index">
+                                              <input id="item-{{ index }}" type="checkbox" [ngModel]="item$?.selected"
+                                                [ngModelOptions]="{ standalone: true }" />
+                                              {{ item.selectedAllAttractions }}
+                                            </ng-template>
+                                            <ng-template ng-option-tmp let-item="item" let-item$="item$"
+                                              let-index="index">
+                                              <input id="item-{{ index }}" type="checkbox" name="item-{{ index }}"
+                                                [ngModel]="item$?.selected" [ngModelOptions]="{ standalone: true }" />
+                                              {{ item.activityName }}
+                                              <div class="col-md-8">
+                                                <div class="text-muted font-small-2 text-bold-600">
+                                                  {{ item.location }}
+                                                </div>
+                                              </div>
+                                            </ng-template>
+
+                                            <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                              <div class="ng-value" *ngFor="let item of items | slice: 0:10">
+                                                <span class="ng-value-label">
+                                                  {{ item?.activityName }}
+                                                </span>
+                                                <span class="ng-value-icon right" (click)="clear(item)"
+                                                  aria-hidden="true">×</span>
+                                              </div>
+                                              <div class="ng-value" *ngIf="items?.length > 10">
+                                                <span class="ng-value-label"> {{ items?.length - 10 }} more </span>
+                                              </div>
+                                            </ng-template>
+                                          </ng-select>
+
+                                          <div class="invalid-feedback" *ngIf="
+                                          flightAttractions(i).controls[attractionsIndex].get('attractionName')
+                                            .errors?.required &&
+                                          ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                            flightAttractions(i).controls[attractionsIndex].get('attractionName')
+                                              .touched)
+                                        ">
+                                        Please select your attractions
+                                      </div>
+                                        </div>
+                                      </div>
+
+                                      <div formGroupName="attractionsRequiredPassenger" class="col-md-2 col-12">
+                                        <div class="form-group mb-2">
+                                          <label for="Pax">Pax</label>
+                                          <ng-select [multiple]="true" [items]="addonsPassengers[i]"
+                                            groupBy="selectedAllGroup" [selectableGroup]="true"
+                                            [selectableGroupAsModel]="false" bindLabel="paxType" placeholder="Select"
+                                            [multiple]="true" [closeOnSelect]="false" formControlName="pax">
+                                            <ng-template ng-optgroup-tmp let-item="item" let-item$="item$"
+                                              let-index="index">
+                                              <input id="item-{{ index }}" type="checkbox" [ngModel]="item$?.selected"
+                                                [ngModelOptions]="{ standalone: true }" />
+                                              {{ item.selectedAllGroup }}
+                                            </ng-template>
+                                            <ng-template ng-option-tmp let-item="item" let-item$="item$"
+                                              let-index="index">
+                                              <input id="item-{{ index }}" type="checkbox" name="item-{{ index }}"
+                                                [ngModel]="item$?.selected" [ngModelOptions]="{ standalone: true }" />
+                                              {{ item.paxType }}
+                                            </ng-template>
+
+                                            <ng-template ng-multi-label-tmp let-items="items">
+                                              <div class="ng-value" *ngFor="let item of items | slice: 0:0">
+                                                <span class="ng-value-icon right" (click)="clear(item)"
+                                                  aria-hidden="true">×</span>
+                                              </div>
+                                              <div class="ng-value" *ngIf="items?.length > 0">
+                                                <span class="ng-value-label">
+                                                  {{
+                                                  items?.length === addonsPassengers[i]?.length
+                                                  ? 'All'
+                                                  : items?.length
+                                                  }}
+                                                  selected</span>
+                                              </div>
+                                            </ng-template>
+                                          </ng-select>
+                                        </div>
+                                      </div>
+                                      <div class="col-md-4 col-12">
+                                        <div class="form-group mb-2">
+                                          <label for="Remarks">Remarks</label>
+                                          <input type="text" id="Remarks" placeholder="Enter Remarks"
+                                            class="form-control square" name="Remarks" formControlName="remarks" />
+                                        </div>
+                                      </div>
+                                      <div class="d-flex ml-1" style="margin-top: 1.9rem !important">
+                                        <ul class="list-unstyled mb-0">
+                                          <li class="d-inline-block mr-2 mb-2">
+                                            <div class="checkbox checkbox-primary">
+                                              <input type="checkbox"
+                                                id="{{ 'checkbox2attractions' + i + attractionsIndex }}"
+                                                formControlName="required" />
+                                              <label for="{{ 'checkbox2attractions' + i + attractionsIndex }}"
+                                                placement="bottom" ngbTooltip="Required"><span>Req</span></label>
+                                            </div>
+                                          </li>
+                                          <li class="d-inline-block mr-2 mb-2">
+                                            <div class="checkbox checkbox-primary">
+                                              <input type="checkbox"
+                                                id="{{ 'checkbox3attrctions' + i + attractionsIndex }}"
+                                                formControlName="extraCost" />
+                                              <label
+                                                for="{{ 'checkbox3attrctions' + i + attractionsIndex }}"><span>E.Cost</span></label>
+                                            </div>
+                                          </li>
+                                        </ul>
+                                      </div>
+                                      <div class="d-flex align-items-center">
+                                        <div (click)="addAttractions(i)" type="button" class="text-primary mt-2 p-0">
+                                          <i class="ft-plus-circle" aria-hidden="true" style="font-size: 28px"></i>
+                                        </div>
+                                        <div (click)="removeAttractions(i, attractionsIndex)" type="button"
+                                          class="text-primary p-0 ml-2 mt-2">
+                                          <i class="ft-minus-circle" aria-hidden="true" style="font-size: 28px"></i>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </ng-template>
+                        </li>
+                        <li [ngbNavItem]="2" *ngIf="keys?.includes(addonsTab)">
+                          <a ngbNavLink>Addons / Inclusions</a>
+
+                          <ng-template ngbNavContent>
+                            <div id="addons1">
+                              <div class="addons-cl" id="addons_collapse_{{ i }}">
+                                <div formArrayName="addons">
+                                  <div *ngFor="let a of flightAddons(i).controls; let addonsIndex = index"
+                                    [formGroupName]="addonsIndex">
+
+                                    <div class="form-row">
+                                      <div class="col-md-2 col-12">
+                                        <div class="form-group mb-2">
+                                          <label for="addons">Addons</label>
+                                          <input type="search" id="addons" (keydown)="typeaheadKeydown($event)"
+                                            [resultTemplate]="searchResultAddonsTemplate"
+                                            #typeaheadInstance="ngbTypeahead" class="form-control square" name="addons"
+                                            formControlName="addOnType" [inputFormatter]="flightAddonsformatter"
+                                            [ngbTypeahead]="onSearchFlightAddons" />
+                                          <ng-template #searchResultAddonsTemplate let-r="result" let-t="term">
+                                            <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+                                          </ng-template>
+                                        </div>
+                                      </div>
+                                      <!-- <div class="col-md-2 col-12">
+                                  <div class="form-group mb-2">
+                                    <label for="hotelNights">Nights</label>
+                                    <select id="hotelNights" name="hotelNights" class="form-control square">
+                                      <option value="">Choose</option>
+                                      <option value="less than $5000">less than $5000</option>
+
+                                    </select>
+                                  </div>
+                                </div> -->
+                                      <div formGroupName="requiredPassenger" class="col-md-2 col-12">
+                                        <div class="form-group mb-2">
+                                          <label for="Pax">Pax</label>
+                                          <ng-select [multiple]="true" [items]="addonsPassengers[i]"
+                                            groupBy="selectedAllGroup" [selectableGroup]="true"
+                                            [selectableGroupAsModel]="false" bindLabel="paxType" placeholder="Select"
+                                            [multiple]="true" [closeOnSelect]="false" formControlName="passengers">
+                                            <ng-template ng-optgroup-tmp let-item="item" let-item$="item$"
+                                              let-index="index">
+                                              <input id="item-{{ index }}" type="checkbox" [ngModel]="item$?.selected"
+                                                [ngModelOptions]="{ standalone: true }" />
+                                              {{ item.selectedAllGroup }}
+                                            </ng-template>
+                                            <ng-template ng-option-tmp let-item="item" let-item$="item$"
+                                              let-index="index">
+                                              <input id="item-{{ index }}" type="checkbox" name="item-{{ index }}"
+                                                [ngModel]="item$?.selected" [ngModelOptions]="{ standalone: true }" />
+                                              {{ item.paxType }}
+                                            </ng-template>
+
+                                            <ng-template ng-multi-label-tmp let-items="items">
+                                              <div class="ng-value" *ngFor="let item of items | slice: 0:0">
+                                                <span class="ng-value-icon right" (click)="clear(item)"
+                                                  aria-hidden="true">×</span>
+                                              </div>
+                                              <div class="ng-value" *ngIf="items?.length > 0">
+                                                <span class="ng-value-label">
+                                                  {{
+                                                  items?.length === addonsPassengers[i]?.length
+                                                  ? 'All'
+                                                  : items?.length
+                                                  }}
+                                                  selected</span>
+                                              </div>
+                                            </ng-template>
+                                          </ng-select>
+                                        </div>
+                                      </div>
+                                      <div class="col-md-4 col-12">
+                                        <div class="form-group mb-2">
+                                          <label for="Remarks">Remarks</label>
+                                          <input type="text" id="Remarks" placeholder="Enter Remarks"
+                                            class="form-control square" name="Remarks" formControlName="remarks" />
+                                        </div>
+                                      </div>
+                                      <div class="d-flex ml-1" style="margin-top: 1.9rem !important">
+                                        <ul class="list-unstyled mb-0">
+                                          <li class="d-inline-block mr-2 mb-2">
+                                            <div class="checkbox checkbox-primary">
+                                              <input type="checkbox" id="{{ 'checkbox2' + i + addonsIndex }}"
+                                                formControlName="required" />
+                                              <label for="{{ 'checkbox2' + i + addonsIndex }}" placement="bottom"
+                                                ngbTooltip="Required"><span>Req</span></label>
+                                            </div>
+                                          </li>
+                                          <li class="d-inline-block mr-2 mb-2">
+                                            <div class="checkbox checkbox-primary">
+                                              <input type="checkbox" id="{{ 'checkbox3' + i + addonsIndex }}"
+                                                formControlName="extraCost" />
+                                              <label
+                                                for="{{ 'checkbox3' + i + addonsIndex }}"><span>E.Cost</span></label>
+                                            </div>
+                                          </li>
+                                        </ul>
+                                      </div>
+                                      <div class="d-flex align-items-center">
+                                        <div (click)="addAddons(i)" type="button" class="text-primary mt-2 p-0">
+                                          <i class="ft-plus-circle" aria-hidden="true" style="font-size: 28px"></i>
+                                        </div>
+                                        <div (click)="removeAddons(i, addonsIndex)" type="button"
+                                          class="text-primary p-0 ml-2 mt-2">
+                                          <i class="ft-minus-circle" aria-hidden="true" style="font-size: 28px"></i>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </ng-template>
+                        </li>
+                        <li [ngbNavItem]="3" *ngIf="keys?.includes(lpoTab)">
+                          <a ngbNavLink>LPO Details</a>
+                          <ng-template ngbNavContent>
+                            <div class="form-row" id="lpo_collapse_{{ i }}">
+                              <div class="col-md-2">
+                                <div class="form-group mb-2">
+                                  <label for="lpo_Number">LPO Number</label>
+                                  <input type="text" id="lpo_Number" placeholder="Enter LPO Number"
+                                    class="form-control square" name="lpo_Number" formControlName="lpoNumber" />
+                                </div>
+                              </div>
+                              <div class="col-md-2">
+                                <div class="form-group mb-2">
+                                  <label for="lpo_date">LPO Date</label>
+                                  <input type="date" id="lpo_date" class="form-control square" name="lpo_date"
+                                    formControlName="lpoDate" />
+                                </div>
+                              </div>
+                              <div class="col-md-2">
+                                <div class="form-group mb-2">
+                                  <label for="lpo_amount">LPO Amount</label>
+                                  <input type="number" id="lpo_amount" placeholder="Enter LPO Amount"
+                                    class="form-control square" name="lpo_amount" formControlName="lpoAmount" />
+                                </div>
+                              </div>
+                            </div>
+                          </ng-template>
+                        </li>
+                        <li [ngbNavItem]="4" *ngIf="keys?.includes(flightExtraTab)">
+                          <a ngbNavLink>Flight Extra</a>
+                          <ng-template ngbNavContent>
+                            <div class="form-row align-items-center p-0 more-request-block" id="morecollapse_{{ i }}">
+                              <div class="col-12 col-md-1">
+                                <div class="form-group">
+                                  <label for="rbd">RBD</label>
+                                  <ng-select [items]="masterRbdList" id="rbd" formControlName="rbd" bindValue="code"
+                                    bindLabel="name">
+                                  </ng-select>
+                                </div>
+                              </div>
+                              <div class="col-12 col-md-1 position-relative">
+                                <div class="form-group">
+                                  <label for="from" class="d-flex">AirLine
+                                    <a class="p-0" *ngIf="keys?.includes(holidayPackageFlexAirline)"
+                                      style="display: inline-block; margin-left: auto" (click)="
+                                        rowsControlsFlexAirline[i].isCollapsedFlexAirline =
+                                          !rowsControlsFlexAirline[i]?.isCollapsedFlexAirline
+                                      " [attr.aria-controls]="'flexAirLine_' + i"><i class="ft-zap text-info"
+                                        style="font-size: 16px; padding: 0px 4px; align-items: center; display: flex"></i></a>
+                                  </label>
+                                  <input id="airline" type="text" #typeaheadInstance="ngbTypeahead"
+                                    class="form-control square" (keydown)="typeaheadKeydown($event)"
+                                    [resultTemplate]="searchResultTemplateAirLine" [inputFormatter]="formatterAirline"
+                                    formControlName="airlineCode" [ngbTypeahead]="onSearchPoint" />
+
+                                  <ng-template #searchResultTemplateAirLine let-r="result" let-t="term">
+                                    <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+                                  </ng-template>
+                                </div>
+                              </div>
+                              <div id="flexAirLine_{{ i }}"
+                                [ngbCollapse]="rowsControlsFlexAirline[i]?.isCollapsedFlexAirline"
+                                class="popover fade show bs-popover-bottom ml-4" style="
+                                  position: absolute;
+                                  top: 9px;
+                                  margin-top: 100px;
+                                  left: 0px;
+                                  will-change: transform;
+                                  transform: translate(-50px, -84px);
+                                  max-width: 806px;
+                                  width: 320px;
+                                ">
+                                <div class="text-right">
+                                  <div (click)="
+                                      rowsControlsFlexAirline[i].isCollapsedFlexAirline =
+                                        !rowsControlsFlexAirline[i]?.isCollapsedFlexAirline
+                                    " [attr.aria-expanded]="!rowsControlsFlexAirline[i]?.isCollapsedFlexAirline"
+                                    class="pointer" [attr.aria-controls]="'isCollapsedFlexAirline' + i">
+                                    <i class="ft-x" aria-hidden="true" style="font-size: 18px"></i>
+                                  </div>
+                                </div>
+                                <div class="arrow" style="right: 43px"></div>
+                                <div class="row" style="padding: 15px">
+                                  <div class="col-12 col-md-12">
+                                    <div class="form-group">
+                                      <label for="flexAirLine">Flex AirLine </label>
+                                      <div class="form-control square form-control-custom">
+                                        <span class="selected-item" *ngFor="let item of selectedFlexAirLineItems[i]">
+                                          {{ item }}
+                                          <span class="close-selected"
+                                            (click)="closeFlex(item, 'flexAirline', i)">&nbsp;x</span>
+                                        </span>
+                                        <input id="flexAirLine" style="width: 100%" type="text" (selectItem)="
+                                            onSelectedItemsFlexAirLine($event, 'flexAirline', i);
+                                            flexAirlineInput.value = ''
+                                          " #flexAirlineInput class="multiSelectInputNoBorder"
+                                          (keydown)="typeaheadKeydown($event)" [resultTemplate]="searchResultTemplate"
+                                          formControlName="flexAirLineCode" [inputFormatter]="formatterAirline"
+                                          [ngbTypeahead]="onSearchAirLineMulitiselect" />
+
+                                        <ng-template #searchResultTemplate let-r="result" let-t="term">
+                                          <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+                                        </ng-template>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <ul class="list-unstyled mb-0 ml-1 mt-3">
+                                <li class="d-inline-block mr-2 mb-2">
+                                  <div class="checkbox checkbox-primary">
+                                    <input type="checkbox" id="{{ 'color-checkbox-1' + i }}"
+                                      formControlName="validateCarrier" />
+                                    <label for="{{ 'color-checkbox-1' + i }}"><span>Validate Carrier</span></label>
+                                  </div>
+                                </li>
+                              </ul>
+                              <div class="col-12 col-md-2">
+                                <div class="form-group">
+                                  <label for="bdfrom" class="form-label">Budget From</label>
+                                  <input type="number" class="form-control square" formControlName="budgetFrom"
+                                    id="bdfrom" />
+                                </div>
+                              </div>
+                              <div class="col-12 col-md-2">
+                                <div class="form-group">
+                                  <label for="bdto" class="form-label">Budget To</label>
+                                  <input type="number" class="form-control square" formControlName="budgetTo"
+                                    id="bdto" />
+                                </div>
+                              </div>
+                            </div>
+                          </ng-template>
+                        </li>
+                        <li [ngbNavItem]="5" *ngIf="keys?.includes(visaTab)">
+                          <a ngbNavLink>Visa</a>
+                          <ng-template ngbNavContent>
+                            <div id="addons1">
+                              <div class="addons-cl" id="addons_collapse_{{ i }}">
+                                <div formArrayName="visaAddons">
+                                  <div *ngFor="let visa of visaAddons(i).controls; let visaAddonsIndex = index"
+                                    [formGroupName]="visaAddonsIndex">
+                                    <div class="form-row">
+                                      <div formGroupName="requiredPassenger" class="col-md-2 col-12">
+                                        <div class="form-group mb-2">
+                                          <label for="Pax">Pax</label>
+                                          <ng-select [multiple]="true" [items]="addonsPassengers[i]"
+                                            groupBy="selectedAllGroup" [selectableGroup]="true"
+                                            [selectableGroupAsModel]="false" bindLabel="paxType" placeholder="Select"
+                                            [multiple]="true" [closeOnSelect]="false" formControlName="passengers">
+                                            <ng-template ng-optgroup-tmp let-item="item" let-item$="item$"
+                                              let-index="index">
+                                              <input id="item-{{ index }}" type="checkbox" [ngModel]="item$?.selected"
+                                                [ngModelOptions]="{ standalone: true }" />
+                                              {{ item.selectedAllGroup }}
+                                            </ng-template>
+                                            <ng-template ng-option-tmp let-item="item" let-item$="item$"
+                                              let-index="index">
+                                              <input id="item-{{ index }}" type="checkbox" name="item-{{ index }}"
+                                                [ngModel]="item$?.selected" [ngModelOptions]="{ standalone: true }" />
+                                              {{ item.paxType }}
+                                            </ng-template>
+
+                                            <ng-template ng-multi-label-tmp let-items="items">
+                                              <div class="ng-value" *ngFor="let item of items | slice: 0:0">
+                                                <span class="ng-value-icon right" (click)="clear(item)"
+                                                  aria-hidden="true">×</span>
+                                              </div>
+                                              <div class="ng-value" *ngIf="items?.length > 0">
+                                                <span class="ng-value-label">
+                                                  {{
+                                                  items?.length === addonsPassengers[i]?.length
+                                                  ? 'All'
+                                                  : items?.length
+                                                  }}
+                                                  selected</span>
+                                              </div>
+                                            </ng-template>
+                                          </ng-select>
+                                        </div>
+                                      </div>
+                                      <div class="col-md-4 col-12">
+                                        <div class="form-group mb-2">
+                                          <label for="Remarks">Remarks</label>
+                                          <input type="text" id="Remarks" placeholder="Enter Remarks"
+                                            class="form-control square" name="Remarks" formControlName="remarks" />
+                                        </div>
+                                      </div>
+                                      <div class="d-flex ml-1" style="margin-top: 1.9rem !important">
+                                        <ul class="list-unstyled mb-0">
+                                          <li class="d-inline-block mr-2 mb-2">
+                                            <div class="checkbox checkbox-primary">
+                                              <input type="checkbox" id="{{ 'checkbox2' + i + visaAddonsIndex }}"
+                                                formControlName="required" />
+                                              <label for="{{ 'checkbox2' + i + visaAddonsIndex }}" placement="bottom"
+                                                ngbTooltip="Required"><span>Req</span></label>
+                                            </div>
+                                          </li>
+                                        </ul>
+                                      </div>
+                                      <div class="d-flex align-items-center">
+                                        <div (click)="addVisaAddons(i)" type="button" class="text-primary mt-2 p-0">
+                                          <i class="ft-plus-circle" aria-hidden="true" style="font-size: 28px"></i>
+                                        </div>
+                                        <div (click)="removeVisaAddons(i, visaAddonsIndex)" type="button"
+                                          class="text-primary p-0 ml-2 mt-2">
+                                          <i class="ft-minus-circle" aria-hidden="true" style="font-size: 28px"></i>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </ng-template>
+                        </li>
+                        <li [ngbNavItem]="6" *ngIf="keys?.includes(insuranceTab)">
+                          <a ngbNavLink>Insurance</a>
+                          <ng-template ngbNavContent>
+                            <div id="addons1">
+                              <div class="addons-cl" id="addons_collapse_{{ i }}">
+                                <div formArrayName="insuranceAddons">
+                                  <div *ngFor="
+                                      let insurance of insuranceAddons(i).controls;
+                                      let insuranceAddonsIndex = index
+                                    " [formGroupName]="insuranceAddonsIndex">
+                                    <div class="form-row">
+                                      <div formGroupName="requiredPassenger" class="col-md-2 col-12">
+                                        <div class="form-group mb-2">
+                                          <label for="Pax">Pax</label>
+                                          <ng-select [multiple]="true" [items]="addonsPassengers[i]"
+                                            groupBy="selectedAllGroup" [selectableGroup]="true"
+                                            [selectableGroupAsModel]="false" bindLabel="paxType" placeholder="Select"
+                                            [multiple]="true" [closeOnSelect]="false" formControlName="passengers">
+                                            <ng-template ng-optgroup-tmp let-item="item" let-item$="item$"
+                                              let-index="index">
+                                              <input id="item-{{ index }}" type="checkbox" [ngModel]="item$?.selected"
+                                                [ngModelOptions]="{ standalone: true }" />
+                                              {{ item.selectedAllGroup }}
+                                            </ng-template>
+                                            <ng-template ng-option-tmp let-item="item" let-item$="item$"
+                                              let-index="index">
+                                              <input id="item-{{ index }}" type="checkbox" name="item-{{ index }}"
+                                                [ngModel]="item$?.selected" [ngModelOptions]="{ standalone: true }" />
+                                              {{ item.paxType }}
+                                            </ng-template>
+
+                                            <ng-template ng-multi-label-tmp let-items="items">
+                                              <div class="ng-value" *ngFor="let item of items | slice: 0:0">
+                                                <span class="ng-value-icon right" (click)="clear(item)"
+                                                  aria-hidden="true">×</span>
+                                              </div>
+                                              <div class="ng-value" *ngIf="items?.length > 0">
+                                                <span class="ng-value-label">
+                                                  {{
+                                                  items?.length === addonsPassengers[i]?.length
+                                                  ? 'All'
+                                                  : items?.length
+                                                  }}
+                                                  selected</span>
+                                              </div>
+                                            </ng-template>
+                                          </ng-select>
+                                        </div>
+                                      </div>
+                                      <div class="col-md-4 col-12">
+                                        <div class="form-group mb-2">
+                                          <label for="Remarks">Remarks</label>
+                                          <input type="text" id="Remarks" placeholder="Enter Remarks"
+                                            class="form-control square" name="Remarks" formControlName="remarks" />
+                                        </div>
+                                      </div>
+                                      <div class="d-flex ml-1" style="margin-top: 1.9rem !important">
+                                        <ul class="list-unstyled mb-0">
+                                          <li class="d-inline-block mr-2 mb-2">
+                                            <div class="checkbox checkbox-primary">
+                                              <input type="checkbox" id="{{ 'checkbox2' + i + insuranceAddonsIndex }}"
+                                                formControlName="required" />
+                                              <label for="{{ 'checkbox2' + i + insuranceAddonsIndex }}"
+                                                placement="bottom" ngbTooltip="Required"><span>Req</span></label>
+                                            </div>
+                                          </li>
+                                        </ul>
+                                      </div>
+                                      <div class="d-flex align-items-center">
+                                        <div (click)="addInsuranceAddons(i)" type="button"
+                                          class="text-primary mt-2 p-0">
+                                          <i class="ft-plus-circle" aria-hidden="true" style="font-size: 28px"></i>
+                                        </div>
+                                        <div (click)="removeInsuranceAddons(i, insuranceAddonsIndex)" type="button"
+                                          class="text-primary p-0 ml-2 mt-2">
+                                          <i class="ft-minus-circle" aria-hidden="true" style="font-size: 28px"></i>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </ng-template>
+                        </li>
+                        <li [ngbNavItem]="7" *ngIf="keys?.includes(exclusionsTab)">
+                          <a ngbNavLink>Exclusions</a>
+                          <ng-template ngbNavContent>
+                            <div id="Exclusionsaddons">
+                              <div class="addons-cl" id="exclusionsAddons_collapse_{{ i }}">
+                                <div formArrayName="exclusionsAddons">
+                                  <div *ngFor="
+                                      let exclusions of flightExclusionsAddons(i).controls;
+                                      let ExclusionsAddonsIndex = index
+                                    " [formGroupName]="ExclusionsAddonsIndex">
+                                    <div class="form-row">
+                                      <div class="col-md-2 col-12">
+                                        <div class="form-group mb-2">
+                                          <label for="addons">Addons</label>
+                                          <input type="search" id="addons" (keydown)="typeaheadKeydown($event)"
+                                            [resultTemplate]="searchResultAddonsTemplate"
+                                            #typeaheadInstance="ngbTypeahead" class="form-control square" name="addons"
+                                            formControlName="addOnType" [inputFormatter]="flightAddonsformatter"
+                                            [ngbTypeahead]="onSearchFlightAddons" />
+                                          <ng-template #searchResultAddonsTemplate let-r="result" let-t="term">
+                                            <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+                                          </ng-template>
+                                        </div>
+                                      </div>
+
+                                      <div formGroupName="requiredPassenger" class="col-md-2 col-12">
+                                        <div class="form-group mb-2">
+                                          <label for="Pax">Pax</label>
+                                          <ng-select [multiple]="true" [items]="addonsPassengers[i]"
+                                            groupBy="selectedAllGroup" [selectableGroup]="true"
+                                            [selectableGroupAsModel]="false" bindLabel="paxType" placeholder="Select"
+                                            [multiple]="true" [closeOnSelect]="false" formControlName="passengers">
+                                            <ng-template ng-optgroup-tmp let-item="item" let-item$="item$"
+                                              let-index="index">
+                                              <input id="item-{{ index }}" type="checkbox" [ngModel]="item$?.selected"
+                                                [ngModelOptions]="{ standalone: true }" />
+                                              {{ item.selectedAllGroup }}
+                                            </ng-template>
+                                            <ng-template ng-option-tmp let-item="item" let-item$="item$"
+                                              let-index="index">
+                                              <input id="item-{{ index }}" type="checkbox" name="item-{{ index }}"
+                                                [ngModel]="item$?.selected" [ngModelOptions]="{ standalone: true }" />
+                                              {{ item.paxType }}
+                                            </ng-template>
+
+                                            <ng-template ng-multi-label-tmp let-items="items">
+                                              <div class="ng-value" *ngFor="let item of items | slice: 0:0">
+                                                <span class="ng-value-icon right" (click)="clear(item)"
+                                                  aria-hidden="true">×</span>
+                                              </div>
+                                              <div class="ng-value" *ngIf="items?.length > 0">
+                                                <span class="ng-value-label">
+                                                  {{
+                                                  items?.length === addonsPassengers[i]?.length
+                                                  ? 'All'
+                                                  : items?.length
+                                                  }}
+                                                  selected</span>
+                                              </div>
+                                            </ng-template>
+                                          </ng-select>
+                                        </div>
+                                      </div>
+
+                                      <div class="d-flex ml-1" style="margin-top: 1.9rem !important">
+                                        <ul class="list-unstyled mb-0">
+                                          <li class="d-inline-block mr-2 mb-2">
+                                            <div class="checkbox checkbox-primary">
+                                              <input type="checkbox" id="{{ 'checkbox2' + i + ExclusionsAddonsIndex }}"
+                                                formControlName="required" />
+                                              <label for="{{ 'checkbox2' + i + ExclusionsAddonsIndex }}"
+                                                placement="bottom" ngbTooltip="Required"><span>Req</span></label>
+                                            </div>
+                                          </li>
+                                        </ul>
+                                      </div>
+                                      <div class="d-flex align-items-center">
+                                        <div (click)="addExclusionsAddons(i)" type="button"
+                                          class="text-primary mt-2 p-0">
+                                          <i class="ft-plus-circle" aria-hidden="true" style="font-size: 28px"></i>
+                                        </div>
+                                        <div (click)="removeExclusionsAddons(i, ExclusionsAddonsIndex)" type="button"
+                                          class="text-primary p-0 ml-2 mt-2">
+                                          <i class="ft-minus-circle" aria-hidden="true" style="font-size: 28px"></i>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </ng-template>
+                        </li>
+                        <li [ngbNavItem]="8" *ngIf="keys?.includes(forexTab)">
+                          <a ngbNavLink>Forex</a>
+                          <ng-template ngbNavContent>
+                            <div id="forexaddons">
+                              <div class="addons-cl" id="forexAddons_collapse_{{ i }}">
+                                <div formArrayName="forexAddons">
+                                  <div *ngFor="let forex of forexAddons(i).controls; let forexAddonsIndex = index"
+                                    [formGroupName]="forexAddonsIndex">
+                                    <div class="form-row">
+                                      <div class="col-md-2 col-12">
+                                        <div class="form-group mb-2">
+                                          <label for="currency">Currency</label><select id="currency" name="currency"
+                                            class="form-control square" formControlName="currency"
+                                            (change)="onChangeFromCurrency($event.target.value, i, forexAddonsIndex)"
+                                            [ngClass]="{
+                                              'is-invalid':
+                                                forexAddons(i).controls[forexAddonsIndex].get('currency').errors &&
+                                                ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                                  forexAddons(i).controls[forexAddonsIndex].get('currency').touched)
+                                            }">
+                                            <option value="">Choose</option>
+                                            <option *ngFor="let forexcurrency of forexCurrency"
+                                              [value]="forexcurrency.code">
+                                              {{ forexcurrency.name }}
+                                            </option>
+                                          </select>
+                                          <div class="invalid-feedback" *ngIf="
+                                              forexAddons(i).controls[forexAddonsIndex].get('currency').errors
+                                                ?.required &&
+                                              ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                                forexAddons(i).controls[forexAddonsIndex].get('currency').touched)
+                                            ">
+                                            required
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="col-md-2 col-12">
+                                        <div class="form-group mb-2">
+                                          <label for="wantCurrency">Want Currency</label><select id="wantCurrency"
+                                            name="wantCurrency" class="form-control square"
+                                            formControlName="wantCurrency"
+                                            (change)="onChangeToCurrency($event.target.value, i, forexAddonsIndex)"
+                                            [ngClass]="{
+                                              'is-invalid':
+                                                forexAddons(i).controls[forexAddonsIndex].get('wantCurrency').errors &&
+                                                ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                                  forexAddons(i).controls[forexAddonsIndex].get('wantCurrency').touched)
+                                            }">
+                                            <option value="">Choose</option>
+                                            <option *ngFor="let forexcurrency of forexCurrency"
+                                              [value]="forexcurrency.code">
+                                              {{ forexcurrency.name }}
+                                            </option>
+                                          </select>
+                                          <div class="invalid-feedback" *ngIf="
+                                              forexAddons(i).controls[forexAddonsIndex].get('wantCurrency').errors
+                                                ?.required &&
+                                              ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                                forexAddons(i).controls[forexAddonsIndex].get('wantCurrency').touched)
+                                            ">
+                                            required
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="col-md-2 col-12">
+                                        <div class="form-group mb-2">
+                                          <label for="mop">MOP</label><select id="mop" name="mop"
+                                            class="form-control square" formControlName="mop"
+                                            (change)="onChangeForexMOP($event.target.value, i, forexAddonsIndex)"
+                                            [ngClass]="{
+                                              'is-invalid':
+                                                forexAddons(i).controls[forexAddonsIndex].get('mop').errors &&
+                                                ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                                  forexAddons(i).controls[forexAddonsIndex].get('mop').touched)
+                                            }">
+                                            <option value="">Choose</option>
+                                            <option *ngFor="let mop of forexMOP" [value]="mop.code">
+                                              {{ mop.name }}
+                                            </option>
+                                          </select>
+                                          <div class="invalid-feedback" *ngIf="
+                                              forexAddons(i).controls[forexAddonsIndex].get('mop').errors?.required &&
+                                              ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                                forexAddons(i).controls[forexAddonsIndex].get('mop').touched)
+                                            ">
+                                            required
+                                          </div>
+                                        </div>
+                                      </div>
+
+                                      <div class="col-md-1 col-12">
+                                        <div class="form-group mb-2">
+                                          <label for="amount">Amount</label><input (keypress)="validatenumber($event)"
+                                            (change)="onChangeForexAmount($event.target.value, i, forexAddonsIndex)"
+                                            forexdecimalPipe type="text" placeholder="Amount" id="amount" name="amount"
+                                            class="form-control square" formControlName="amount" [ngClass]="{
+                                              'is-invalid':
+                                                forexAddons(i).controls[forexAddonsIndex].get('amount').errors &&
+                                                ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                                  forexAddons(i).controls[forexAddonsIndex].get('amount').touched)
+                                            }" />
+                                          <div class="invalid-feedback" *ngIf="
+                                              forexAddons(i).controls[forexAddonsIndex].get('amount').errors
+                                                ?.required &&
+                                              ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                                forexAddons(i).controls[forexAddonsIndex].get('amount').touched)
+                                            ">
+                                            required
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="col-md-2 col-12">
+                                        <div class="form-group mb-2">
+                                          <label for="needByDate">Need By Date</label><input type="date" id="needByDate"
+                                            name="needByDate" class="form-control square"
+                                            formControlName="needByDate" />
+                                        </div>
+                                      </div>
+                                      <div class="col-md-2 col-12">
+                                        <div class="form-group mb-2">
+                                          <label for="note">Note</label>
+                                          <textarea id="note" rows="2" placeholder="Note" name="note"
+                                            class="form-control square description-box" formControlName="note">
+                                          </textarea>
+                                        </div>
+                                      </div>
+                                      <div class="d-flex align-items-center">
+                                        <div (click)="addForexAddons(i)" type="button" class="text-primary mt-2 p-0">
+                                          <i class="ft-plus-circle" aria-hidden="true" style="font-size: 28px"></i>
+                                        </div>
+                                        <div (click)="removeForexAddons(i, forexAddonsIndex)" type="button"
+                                          class="text-primary p-0 ml-2 mt-2">
+                                          <i class="ft-minus-circle" aria-hidden="true" style="font-size: 28px"></i>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </ng-template>
+                        </li>
+
+                        <li [ngbNavItem]="9" *ngIf="keys?.includes(carRentalTab)" [destroyOnHide]="false">
+                          <a ngbNavLink>Car Rental</a>
+                          <ng-template ngbNavContent>
+                            <app-package-dynamic-form
+                              (selectedItem)="onPackageDynamicForm($event,i)" (selectedItemRemove)="onPackageDynamicFormDelete($event,i)" [flightSegmentIndex]="i" [viewCarRental]="viewCarRentalForm"></app-package-dynamic-form>
+
+
+                          </ng-template>
+                        </li>
+                        <li class="add-destination-btn">
+                          <button type="button" class="btn btn-primary mr-1 btn-text" (click)="addFlight(i)"
+                            *ngIf="flights().length === i + 1">
+                            Add Destination
+                          </button>
+                        </li>
+                      </ul>
+
+                      <div [ngbNavOutlet]="nav" class="mt-2"></div>
+                    </div>
+                    <!-- tabs end here  -->
+                  </div>
+                  <!-- <div class="mt-1 full-right card srchbarright">
+            <app-products-navigations [activeId]="4"></app-products-navigations>
+          </div> -->
+                </div>
+              </div>
+            </div>
+            <hr />
+            <div class="form-row align-items-center justify-content-end hrline">
+              <div class="col-md-12 text-right mt-1 mb-2">
+                <div class="pull-left d-flex sm-float-none">
+                  <!-- <button type="button" *ngIf="isEdit" (click)="onUpdateFlightForm()" class="btn btn-info">
+              <i class="ft-bookmark"></i> Update
+            </button> -->
+                  <button type="button" *ngIf="isEdit && keys?.includes(holidayPackageUpdateBtn)"
+                    (click)="onSubmitAlert()" class="btn btn-info">
+                    <i class="ft-bookmark"></i> Update
+                  </button>
+
+                  <button type="button" *ngIf="!isEdit && keys?.includes(holidayPackageSaveBtn)"
+                    (click)="onSubmitFlightForm()" class="btn btn-primary btn-mobile">
+                    <i class="ft-bookmark"></i> Save
+                  </button>
+                </div>
+                <div class="pull-right" *ngIf="keys?.includes(holidayPackageConfirmBtn)">
+                  <!--  redirectToItinerary() -->
+
+                  <button type="button" (click)="navigatedToItineraryView()" class="btn btn-outline-primary mr-2"
+                    *ngIf="isEdit&&productsAvailability">
+                    <i class="icon-map mr-1"></i>
+                    View Itinerary
+                  </button>
+                  <button type="button" (click)="navigatedToItineraryRFQ()" class="btn btn-outline-primary mr-2"
+                    *ngIf="isEdit&&productsAvailability">
+                    <i class="ft-navigation mr-1 "></i>
+                    Itinerary RFP
+                  </button>
+                  <button type="button" *ngIf="isEdit &&!productsAvailability"
+                    (click)="navigatedToPreviewPackagesList()" class="btn btn-outline-info mr-2">
+                    <i class="ft-codepen mr-1"></i> Preview
+                  </button>
+
+                  <button type="button" *ngIf="isEdit &&!productsAvailability" (click)="onCreateServiceRequest()"
+                    class="btn btn-outline-info mr-2">
+                    <i class="ft-check-square mr-1"></i> Confirm
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- <ngx-spinner size="medium" type="ball-circus" *ngIf="requestCreationLoading">
+  <p style="color: white" > Loading... </p>
+</ngx-spinner> -->
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#fff" type="ball-clip-rotate-multiple"
+  [fullScreen]="true" *ngIf="requestCreationLoading">
+  <p style="color: white"> Loading... </p>
+</ngx-spinner>

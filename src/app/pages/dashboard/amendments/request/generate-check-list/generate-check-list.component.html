@@ -1,0 +1,102 @@
+<section id="basic-hidden-label-form-layouts" *ngIf="flightCheckList &&flightCheckList.length>0">
+  <div class="row match-height">
+    <div class="col-lg-12 col-12">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title">Check List</h4>
+        </div>
+        <div class="card-content">
+          <div class="card-body">
+            <ul class="list-unstyled mb-0" >
+              <li class="d-inline-block mr-2 mb-2" >
+                <div class="checkbox">
+                  <input
+                  type="checkbox"
+                   name="selectAll"
+                   id="all_checkList_checkbox"
+                   value="selectAll"
+                   (change)="checkListUncheckAll()"
+                   [(ngModel)]="isCheckListMasterSelected"
+                   [ngModelOptions]="{standalone: true}"
+                   >
+                  <label for="all_checkList_checkbox">
+                    <span>Select All</span>
+                </label>
+                </div>
+              </li>
+            </ul>
+            <div *ngFor="let checkList of flightCheckList;  let checkListIndex = index;trackBy: trackByFn">
+              <ul class="list-unstyled mb-0" >
+                <li class="d-inline-block mr-2 mb-2" >
+                  <div class="checkbox">
+                    <input type="checkbox"
+                     value="{{checkList}}"
+                     id="checkList_checkbox1-{{checkListIndex}}"
+                     (change)="checkListAllSelected()"
+                     [(ngModel)]="checkList.check_flag"
+                     [ngModelOptions]="{standalone: true}"
+                     >
+                    <label for="checkList_checkbox1-{{checkListIndex}}">
+                       <span *ngIf="this.check_list_action_type === 'flight';else else_hotel_content">
+                        {{checkList.passenger_name  }}
+                        <i class="ft-arrow-right"></i>
+                        {{checkList.request_for_text}}
+                        <span *ngIf="checkList.request_for==='cancel_ticket'; else else_content">
+                         {{checkList.from}}
+                         {{checkList.to}}
+                        </span>
+                        <ng-template #else_content>
+                         {{'s'+checkList.segment_number}}
+                         {{'from ' +checkList.from}}
+                         {{'to '+ checkList.to}}
+                        </ng-template>
+                       </span>
+                       <ng-template #else_hotel_content>
+                        Room {{checkList.room_number  }}
+                        <i class="ft-arrow-right"></i>
+                        {{checkList.request_for_text}}
+                        <span *ngIf="checkList.request_for==='cancel_ticket'; else else_content">
+                         {{checkList.from}}
+                         {{checkList.to}}
+                        </span>
+                        <ng-template #else_content>
+                         {{'from ' +checkList.from}}
+                         {{'to '+ checkList.to}}
+                        </ng-template>
+                       </ng-template>
+                  </label>
+                  </div>
+                </li>
+                </ul>
+              </div>
+              <div class="pull-left d-flex mb-2 mt-2" >
+                <button
+                  type="button"
+                  class="btn btn-primary mr-2"
+                  (click)="onSubmitGenerateCheckList('SAME')"
+                >
+                  <i class="ft-bookmark mr-1"></i>
+                 Confirm Check List
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-primary mr-2"
+                  (click)="onSubmitGenerateCheckList('REDIRECT_TO_PNR')"
+                >
+                  <i class="ft-bookmark mr-1"></i>
+                 Confirm Check List & Go To Booking
+                </button>
+                <button
+                type="button"
+                (click)="checkListCancel()"
+                class="btn"
+              >
+              Cancel
+              </button>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

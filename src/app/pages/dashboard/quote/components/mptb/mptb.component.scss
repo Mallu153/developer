@@ -1,0 +1,50 @@
+.flight-details-info .airline-image {
+  border: 1px solid #fc3;
+  padding: 1.5px;
+  box-shadow: -3px 3px 3px 0 rgba(25, 42, 70, 0.11);
+}
+.ng-select.custom .ng-select-container  {
+  border-radius: 1px !important;
+}
+.edit-ng-select-readonly{
+  pointer-events: none;
+  cursor: not-allowed;
+}
+.link{
+  list-style: none;
+}
+
+
+.stopscontainer {
+  border-top: 2px solid #b6b6b6;
+  display: flex;
+  list-style: none;
+  padding: 0;
+  justify-content: space-between;
+  align-items: stretch;
+  align-content: stretch;
+  margin-bottom: 0;
+  margin-top: 15px;
+}
+.stopscontainer .link::after {
+  content: "";
+  width: 10px;
+  height: 10px;
+  background: #fff;
+  position: absolute;
+  border-radius: 10px;
+  top: -16px;
+  left: 50%;
+  transform: translatex(-50%);
+  border: 2px solid #b6b6b6;
+}
+.stopscontainer .link {
+  position: relative;
+  margin-top: 10px;
+  width: 100%;
+  text-align: center;
+}
+.stopscontainer .link a {
+  text-decoration: none;
+  color: #b6b6b6;
+}

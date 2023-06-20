@@ -1,0 +1,198 @@
+
+<div class="container-fluid">
+  <div class="modal-header">
+    <h4 class="modal-title py-1">Send Email</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="rfqEmailForm" id="compose-form">
+      <div class="card-content">
+        <div class="card-body">
+          <div class="form-group">
+            <label for="compose-email-from">from</label>
+            <input type="text" id="compose-email-from" class="form-control" placeholder="From" formControlName="from" readonly>
+          </div>
+          <div class="form-group">
+            <label class="sr-only" for="compose-email-to">To</label>
+            <input type="email" id="compose-email-to" class="form-control" placeholder="To" formControlName="to_address">
+          </div>
+          <div class="form-group">
+            <label class="sr-only" for="compose-email-cc">CC</label>
+            <input type="text" id="compose-email-cc" class="form-control" placeholder="CC" formControlName="cc_address">
+          </div>
+          <div class="form-group">
+            <label class="sr-only" for="compose-email-subject">Subject</label>
+            <input type="text" id="compose-email-subject" class="form-control" placeholder="Subject" formControlName="subject"
+            [ngClass]="{ 'is-invalid': (submitted || f.subject.touched) && f.subject.errors }">
+            <div
+                    *ngIf="(submitted || f.subject.touched) && f.subject.errors"
+                    class="invalid-feedback"
+                  >
+                    <div *ngIf="f.subject.errors?.required">these field is required</div>
+                  </div>
+          </div>
+
+          <!-- <div class="form-group">
+            <label class="sr-only" for="compose-email-bcc">BCC</label>
+            <input type="text" id="compose-email-bcc" class="form-control" placeholder="BCC" formControlName="bb">
+          </div> -->
+
+          <div class="snow-container border rounded">
+            <quill-editor formControlName="mail_body"  [ngClass]="{ 'is-invalid': (submitted || f.mail_body.touched) && f.mail_body.errors }">
+            </quill-editor>
+            <div
+            *ngIf="(submitted || f.mail_body.touched) && f.mail_body.errors"
+            class="invalid-feedback"
+          >
+            <div *ngIf="f.mail_body.errors?.required">these field is required</div>
+          </div>
+            <!-- <quill-editor customToolbarPosition="bottom" format="object" formControlName="mail_body">
+              <div quill-editor-toolbar>
+                <span class="ql-formats">
+                  <button class="ql-bold" [title]="'Bold'"></button>
+                  <button class="ql-italic"></button>
+                  <button class="ql-underline"></button>
+                  <button class="ql-link"></button>
+                  <button class="ql-image"></button>
+                </span>
+              </div>
+            </quill-editor> -->
+          </div>
+          <div class="form-group mt-2">
+            <div class="custom-file">
+              <i class="fa fa-spinner fa-spin " *ngIf="isloading"></i>
+              <input
+               type="file"
+               class="custom-file-input"
+               (change)="onFileChange($event)"
+              multiple=""
+              accept="application/msword, application/vnd.ms-excel,
+              application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.csv,
+              application/vnd.ms-powerpoint,
+              text/plain, application/pdf, .jpg, .jpeg, .png"
+                id="compose-email-attach"
+                >
+              <label class="custom-file-label" for="compose-email-attach">Attach file</label>
+            </div>
+          </div>
+          <!-- <div *ngIf="rfqEmailForm.value.attachments">
+          <a href="{{rfqEmailForm.value.attachments}}" target="_blank">
+            {{rfqEmailForm.value.attachments}}
+          </a>
+        </div> -->
+        <div class="col-12 ">
+          <div  *ngFor="let img of imageResponseArray;let i = index">
+            <div class="form-group mb-1">
+              <span class="text p-1 more-highlight ">
+                <a href="{{img}}" target="_blank">{{img}} </a>
+                <p class="float-right more-highlight  mr-1" (click)="removeMultipleFiles(i,img)">
+                  <i class="ft-minus-circle more-highlight " aria-hidden="true"></i>
+                </p>
+              </span>
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+      <div class=" d-flex justify-content-end pt-0">
+        <button type="reset"(click)="activeModal.close('Close click')"  class="btn bg-light-secondary compose-cancel-btn mr-2">
+          <i class='ft-x m-0 mr-sm-1'></i>
+          <span class="d-sm-inline-block d-none">Cancel</span>
+        </button>
+        <button type="submit" class="btn-send btn btn-primary" (click)="onSubmitForm()">
+          <i class='ft-send m-0 mr-sm-1'></i>
+          <span class="d-sm-inline-block d-none">Send</span>
+        </button>
+      </div>
+    </form>
+  </div>
+  <!-- <div class="modal-footer">
+    <button type="button" class="btn btn-light" (click)="activeModal.close('Close click')">Close</button>
+  </div> -->
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <section id="compose-email">
+  <div class="compose-new-mail-sidebar">
+    <span class="compose-sidebar-close-icon" >
+      <i class="ft-x"></i>
+    </span>
+    <div class="card bg-transparent shadow-none quill-wrapper m-0">
+      <div class="card-header">
+        <h3 class="card-title">New Message</h3>
+      </div>
+      <form action="#" id="compose-form">
+        <div class="card-content">
+          <div class="card-body">
+            <div class="form-group">
+              <label for="compose-email-from">from</label>
+              <input type="text" id="compose-email-from" class="form-control" placeholder="user@example.com" disabled>
+            </div>
+            <div class="form-group">
+              <label class="sr-only" for="compose-email-to">To</label>
+              <input type="email" id="compose-email-to" class="form-control" placeholder="To" required>
+            </div>
+            <div class="form-group">
+              <label class="sr-only" for="compose-email-subject">Subject</label>
+              <input type="text" id="compose-email-subject" class="form-control" placeholder="Subject">
+            </div>
+            <div class="form-group">
+              <label class="sr-only" for="compose-email-cc">CC</label>
+              <input type="text" id="compose-email-cc" class="form-control" placeholder="CC">
+            </div>
+            <div class="form-group">
+              <label class="sr-only" for="compose-email-bcc">BCC</label>
+              <input type="text" id="compose-email-bcc" class="form-control" placeholder="BCC">
+            </div>
+
+            <div class="snow-container border rounded">
+
+              <quill-editor customToolbarPosition="bottom" format="object">
+                <div quill-editor-toolbar>
+                  <span class="ql-formats">
+                    <button class="ql-bold" [title]="'Bold'"></button>
+                    <button class="ql-italic"></button>
+                    <button class="ql-underline"></button>
+                    <button class="ql-link"></button>
+                    <button class="ql-image"></button>
+                  </span>
+                </div>
+              </quill-editor>
+            </div>
+            <div class="form-group mt-2">
+              <div class="custom-file">
+                <input type="file" class="custom-file-input" id="compose-email-attach">
+                <label class="custom-file-label" for="compose-email-attach">Attach file</label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer d-flex justify-content-end pt-0">
+          <button type="reset" class="btn bg-light-secondary compose-cancel-btn mr-2">
+            <i class='ft-x m-0 mr-sm-1'></i>
+            <span class="d-sm-inline-block d-none">Cancel</span>
+          </button>
+          <button type="submit" class="btn-send btn btn-primary">
+            <i class='ft-send m-0 mr-sm-1'></i>
+            <span class="d-sm-inline-block d-none">Send</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section> -->
+

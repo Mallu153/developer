@@ -1,0 +1,199 @@
+<section id="basic-hidden-label-form-layouts">
+  <div class="row match-height">
+    <div class="col-lg-12 col-12">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title">{{pageTitle}}</h4>
+        </div>
+        <div class="card-content">
+          <div class="card-body">
+            <form [formGroup]="packageSearchForm">
+              <div class="form-row">
+                <div class="col-md-2 col-12">
+                  <div class="form-group mb-2">
+                    <label for="srNumber">Sr No</label>
+                    <input type="number" id="srNumber" class="form-control square" placeholder="Sr No" name="srNumber" formControlName="srId">
+                  </div>
+                </div>
+                <div class="col-md-3 col-12">
+                  <label for="customer">Customer</label>
+                  <ng-select
+                  class="custom"
+                  [items]="customer$ | async"
+                  bindLabel="businessName"
+                  [minTermLength]="minLengthcustomerTerm"
+                  bindValue="customerId"
+                  [closeOnSelect]="true"
+                  [loading]="customerLoading"
+                  typeToSearchText="Please enter {{ minLengthcustomerTerm }} or more characters"
+                  [typeahead]="customerInput$"
+                  (change)="onChangeCustomer($event)"
+                  formControlName="customerId"
+                >
+                </ng-select>
+                </div>
+                <div class="col-md-2 col-12">
+                  <div class="form-group mb-2">
+                    <label for="customerEmail">Customer E-mail</label>
+                    <input type="email" id="customerEmail" formControlName="customerEmail"  class="form-control square" placeholder="Customer E-mail" name="customerEmail">
+                  </div>
+                </div>
+                <div class="col-md-2 col-12">
+                  <div class="form-group mb-2">
+                    <label for="customerPhoneNo">Customer Phone No</label>
+                    <input type="number" id="customerPhoneNo"  formControlName="customerPhone" class="form-control square" placeholder="Customer Phone No" name="customerPhoneNo">
+                  </div>
+                </div>
+                <div class="col-md-3 col-12">
+                  <div class="form-group mb-2">
+                    <label for="customerContact">Contact</label>
+                    <ng-select #contactselect    class="custom"   formControlName="contactId" [items]="contactList" [searchable]="false" bindLabel="Requestor" bindValue="CUSTOMERCONTACTID">
+                      <ng-template ng-header-tmp>
+                          <input  class="form-control square"   (input)="contactselect.filter($event.target.value)"/>
+                      </ng-template>
+                  </ng-select>
+                  </div>
+                </div>
+
+              </div>
+              <div class="form-row">
+                <div class="col-md-2 col-12">
+                  <div class="form-group mb-2">
+                    <label for="srFromDate">Sr From</label>
+                    <input type="date" id="srFromDate"  formControlName="srFromCreationDate"  class="form-control square" name="srFromDate">
+                  </div>
+                </div>
+                <div class="col-md-2 col-12">
+                  <div class="form-group mb-2">
+                    <label for="srToDate">Sr To</label>
+                    <input type="date" id="srToDate"   formControlName="srToCreationDate" class="form-control square" name="srToDate">
+                  </div>
+                </div>
+              </div>
+              <div class="d-flex justify-content-end" >
+                <button type="button" class="btn btn-primary mr-2" (click)="onSearchForm()"><i class="ft-search mr-1"></i>
+                  {{ loading ? 'Loading...' : 'Search' }}</button>
+                <button type="button" class="btn btn-secondary" (click)="onResetForm()"><i class="ft-x mr-1"></i>Reset</button>
+              </div>
+            </form>
+
+            <fieldset class="form-group"   *ngIf="rows&&rows.length>0" >
+              <label
+                >Show
+                <select
+                  name="users-list-select"
+                  class="form-control form-control-sm d-inline-block width-100 p-right-25 pl-4 mx-1"
+                  (click)="updateLimit($event)"
+                >
+                  <option value="10">10</option>
+                  <option value="25">25</option>
+                  <option value="50">50</option>
+                  <option value="100">100</option>
+                </select>
+                entries</label
+              >
+            </fieldset>
+            <ngx-datatable
+              [rows]="rows"
+              [rowHeight]="'auto'"
+              #tableRowDetails
+              class="bootstrap core-bootstrap"
+              [limit]="limitRef"
+              [columnMode]="ColumnMode.force"
+              [headerHeight]="50"
+              [footerHeight]="50"
+              [scrollbarH]="true"
+              *ngIf="rows&&rows.length>0"
+            >
+              <ngx-datatable-column name="S.No" [width]="80">
+                <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-row="row">
+                  {{ rowIndex + 1 }}
+                </ng-template>
+              </ngx-datatable-column>
+
+              <ngx-datatable-column [width]="120" name="Request ID" prop="requestId">
+                <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                  <div >
+                    {{ value }}
+                  </div>
+                </ng-template>
+              </ngx-datatable-column>
+
+
+              <ngx-datatable-column [width]="150" name="Status" prop="packageLineStatusName">
+                <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                  <div class="{{ row.packageLineStatusClass }}">
+                    {{ value }}
+                  </div>
+                </ng-template>
+              </ngx-datatable-column>
+
+              <ngx-datatable-column name="Contact Name" prop="contactName" [width]="150"></ngx-datatable-column>
+              <ngx-datatable-column [width]="200"  name="Email" prop="customerEmail">
+                <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                  <div class="long--text">
+                    {{ value }}
+                  </div>
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column [width]="220" name="Phone Number" prop="customerPhone">
+                <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                  <div class="long--text">
+                    {{ value }}
+                  </div>
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column [width]="230" name="Customer" prop="customerName">
+                <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                  <div >
+                    {{ value }}
+                  </div>
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column [width]="350" name="Product Deatils" prop="product">
+                <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                  <span *ngFor="let productData of row.product; let i = index">
+                   <button type="button"  class="btn btn-link btn-sm  p-0" style="box-shadow: none !important; "   (click)="openRequestList(row.requestId,row.contactId)">{{productData}} - {{row.productLineCount[i]}}</button>
+                  </span>
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column [width]="350" name="Rfq Send" prop="optionSentCount">
+                <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                  <span *ngFor="let productData of row.product; let rfqSendIndex = index">
+                   <button type="button"  class="btn btn-link btn-sm  p-0" style="box-shadow: none !important; " (click)="openRfqList(row.requestId)">{{productData}} - {{row.optionSentCount[rfqSendIndex]}}</button>
+                  </span>
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column [width]="350" name="Rfq Received" prop="optionReceivedCount">
+                <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                  <span *ngFor="let productData of row.product; let rfqReceivedIndex = index">
+                   <button type="button"  class="btn btn-link btn-sm  p-0" style="box-shadow: none !important; " (click)="openRfqList(row.requestId)">{{productData}} - {{row.optionReceivedCount[rfqReceivedIndex]}}</button>
+                  </span>
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column [width]="350" name="Quotes" prop="optionQuoteCount">
+                <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                  <span *ngFor="let productData of row.product; let optionQuoteCountIndex = index">
+                   <button type="button"  class="btn btn-link btn-sm  p-0" style="box-shadow: none !important; ">{{productData}} - {{row.optionQuoteCount[optionQuoteCountIndex]}}</button>
+                  </span>
+                </ng-template>
+              </ngx-datatable-column>
+
+
+
+              <ngx-datatable-column [width]="140" name="Created Date" prop="srCreationDate">
+                <ng-template ngx-datatable-cell-template let-value="value">
+                  <!-- {{ value | date: 'dd-MMM-yyyy' }} -->
+                  {{ value  }}
+                </ng-template>
+              </ngx-datatable-column>
+
+            </ngx-datatable>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>

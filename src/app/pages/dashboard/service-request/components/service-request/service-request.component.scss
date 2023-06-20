@@ -1,0 +1,34 @@
+.srchbarright{ width: 40px; position: absolute; right: 0px; top: 0;}
+.nav-tabs {
+  /* border-bottom: 1px solid #dee2e6; */
+  border-bottom:none !important ;
+}
+.position-abs{position: absolute; top: 5px; right: 2px;}
+/* /input type=number increment hiddeen css/ */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  /* display: none; <- Crashes Chrome on hover */
+  appearance: none;
+  -webkit-appearance: none;
+  margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+input[type='number']:hover {
+  appearance: textfield;
+  -moz-appearance: textfield; /* Firefox */
+}
+.pointer {
+  cursor:pointer;
+}
+
+
+.icon-check-font{
+  font-size: 28px;
+}
+.segment-line-status-name {
+  font-size: 11px !important;
+  color: #3c8cd7 !important;
+}
+
+.margin-left-auto{
+  margin-left: auto !important;
+}

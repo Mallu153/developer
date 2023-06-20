@@ -1,0 +1,129 @@
+<section id="ngx-datatable-basic" >
+  <div class="row">
+    <div class="col-12">
+      <h6 class="mt-2 mb-0 ">
+        <span class="d-flex align-items-center">
+          <span>
+            <a class="a_link" (click)="goToDashBoard()">Home</a>
+            <i class="ft-chevron-right"></i>
+            <span>  Agent Cash Transactions</span>
+          </span>
+        </span>
+      </h6>
+      <div class="card">
+        <div class="card-header  py-1 mt-1" >
+          <h4 class="card-title">
+            Agent Cash Transactions
+
+          </h4>
+        </div>
+        <div class="card-content">
+          <div class="card-body">
+            <fieldset class="form-group" *ngIf="rows&&rows.length >0">
+              <label
+                >Show
+                <select
+                  name="users-list-select"
+                  class="form-control form-control-sm d-inline-block width-100 p-right-25 pl-4 mx-1"
+                  (click)="updateLimit($event)"
+                >
+                  <option value="10">10</option>
+                  <option value="25">25</option>
+                  <option value="50">50</option>
+                  <option value="100">100</option>
+                </select>
+                entries</label
+              >
+
+            </fieldset>
+            <ngx-datatable
+            [rows]="rows"
+            [rowHeight]="'auto'"
+             class="bootstrap core-bootstrap"
+             [limit]="limitRef"
+              [columnMode]="ColumnMode.force"
+              [headerHeight]="50"
+              [footerHeight]="50"
+              [scrollbarH]="true"
+              [sorts]="sorts"
+              *ngIf="rows&&rows.length >0"
+              >
+              <ngx-datatable-column name="S.No" [width]="10">
+                <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-row="row">
+                  {{rowIndex+1}}
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column [width]="100" name="Agent Name" prop="agentName">
+                <ng-template ngx-datatable-cell-template  let-row="row" let-value="value">
+
+                    {{ value }}
+
+                </ng-template>
+              </ngx-datatable-column>
+             <!--  <ngx-datatable-column [width]="50" name="SR ID" prop="sr_id">
+                <ng-template ngx-datatable-cell-template  let-row="row" let-value="value">
+
+                    {{ value }}
+                </ng-template>
+              </ngx-datatable-column> -->
+              <ngx-datatable-column [width]="150" name="Transaction Type" prop="transaction_type">
+                <ng-template ngx-datatable-cell-template  let-row="row" let-value="value">
+
+                    {{ value }}
+
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Transaction Ref.No" prop="transaction_refno" [width]="150"></ngx-datatable-column>
+
+              <ngx-datatable-column [width]="100" name="Total Amount" prop="total_amount">
+                <ng-template ngx-datatable-cell-template  let-row="row" let-value="value">
+
+                    {{ value }}
+
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column [width]="100" name="Prevoius Balance" prop="agent_credit_limit">
+                <ng-template ngx-datatable-cell-template  let-row="row" let-value="value">
+
+                    {{ value }}
+
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column [width]="100" name="Current Balance" prop="agent_credit_limit_balance">
+                <ng-template ngx-datatable-cell-template  let-row="row" let-value="value">
+
+                    {{ value }}
+
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column [width]="100" name="Product" prop="productName">
+                <ng-template ngx-datatable-cell-template  let-row="row" let-value="value">
+
+                    {{ value }}
+
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column [width]="100" name="Micro Account Ref" prop="micro_account_id">
+                <ng-template ngx-datatable-cell-template  let-row="row" let-value="value">
+
+                    {{ value }}
+
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column [width]="130" name="Transaction Date" prop="created_date">
+                <ng-template ngx-datatable-cell-template let-value="value">
+                  {{ value | date: 'medium'}}
+                </ng-template>
+              </ngx-datatable-column>
+            </ngx-datatable>
+           <div *ngIf="loading">
+            <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+            Loading...
+           </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,553 @@
+<section>
+  <div class="card">
+    <div class="card-content">
+      <div class="card-body py-1 px-2">
+        <h5 *ngIf="loading" class="card-title text-center">Please wait fetching the details...</h5>
+        <h5 *ngIf="requestLoading" class="card-title text-center">Please wait create the request...</h5>
+        <div
+          *ngIf="PackageDetailedInfo && PackageDetailedInfo.length > 0 && itineraryInfo && itineraryInfo?.length > 0"
+        >
+          <div class="row">
+            <!-- <div class="w-5"  *ngIf="keys?.includes(backBtn)">
+              <button type="button" class="btn text-primary mx-2 mb-1" (click)="backToRedirectSource()">
+                <i class="fa fa-angle-left"></i> Back
+              </button>
+            </div> -->
+            <div style="margin-left: auto" *ngIf="keys?.includes(rfqPackageListBtn)">
+              <a
+                [routerLink]="['/dashboard/rfq/package-rfq']"
+                class="text-primary mx-2 mb-1 packli"
+                [queryParams]="{ request_id: requestId }"
+
+                target="_blank"
+              >
+                <i class="fa fa-angle-right"></i> Rfq Package List
+              </a>
+            </div>
+            <div style="margin-left: auto" *ngIf="showCheckBox">
+              <ul class="list-unstyled mb-0 mt-2 mr-2">
+                <li class="d-inline-block mr-3 mb-2">
+                  <div class="checkbox">
+                    <input
+                      type="checkbox"
+                      (change)="onChangeProductDetails($event?.target?.checked, 'all')"
+                      [(ngModel)]="isAllMasterSelected"
+                      id="selectAllCheckbox"
+                    />
+                    <label for="selectAllCheckbox"><span></span></label>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div *ngFor="let itinerary of itineraryInfo; index as i; trackBy: trackByFn">
+            <div class="card border my-1 rounded-1 itinerary-list-item">
+              <div class="card-body p-1">
+                <!--  flight row start -->
+                <div class="row no-gutters align-items-center" *ngIf="itinerary.key === 'flight'">
+                  <div class="col-md-12 col-lg-5 col-xl-5 mb-4 mb-lg-0 text-left d-flex align-items-center">
+                    <div class="product-icon-blk px-2 py-1">
+                      <i class="fa-plane-bg">
+                        <img src="/assets/img/flight.svg" width="22" />
+                      </i>
+                    </div>
+                    <div class="package-l-info">
+                      <span class="package-location">
+                        {{ itinerary.segmentBoardCityOrAirport }} {{ '(' + itinerary.segmentBoardPoint + ')' }}
+                        -
+                        {{ itinerary.segmentArrivalCityOrAirport }} {{ '(' + itinerary.segmentOffPoint + ')' }}
+                      </span>
+                      <!--   <span class="package-location" *ngIf="isEdit">
+                        {{itinerary.routeName}}
+                      </span> -->
+                      <span class="package-request-info" *ngIf="itinerary?.flightrequestlineID">
+                        {{ requestId }} - {{ itinerary?.flightrequestlineID }}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-lg-3 col-xl-3">
+                    <span class="package-itinerary-date-span">
+                      {{ itinerary.segmentDepartDate | date: 'EEE d, MMM  y' }}
+                    </span>
+                  </div>
+                  <div class="col-md-2 col-lg-2 col-xl-2 d-flex">
+                    <div class="pas-count mr-2">
+                      <img
+                        class="package-passenger-icon"
+                        src="assets/img/icons/adult_avatar_male_icon.svg"
+                        alt="adult_avatar_male_icon"
+                      />
+                      <span class="mx-1 d-inline-block">{{ itinerary.adtCount }} </span>
+                    </div>
+                    <div class="pas-count mr-2">
+                      <img class="package-passenger-icon" src="assets/img/icons/child_icon.svg" alt="child_icon" />
+                      <span class="mx-1 d-inline-block">{{ itinerary.chdCount }}</span>
+                    </div>
+
+                    <div class="pas-count">
+                      <img
+                        class="package-passenger-icon"
+                        src="assets/img/icons/baby_nursery_icon.svg"
+                        alt="baby_nursery_icon"
+                      />
+                      <span class="mx-1 d-inline-block">{{ itinerary.infCount }} </span>
+                    </div>
+                  </div>
+                  <div class="col-md-1 col-lg-1 col-xl-1 text-right">
+                    <button
+                      class="btn btn-sm btn-outline-info btn-icon btn-dwn"
+                      type="button"
+                      (click)="showProductDetailsInfo(i)"
+                    >
+                      <i class="fa fa-angle-down" aria-hidden="true"></i>
+                    </button>
+                  </div>
+                  <div class="col-md-1 col-lg-1 col-xl-1 text-right" *ngIf="showCheckBox">
+                    <div class="checkbox d-inline-block mr-2">
+                      <input
+                        type="checkbox"
+                        id="checkbox_flight_{{ i }}"
+                        (change)="onChangeProductDetails($event?.target?.checked, 'single')"
+                        [(ngModel)]="itinerary.isChecked"
+                      />
+                      <label for="checkbox_flight_{{ i }}"></label>
+                    </div>
+                  </div>
+                  <div class="col-12" *ngIf="hideme[i]">
+                    <div class="package-passenger-info-block">
+                      <app-package-pax-info
+                        [hidden]="!hideme[i]"
+                        [addons]="itinerary?.addOns"
+                        [paxInfo]="itinerary?.paxInfo"
+                      ></app-package-pax-info>
+                    </div>
+                  </div>
+                </div>
+                <!--  flight row end -->
+
+                <!--  hotel row start -->
+                <div class="row no-gutters align-items-center" *ngIf="itinerary.key === 'hotel'">
+                  <div class="col-md-12 col-lg-5 col-xl-5 mb-4 mb-lg-0 text-left d-flex align-items-center">
+                    <div class="product-icon-blk px-2 py-1">
+                      <i class="fa fa-bed-bg">
+                        <img src="/assets/img/hotel.svg" width="22" />
+                      </i>
+                    </div>
+                    <div class="package-i-info">
+                      <span class="package-location">
+                        {{ itinerary.hotelCityName }} {{ itinerary.hotelCountryName }}
+                        {{ '(' + itinerary.hotelCountryCode + ')' }}
+                      </span>
+                      <!--  <span class="package-location" *ngIf="isEdit">
+                        {{ itinerary?.hotelName }}
+
+                      </span> -->
+                      <span class="package-request-info" *ngIf="itinerary?.hotelrequestlineID">
+                        {{ requestId }} - {{ itinerary?.hotelrequestlineID }}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-lg-3 col-xl-3">
+                    <span class="package-itinerary-date-span"
+                      >{{ itinerary.checkInDate | date: 'EEE d, MMM  y' }} to
+                      {{ itinerary.checkOutDate | date: 'EEE d, MMM  y' }}</span
+                    >
+                  </div>
+                  <div class="col-md-2 col-lg-2 col-xl-2 d-flex">
+                    <div class="pas-count mr-2">
+                      <img
+                        class="package-passenger-icon"
+                        src="assets/img/icons/adult_avatar_male_icon.svg"
+                        alt="adult_avatar_male_icon"
+                        title="Adult"
+                      />
+                      <span class="bold mx-1 d-inline-block">{{ itinerary.adtCount }} </span>
+                    </div>
+
+                    <div class="pas-count mr-2">
+                      <img
+                        class="package-passenger-icon"
+                        src="assets/img/icons/child_icon.svg"
+                        alt="child_icon"
+                        title="Child"
+                      />
+                      <span class="mx-1 d-inline-block">{{ itinerary.chdCount }}</span>
+                    </div>
+
+                    <span class="pas-count">
+                      <img
+                        class="package-passenger-icon"
+                        src="assets/img/icons/baby_nursery_icon.svg"
+                        alt="baby_nursery_icon"
+                        title="Baby"
+                      />
+                      <span class="mx-1 d-inline-block">{{ itinerary.infCount }} </span></span
+                    >
+                  </div>
+                  <div class="col-md-1 col-lg-1 col-xl-1 text-right">
+                    <button
+                      class="btn btn-sm btn-outline-info btn-icon btn-dwn"
+                      type="button"
+                      (click)="showProductDetailsInfo(i)"
+                    >
+                      <i class="fa fa-angle-down" aria-hidden="true"></i>
+                    </button>
+                  </div>
+                  <div class="col-md-1 col-lg-1 col-xl-1 text-right" *ngIf="showCheckBox">
+                    <div class="checkbox d-inline-block mr-2">
+                      <input
+                        type="checkbox"
+                        id="checkbox_hotel_{{ i }}"
+                        (change)="onChangeProductDetails($event?.target?.checked, 'single')"
+                        [(ngModel)]="itinerary.isChecked"
+                      />
+                      <label for="checkbox_hotel_{{ i }}"></label>
+                    </div>
+                  </div>
+
+                  <div class="col-12" *ngIf="hideme[i]">
+                    <div class="package-passenger-info-block">
+                      <app-package-pax-info
+                        [hidden]="!hideme[i]"
+                        [addons]="itinerary?.addOns"
+                        [paxInfo]="itinerary?.paxInfo"
+                      ></app-package-pax-info>
+                    </div>
+                  </div>
+                </div>
+                <!--  hotel row end -->
+
+                <!--  attractions row start -->
+                <div class="row no-gutters align-items-center" *ngIf="itinerary.key === 'attractions'">
+                  <div class="col-md-12 col-lg-5 col-xl-5 mb-4 mb-lg-0 text-left d-flex align-items-center">
+                    <div class="product-icon-blk px-2 py-1">
+                      <i class="fa fa-map-marker"></i>
+                    </div>
+                    <div class="package-i-info">
+                      <span class="package-location">{{ itinerary.attractionName }} ({{ itinerary.city }})</span>
+                      <span
+                        class="package-request-info"
+                        *ngIf="itinerary?.attractionrequestlineID"
+                      >
+                        {{ requestId }} - {{ itinerary?.attractionrequestlineID }} <!--  && itinerary?.attractionLineId -{{ itinerary?.attractionLineId }} -->
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="col-md-3 col-lg-3 col-xl-3"
+                    *ngIf="itinerary?.daysList[0] === null || itinerary?.daysList?.length === 0; else dayvalueshow"
+                  >
+                    <span class="package-itinerary-date-span">NA</span>
+                  </div>
+                  <ng-template #dayvalueshow>
+                    <div class="col-md-3 col-lg-3 col-xl-3">
+                      <span class="package-itinerary-date-span">{{
+                        itinerary.daysList[0] | date: 'EEE d, MMM  y'
+                      }}</span>
+                    </div>
+                  </ng-template>
+                  <div class="col-md-2 col-lg-2 col-xl-2 d-flex">
+                    <span class="pas-count">
+                      <img
+                        class="package-passenger-icon"
+                        src="assets/img/icons/travel-img.svg"
+                        alt="passenger_tourist_icon"
+                      />
+                      <span class="mx-1 d-inline-block">{{
+                        itinerary.paxCount !== null ? itinerary.paxCount : 0
+                      }}</span></span
+                    >
+                  </div>
+                  <div class="col-md-1 col-lg-1 col-xl-1 text-right">
+                    <button
+                      class="btn btn-sm btn-outline-info btn-icon btn-dwn"
+                      type="button"
+                      (click)="showProductDetailsInfo(i)"
+                    >
+                      <i class="fa fa-angle-down" aria-hidden="true"></i>
+                    </button>
+                  </div>
+                  <div class="col-md-1 col-lg-1 col-xl-1 text-right" *ngIf="showCheckBox">
+                    <div class="checkbox d-inline-block mr-2">
+                      <input
+                        type="checkbox"
+                        id="checkbox_attraction_{{ i }}"
+                        (change)="onChangeProductDetails($event?.target?.checked, 'single')"
+                        [(ngModel)]="itinerary.isChecked"
+                      />
+                      <label for="checkbox_attraction_{{ i }}"></label>
+                    </div>
+                  </div>
+
+                  <div class="col-12" *ngIf="itinerary.paxCount; else noPaxResults">
+                    <div class="package-passenger-info-block" *ngIf="hideme[i]">
+                      <app-package-pax-info
+                        [hidden]="!hideme[i]"
+                        [attractionPaxDeatils]="itinerary?.paxDetails"
+                        [addons]="[]"
+                        [paxInfo]="itinerary?.paxInfo"
+                      ></app-package-pax-info>
+                    </div>
+                  </div>
+                  <ng-template #noPaxResults>
+                    <div class="col-12" *ngIf="hideme[i]">
+                      <div class="package-passenger-info-block">
+                        <app-package-pax-info
+                          [hidden]="!hideme[i]"
+                          [attractionPaxDeatils]="[]"
+                          [addons]="[]"
+                          [paxInfo]="[]"
+                        ></app-package-pax-info>
+                      </div>
+                    </div>
+                  </ng-template>
+                </div>
+                <!--  attractions row end -->
+
+                <!--  anx row start -->
+                <div class="row no-gutters align-items-center" *ngIf="itinerary.key === 'anx'">
+                  <div class="col-md-12 col-lg-5 col-xl-5 mb-4 mb-lg-0 text-left d-flex align-items-center">
+                    <div class="product-icon-blk px-2 py-1">
+                      <i class="fa fa-car-bg ancillary"><img src="/assets/img/car.svg" width="22" /></i>
+                    </div>
+
+                    <div class="package-i-info">
+                      <span class="package-location">{{ itinerary.addOnName }}</span>
+                      <span class="package-request-info" *ngIf="itinerary?.anxrequestlineID">
+                        {{ requestId }} - {{ itinerary?.anxrequestlineID }}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3 col-lg-3 col-xl-3">
+                    <span class="package-itinerary-date-span">{{ itinerary.daysList[0] | date: 'EEE d, MMM  y' }}</span>
+                  </div>
+                  <div class="col-md-2 col-lg-2 col-xl-2 d-flex">
+                    <span class="pas-count"
+                      ><img
+                        class="package-passenger-icon"
+                        src="assets/img/icons/passenger_tourist_icon.svg"
+                        alt="passenger_tourist_icon"
+                      />
+                      <span class="mx-1 d-inline-block">{{
+                        itinerary.paxCount !== null ? itinerary.paxCount : 0
+                      }}</span></span
+                    >
+                  </div>
+                  <div class="col-md-1 col-lg-1 col-xl-1 text-right">
+                    <button
+                      class="btn btn-sm btn-outline-info btn-icon btn-dwn"
+                      type="button"
+                      (click)="showProductDetailsInfo(i)"
+                    >
+                      <i class="fa fa-angle-down" aria-hidden="true"></i>
+                    </button>
+                  </div>
+                  <div class="col-md-1 col-lg-1 col-xl-1 text-right" *ngIf="showCheckBox">
+                    <div class="checkbox d-inline-block mr-2">
+                      <input
+                        type="checkbox"
+                        id="checkbox_addon_{{ i }}"
+                        (change)="onChangeProductDetails($event?.target?.checked, 'single')"
+                        [(ngModel)]="itinerary.isChecked"
+                      />
+                      <label for="checkbox_addon_{{ i }}"></label>
+                    </div>
+                  </div>
+                  <div class="col-12" *ngIf="itinerary.paxCount; else noResults">
+                    <div *ngIf="hideme[i]">
+                      <div class="package-passenger-info-block">
+                        <app-package-pax-info
+                          [hidden]="!hideme[i]"
+                          [attractionPaxDeatils]="itinerary?.paxDetails"
+                          [addons]="[]"
+                          [paxInfo]="itinerary?.paxInfo"
+                        ></app-package-pax-info>
+                      </div>
+                    </div>
+                  </div>
+                  <ng-template #noResults>
+                    <div class="col-12" *ngIf="hideme[i]">
+                      <div class="package-passenger-info-block">
+                        <app-package-pax-info
+                          [hidden]="!hideme[i]"
+                          [attractionPaxDeatils]="[]"
+                          [addons]="[]"
+                          [paxInfo]="[]"
+                        ></app-package-pax-info>
+                      </div>
+                    </div>
+                  </ng-template>
+                </div>
+                <!--  anx row end -->
+              </div>
+            </div>
+          </div>
+
+          <!-- <div class="d-flex mb-2" *ngIf="PackageDetailedInfo && PackageDetailedInfo?.length > 0&&itineraryInfo&&itineraryInfo?.length>0">
+            <button type="button" (click)="onCreateServiceRequest()" class="btn btn-primary mr-2" *ngIf="submitButton">
+              <i class="ft-bookmark"></i>
+              Generate Request
+            </button>
+          </div> -->
+
+          <div *ngIf="keys?.includes(supplierBtn)&&showCheckBox">
+            <button
+              type="button"
+              (click)="getSupplierDetailes()"
+              class="btn btn-primary mr-2 my-2 pull-right"
+
+            >
+              <i class="icon-users mr-1"></i>
+              Get Supplier
+            </button>
+          </div>
+          <div
+            class="row"
+            style="display: block; clear: both"
+            *ngIf="supplierDeatils && supplierDeatils?.length > 0 && showCheckBox"
+          >
+            <div class="col-12">
+              <div>
+                <div>
+                  <div>
+                    <fieldset class="form-group">
+                      <label
+                        >Show
+                        <select
+                          name="users-list-select"
+                          [(ngModel)]="pageSize"
+                          class="form-control form-control-sm d-inline-block width-100 p-right-25"
+                        >
+                          <option [ngValue]="10">10</option>
+                          <option [ngValue]="15">15</option>
+                          <option [ngValue]="25">25</option>
+                          <option [ngValue]="50">50</option>
+                          <option [ngValue]="100">100</option>
+                        </select>
+                        entries</label
+                      >
+                      <label for="ngx-filter-ref" class="float-right"
+                        >Search:
+                        <input
+                          id="ngx-filter-ref"
+                          class="form-control form-control-sm d-inline-block width-200"
+                          type="text"
+                          id="search"
+                          [(ngModel)]="searchText"
+                          placeholder="Search"
+                        />
+                      </label>
+                    </fieldset>
+                    <div class="table-responsive">
+                      <table class="table table-bordered m-0">
+                        <thead>
+                          <tr class="refresh">
+                            <th scope="col"></th>
+                            <th
+                              scope="col"
+                              class="cursor-pointer"
+                              [appSort]="supplierDeatils"
+                              data-order="desc"
+                              data-name="businessName"
+                            >
+                              Supplier
+                            </th>
+                            <th
+                              scope="col"
+                              class="cursor-pointer"
+                              [appSort]="supplierDeatils"
+                              data-order="desc"
+                              data-name="primaryConatct"
+                            >
+                              Contact
+                            </th>
+                            <th
+                              scope="col"
+                              class="cursor-pointer"
+                              [appSort]="supplierDeatils"
+                              data-order="desc"
+                              data-name="primaryEmail"
+                            >
+                              Email
+                            </th>
+                            <th
+                              scope="col"
+                              class="cursor-pointer"
+                              [appSort]="supplierDeatils"
+                              data-order="desc"
+                              data-name="primaryPhoneNumber"
+                            >
+                              Phone Number
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr
+                            *ngFor="
+                              let supplier of supplierDeatils
+                                | filter: searchText
+                                | slice: (page - 1) * pageSize:page * pageSize;
+                              index as i; trackBy: trackByFn
+                            "
+                          >
+                            <td scope="row">
+                              <ul class="list-unstyled mb-0">
+                                <li class="d-inline-block mr-2 mb-2">
+                                  <div class="checkbox">
+                                    <input
+                                      type="checkbox"
+                                      id="{{ 'color-checkbox-5' + i }}"
+                                      (change)="isAllSelected()"
+                                      [(ngModel)]="supplier.isSelected"
+                                      value="{{ supplier }}"
+                                    />
+                                    <label for="{{ 'color-checkbox-5' + i }}"></label>
+                                  </div>
+                                </li>
+                              </ul>
+                            </td>
+                            <td scope="row">{{ supplier?.businessName }}</td>
+                            <td scope="row">{{ supplier?.primaryConatct }}</td>
+                            <td scope="row">{{ supplier?.primaryEmail }}</td>
+                            <td scope="row">{{ supplier?.primaryPhoneNumber }}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+
+                      <div class="d-flex justify-content-between p-2" *ngIf="supplierDeatils?.length > 0">
+                        <p>Showing 1 to {{ pageSize }} of {{ supplierDeatils?.length }} entries</p>
+                        <ngb-pagination
+                          [collectionSize]="supplierDeatils?.length"
+                          [(page)]="page"
+                          [maxSize]="10"
+                          [boundaryLinks]="true"
+                          [pageSize]="pageSize"
+                          class="d-flex justify-content-center"
+                        >
+                        </ngb-pagination>
+                      </div>
+                    </div>
+                    <div *ngIf="keys?.includes(sendBtn)">
+                      <button type="button" (click)="onCreateRfqForSelectedProducts()" class="btn btn-primary mr-2">
+                        SEND
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#fff" type="ball-clip-rotate-multiple"
+  [fullScreen]="true" *ngIf="requestCreationLoading">
+  <p style="color: white"> Loading... </p>
+</ngx-spinner>

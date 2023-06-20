@@ -1,0 +1,128 @@
+
+
+<div class="row">
+  <div class="col-md-12 col-12">
+    <div class="card shopping-cart">
+      <div class="card-header pb-0">
+        <div class="row">
+          <div class="col-md-5 col-5 form-group">
+            <input type="text" class="form-control form-control-sm" placeholder="Search with SR# / Req Type" />
+          </div>
+          <h4 class="col-md-3 col-7 ml-auto card-title text-right">Recent Requests</h4>
+        </div>
+      </div>
+      <div class="card-content">
+        <div class="card-body p-0">
+          <ngx-datatable
+            #tableRowDetails
+            class="bootstrap core-bootstrap"
+            [rows]="rows"
+            [headerHeight]="50"
+            [columnMode]="columnMode"
+            [footerHeight]="50"
+            [rowHeight]="'auto'"
+            [scrollbarH]="true"
+            [limit]="limitRef"
+          >
+            <ngx-datatable-row-detail [rowHeight]="130" #myDetailRow (toggle)="onDetailToggle($event)">
+              <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
+                <div class="row mx-1 border">
+                  <div class="col-3 text-left text-bold-600">Item</div>
+                  <div class="col-9 text-right">: {{ row?.originDestinationLocation }}</div>
+                  <div class="col-6 text-left text-bold-600">Journey/Check in</div>
+                  <div class="col-6 text-right">: {{ row.dateOfJourneyCheckIn }}</div>
+                  <div class="col-6 text-left text-bold-600">Class/Days</div>
+                  <div class="col-6 text-right">: {{ row.classDays }}</div>
+                  <div class="col-6 text-left text-bold-600">Pax</div>
+                  <div class="col-6 text-right">: {{ row.paxCount }}</div>
+                  <div class="col-12 d-flex justify-content-around border-top border-primary">
+                    <a class="my-1"
+                      ><i class="ft-message-square text-success font-medium-1 my-1"></i
+                    ></a>
+                    <a class="my-1"><i class="ft-phone text-success font-medium-1 ml-2"></i></a>
+                    <a class="ml-2 my-1"> <img src="assets/img/cbt-img/meeting-icon.png" alt="meeting" height="15" /></a>
+                  </div>
+                  {{ row?.serviceRequestNumber }}
+                </div>
+              </ng-template>
+            </ngx-datatable-row-detail>
+            <ngx-datatable-column
+              [width]="50"
+              [resizeable]="false"
+              [sortable]="false"
+              [draggable]="false"
+              [canAutoResize]="false"
+            >
+              <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+                <a
+                  [class.datatable-icon-right]="!expanded"
+                  [class.datatable-icon-down]="expanded"
+                  title="Expand/Collapse Row"
+                  (click)="toggleExpandRow(row)"
+                  class="desktop-hidden"
+                >
+                </a>
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="SR#" prop="serviceRequestNumber">
+              <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                <a class="text-info" (click)="getLinesBySrRequest(row)">
+                  <span [ngSwitch]="row.product">
+                    <span *ngSwitchCase="'Flight'"><i class="icon-plane"></i> </span>
+                    <span *ngSwitchCase="'Hotel'"><i class="fa fa-bed"></i></span>
+                    <span *ngSwitchCase="'Ancillary'"><i class="fa fa-car"></i></span>
+                    <span *ngSwitchCase="'Attraction'"><i class="ft-map-pin"></i></span>
+                  </span>
+                  <span > - {{ row.serviceRequestLine }} </span>
+                  <span *ngIf="rows[rowIndex - 1]?.serviceRequestNumber != row.serviceRequestNumber">
+                    - {{ row.serviceRequestNumber }}</span
+                  >
+                </a>
+              </ng-template>
+            </ngx-datatable-column>
+            <ng-container *ngIf="isMobile">
+              <ngx-datatable-column name="Class/Days" prop="classDays" [width]="150">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <span> {{ row.classDays }}</span>
+                </ng-template>
+              </ngx-datatable-column>
+            </ng-container>
+
+            <ng-container *ngIf="!isMobile">
+              <ngx-datatable-column name="Item" prop="originDestinationLocation" [minWidth]="350">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <span>
+                    {{ row.originDestinationLocation }}
+                  </span>
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Journey/Check in" prop="dateOfJourneyCheckIn" [width]="250">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <span> {{ row.dateOfJourneyCheckIn }}</span>
+                </ng-template>
+              </ngx-datatable-column>
+
+              <ngx-datatable-column name="Class/Days" prop="classDays" [width]="250">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <span> {{ row.classDays }}</span>
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Pax" prop="paxCount" [width]="150">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <span> {{ row.paxCount }}</span>
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Actions" [sortable]="false">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <a><i class="ft-message-square text-success font-medium-1"></i></a>
+                  <a><i class="ft-phone text-success font-medium-1 ml-2"></i></a>
+                  <a class="ml-2"> <img src="assets/img/cbt-img/meeting-icon.png" alt="meeting"  height="15" /></a>
+                </ng-template>
+              </ngx-datatable-column>
+            </ng-container>
+          </ngx-datatable>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

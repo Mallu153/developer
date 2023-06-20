@@ -1,0 +1,120 @@
+<div class="container-fluid">
+  <div class="modal-header">
+    <h4 class="modal-title">{{ explodeList.length }} Combinations</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <!--  <div class="card">
+      <div class="card-content">
+        <div class="card-body"> -->
+    <div class="table-responsive table">
+      <!--  <div class="outer">
+                <div class="inner"> -->
+      <table class="table m-0">
+        <thead>
+          <tr class="refresh">
+            <th scope="col" class="col1">
+              <input
+                type="checkbox"
+                [(ngModel)]="masterSelected"
+                name="list_name"
+                value="m1"
+                (change)="checkUncheckAll()"
+              />
+            </th>
+            <!-- <th scope="col" class="listtr col1">SNO</th> -->
+            <th scope="col" class="">From</th>
+            <th scope="col" class="">To</th>
+            <th scope="col" class="">Class</th>
+
+            <th scope="col" class="">Air Line</th>
+            <th scope="col" class="">Stops</th>
+            <th scope="col" class="">Depature</th>
+            <th scope="col" class="">Return</th>
+            <th scope="col">MPTB</th>
+            <th scope="col">AVL</th>
+            <th scope="col">ML</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let explode of explodeList; let i = index;trackBy: trackByFn">
+            <td scope="row">
+              <input
+                type="checkbox"
+                [(ngModel)]="explode.isSelected"
+                name="list_name"
+                value="{{ i }}"
+                (change)="isAllSelected()"
+              />
+              <!--  {{ item.value }}
+              {{ item.isSelected }} -->
+            </td>
+            <!-- <td scope="row">
+              {{ i + 1 }}
+            </td> -->
+            <td>
+              {{ explode.flexFromCode }}
+            </td>
+            <td>
+              {{ explode.flexToCode }}
+            </td>
+            <td>
+              {{ explode.flexClassName.name }}
+            </td>
+            <td>
+              {{ explode.flexAirLineCode }}
+            </td>
+            <td>
+              {{ explode.flexStops }}
+            </td>
+            <td>
+              {{ explode.flexDepature?.flexDepatureDate }}
+            </td>
+            <td>
+              {{ explode.flexReturn ? 'NO' : explode.flexReturn?.flexReturnDate }}
+            </td>
+            <td>
+
+             <!--  <div [appFlexprice]="explode" ></div> -->
+              <div *ngIf="explode?.priceData; else explodePrice" >
+                <div *ngFor="let price of explode?.priceData?.travelerPricings;trackBy: trackByFn">
+                  <div *ngIf="price?.travelerType == 'ADULT' && explode?.noofADT > 0">
+                    <span  class="text-primary cursor-pointer"  (click)="getPriceBreakupDeatilsData(explode?.priceData,'ADULT')">  ADT {{(price?.price?.total * explode?.noofADT).toFixed(2)}}</span>
+                  </div>
+                  <div *ngIf="price?.travelerType == 'CHILD' && explode?.noofCHD > 0">
+                    <span class="text-primary cursor-pointer"   (click)="getPriceBreakupDeatilsData(explode?.priceData,'CHILD')"> CHD {{(price?.price?.total * explode?.noofCHD).toFixed(2)}}</span>
+                </div>
+                <div *ngIf="price?.travelerType == 'HELD_INFANT' && explode?.noofINF > 0">
+                  <span  class="text-primary cursor-pointer"  (click)="getPriceBreakupDeatilsData(explode?.priceData,'HELD_INFANT')"> INF {{(price?.price?.total * explode?.noofINF).toFixed(2)}}</span>
+              </div>
+                </div>
+              </div>
+              <ng-template #explodePrice>Loading..</ng-template>
+            </td>
+            <td>
+              NA
+
+            </td>
+            <td>
+
+              NA
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <!--  </div>
+              </div> -->
+    </div>
+    <!--  </div>
+      </div>
+    </div> -->
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Close</button>
+    <button type="button" class="btn btn-primary" (click)="onSubmit()">Submit</button>
+  </div>
+</div>

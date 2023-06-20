@@ -1,0 +1,255 @@
+<div class="card" *ngIf="showPriceLineBlock">
+  <div class="card-header">Pricing<button (click)="addPriceLine()" class="btn btn-outline-info pull-right">Add Line</button></div>
+  <div class="card-body">
+    <form [formGroup]="myForm" autocomplete="off">
+    <div class="row">
+
+      <!-- <div class="col-12">
+
+        <div class="form-group d-flex flex-row no-gutters border p-1 align-items-center shadow-sm">
+          <div class="col-md-1 px-1">
+              <label>Product</label>
+          </div>
+          <div class="col-md-1 px-1">
+            <label>Route/Rooms</label>
+
+          </div>
+          <div class="col-md-2 px-1">
+
+            <label>Passengers</label>
+
+          </div>
+          <div class="col-md-1 px-1">
+            <label>Base</label>
+          </div>
+          <div class="col-md-1 px-1">
+            <label>Tax</label>
+          </div>
+          <div class="col-md-1 px-1">
+            <label>Input VAT</label>
+          </div>
+
+          <div class="col-md-1 px-1">
+            <label>Markup</label>
+          </div>
+          <div class="col-md-1 px-1">
+            <label>Discount</label>
+          </div>
+          <div class="col-md-1 px-1">
+            <label>Output VAT</label>
+          </div>
+          <div class="col-md-1 px-1">
+            <label>Total</label>
+          </div>
+          <div class="col-md-1 px-1">
+            <label>Action</label>
+          </div>
+        </div>
+
+      </div> -->
+      <div class="col-12">
+          <div formArrayName="fields">
+            <div *ngFor="let field of fields.controls; let i = index" [formGroupName]="i">
+              <div class="form-group d-flex flex-row no-gutters border p-1 pt-3 pb-2 align-items-start shadow-sm">
+                <div class="col-md-1 px-1">
+                  <label for="passengers" class="mb-2">Product*</label>
+                <ng-select
+                    [items]="priceLinesListForSel"
+                    [multiple]="false"
+                    [closeOnSelect]="true"
+                    [searchable]="false"
+                    bindLabel="showLabel"
+                    [clearable]="false"
+                    placeholder="Select For"
+                    (change)="onChangeProduct($event,i)"
+                    formControlName="productDetails"
+                    >
+                    <ng-option *ngFor="let option of priceLinesListForSel" [value]="option.value" [title]="option.showLabel">
+                      {{ option.showLabel }}
+                    </ng-option>
+                </ng-select>
+                <div *ngIf="fields.controls[i].get('productDetails').invalid && fields.controls[i].get('productDetails').touched" class="form-text text-muted danger">
+                  <div *ngIf="fields.controls[i].get('productDetails').hasError('required')">Product is required.</div>
+                </div>
+
+
+                  <label for="pnr_or_booking" class="mb-2">
+                    <span>
+                      {{
+                        field.value.productDetails.productId == '1'? 'PNR':'Booking'
+                      }}
+                    </span>
+
+                  </label>
+
+
+
+                <input type="text" class="form-control square" id="supplierReference_{{i}}" name="supplierReference" placeholder="{{
+                  field.value.productDetails.productId == '1'? 'PNR':'Booking'
+                }}"  formControlName="supplierReference"/>
+                </div>
+                <div class="col-md-1 px-1">
+
+                  <label for="passengers" class="mb-2">Routes/Rooms*</label>
+                  <ng-select
+                    [items]="getFilteredItem(i)"
+                    [multiple]="true"
+                    [closeOnSelect]="true"
+                    [searchable]="true"
+                    bindLabel="showLabel"
+                    [clearable]="true"
+                    placeholder="Select For"
+                    formControlName="referenceOne"
+                    >
+                </ng-select>
+                <div *ngIf="fields.controls[i].get('referenceOne').invalid && fields.controls[i].get('referenceOne').touched" class="form-text text-muted danger">
+                  <div *ngIf="fields.controls[i].get('referenceOne').hasError('required')">Routes/Rooms is required.</div>
+                </div>
+                </div>
+                <div class="col-md-2 px-1">
+
+                  <label for="passengers" class="mb-2">Passengers*</label>
+                  <ng-select
+                    [items]="getFilteredItemsPax(i)"
+                    [multiple]="true"
+                    [closeOnSelect]="true"
+                    [searchable]="true"
+                    bindLabel="showLabel"
+                    [clearable]="true"
+                    placeholder="Select For"
+                    formControlName="referenceTwo"
+                    >
+                </ng-select>
+                <div *ngIf="fields.controls[i].get('referenceTwo').invalid && fields.controls[i].get('referenceTwo').touched" class="form-text text-muted danger">
+                  <div *ngIf="fields.controls[i].get('referenceTwo').hasError('required')">Passengers is required.</div>
+                </div>
+                <div class="checkbox mt-2"><input  type="checkbox" id="priceBreakdownFlag_{{i}}"  name="priceBreakdownFlag" formControlName="priceBreakdownFlag"  checked="checked"><label for="priceBreakdownFlag_{{i}}"><span >Per
+                  {{
+                    field.value.productDetails.productId == '2'? 'Room':'PAX'
+                  }}
+
+                </span></label></div>
+
+                </div>
+                <div class="col-md-1 px-1">
+                  <label for="base" class="mb-2">Base*</label>
+                  <input type="text" class="form-control square text-right" id="base_{{i}}" name="base" placeholder="Base"  formControlName="base"/>
+                  <div *ngIf="fields.controls[i].get('base').invalid && fields.controls[i].get('base').touched" class="form-text text-muted danger">
+                    <div *ngIf="fields.controls[i].get('base').hasError('required')">Base is required.</div>
+                    <div *ngIf="fields.controls[i].get('base').hasError('pattern')">Invalid format(1234.56).</div>
+                  </div>
+                </div>
+                <div class="col-md-1 px-1">
+                  <label for="tax" class="mb-2">Tax*</label>
+                  <input type="text" class="form-control square text-right" id="tax_{{i}}" name="tax" placeholder="Tax"  formControlName="tax"/>
+                  <div *ngIf="fields.controls[i].get('tax').invalid && fields.controls[i].get('tax').touched" class="form-text text-muted danger">
+                    <div *ngIf="fields.controls[i].get('tax').hasError('required')">Tax is required.</div>
+                    <div *ngIf="fields.controls[i].get('tax').hasError('pattern')">Invalid format(1234.56).</div>
+                  </div>
+                </div>
+                <div class="col-md-1 px-1">
+                  <label for="inputVat" class="mb-2">Input VAT</label>
+                  <input type="text" class="form-control square text-right" id="inputvat_{{i}}" name="inputVat" placeholder="Input VAT"  formControlName="inputVat"/>
+                  <div *ngIf="fields.controls[i].get('inputVat').invalid && fields.controls[i].get('inputVat').touched" class="form-text text-muted danger">
+                    <div *ngIf="fields.controls[i].get('inputVat').hasError('required')">Input VAT is required.</div>
+                    <div *ngIf="fields.controls[i].get('inputVat').hasError('pattern')">Invalid format(1234.56).</div>
+                  </div>
+                </div>
+
+                <div class="col-md-1 px-1">
+                  <label for="markup" class="mb-2">Markup</label>
+                  <input type="text" class="form-control square text-right" id="markup_{{i}}" name="markup" placeholder="Markup"  formControlName="markup"/>
+                  <div *ngIf="fields.controls[i].get('markup').invalid && fields.controls[i].get('markup').touched" class="form-text text-muted danger">
+                    <div *ngIf="fields.controls[i].get('markup').hasError('required')">Markup is required.</div>
+                    <div *ngIf="fields.controls[i].get('markup').hasError('pattern')">Invalid format(1234.56).</div>
+                  </div>
+                </div>
+                <div class="col-md-1 px-1">
+                  <label for="discount" class="mb-2">Discount</label>
+                  <input type="text" class="form-control square text-right" id="discount_{{i}}" name="discount" placeholder="Discount"  formControlName="discount"/>
+                  <div *ngIf="fields.controls[i].get('discount').invalid && fields.controls[i].get('discount').touched" class="form-text text-muted danger">
+                    <div *ngIf="fields.controls[i].get('discount').hasError('required')">Discount is required.</div>
+                    <div *ngIf="fields.controls[i].get('discount').hasError('pattern')">Invalid format(1234.56).</div>
+                  </div>
+                </div>
+                <div class="col-md-1 px-1">
+                  <label for="outputVat" class="mb-2">Output VAT</label>
+                  <input type="text" class="form-control square text-right" id="outputvat_{{i}}" name="outputVat" placeholder="Output VAT"  formControlName="outputVat"/>
+                  <div *ngIf="fields.controls[i].get('outputVat').invalid && fields.controls[i].get('outputVat').touched" class="form-text text-muted danger">
+                    <div *ngIf="fields.controls[i].get('outputVat').hasError('required')">Output Vat is required.</div>
+                    <div *ngIf="fields.controls[i].get('outputVat').hasError('pattern')">Invalid format(1234.56).</div>
+                  </div>
+                </div>
+                <div class="col-md-1 px-1">
+                  <label for="total" class="mb-2">Total</label>
+                  <span class="text-right d-block p-1">
+                  {{ field.value.total }}
+                  </span>
+                </div>
+                <div class="col-md-1 px-1">
+                  <button class="btn btn-outline-info border-0 mt-3" (click)="removeField(i)"><i class="fas fa-trash"></i></button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+
+      </div>
+      <div class="col-12">
+        <div class="border-top mb-2"></div>
+      </div>
+      <div class="col-12">
+        <div class="form-group row no-gutters">
+          <label class="col-md-4 col-form-label text-right px-2" for="">Grand Total</label>
+          <div class="col-md-1 px-1">
+            <input type="text" class="form-control square text-right" id="" name="" placeholder="Base" formControlName="grandBase"  />
+          </div>
+          <div class="col-md-1 px-1">
+            <input type="text" class="form-control square text-right" id="" name="" placeholder="Tax" formControlName="grandTax"/>
+          </div>
+          <div class="col-md-1 px-1">
+            <input type="text" class="form-control square text-right" id="" name="" placeholder="Input VAT" formControlName="grandInputVat"/>
+          </div>
+          <div class="col-md-1 px-1">
+            <input type="text" class="form-control square text-right" id="" name="" placeholder="Markup" formControlName="grandMarkup" />
+          </div>
+          <div class="col-md-1 px-1">
+            <input type="text" class="form-control square text-right" id="" name="" placeholder="Discount" formControlName="grandDiscount" />
+          </div>
+          <div class="col-md-1 px-1">
+            <input type="text" class="form-control square text-right" id="" name="" placeholder="Output VAT" formControlName="grandOutputVat"/>
+          </div>
+          <div class="col-md-1 px-1">
+
+            <span class="text-right d-block p-1">
+              {{ myForm.value.grandTotal }}
+            </span>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="col-md-12 px-1 text-right mt-2">
+        <span class="text-muted font-small-3 mr-3">(* Required)</span>
+        <button class="btn btn-outline-info mr-2" (click)="quotePriceLines()" [disabled]="loadingQuote || myForm.invalid">
+
+          <span *ngIf="!loadingQuote">Add Quote</span>
+          <span *ngIf="loadingQuote">Adding...</span>
+
+        </button>
+        <button class="btn btn-outline-info" (click)="comfirmPriceLines()" [disabled]="loadingBooking || myForm.invalid">
+
+          <span *ngIf="!loadingBooking">Confirm Booking</span>
+          <span *ngIf="loadingBooking">Confirming...</span>
+
+        </button>
+      </div>
+
+
+
+    </div>
+    </form>
+  </div>
+</div>

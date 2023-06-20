@@ -1,0 +1,272 @@
+<section class="section-flight">
+  <div class="card">
+    <div *ngIf="lineStatusName" class="mobile-none margin-left-auto segment-line-status-name ">
+      {{lineStatusName}}
+    </div>
+    <div class="card-content">
+      <div class="card-body py-1 px-2">
+        <div class="section__body">
+          <form [formGroup]="activitiesForm">
+            <div class="form-container position-relative">
+              <div class="form-body">
+                <div formArrayName="activites">
+                  <div *ngFor="let act of activites.controls; let i = index;trackBy: trackByFn" [formGroupName]="i">
+                    <div class="row m-0">
+                      <div class="form-row-city align-items-top shadow-sm mb-3 srchbar position-relative">
+                        <div class="col-4 citygroup mb-0 pr-4">
+                          <label for="activitiesSearch">Location</label>
+                          <div class="position-relative has-icon-left">
+                            <input
+                              id="activitieslocationSearch"
+                              name="activitieslocationSearch"
+                              type="search"
+                              placeholder="Activities, Tours or Destination"
+                              #typeaheadInstance="ngbTypeahead"
+                              formControlName="attractionLineLocation"
+                              class="trav_inputField pl-3"
+                              style="border: none"
+                              (keydown)="typeaheadKeydown($event)"
+                              (selectItem)="bindValueOfLocationControl($event, i, 'attractionLineLocation')"
+                              (input)="onChangeActivites($event, i)"
+                              [resultTemplate]="searchActiviesResultTemplate"
+                              [inputFormatter]="formatter"
+                              title="{{ act.value.attractionLineLocation?.name }}"
+                              [ngbTypeahead]="onSearchLocation"
+                              [ngClass]="{
+                                'is-invalid':
+                                  activites.controls[i].get('attractionLineLocation').errors &&
+                                  ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                    activites.controls[i].get('attractionLineLocation').touched)
+                              }"
+                            />
+
+                            <ng-template #searchActiviesResultTemplate let-r="result" let-t="term">
+                              <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+                            </ng-template>
+                            <div class="form-control-position" style="top: 3px; left: -12px">
+                              <i class="ft-map-pin" style="font-size: 24px"></i>
+                            </div>
+
+                            <div
+                              class="invalid-feedback"
+                              *ngIf="
+                                activites.controls[i].get('attractionLineLocation').errors?.required &&
+                                ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                  activites.controls[i].get('attractionLineLocation').touched)
+                              "
+                            >
+                              required
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="col-4 citygroup mb-0 pr-4">
+                          <label for="activitiesName">Activites</label>
+                          <div>
+                            <ng-select
+                              [items]="attractionsData[i]"
+                              [selectableGroup]="true"
+                              [selectableGroupAsModel]="false"
+                              bindLabel="activityName"
+                              placeholder="Select"
+                              [multiple]="false"
+                              class="custom"
+                              [closeOnSelect]="true"
+                              formControlName="attractionLineName"
+                              [ngClass]="{
+                                'is-invalid':
+                                  activites.controls[i].get('attractionLineName').errors &&
+                                  ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                    activites.controls[i].get('attractionLineName').touched)
+                              }"
+                            >
+                            </ng-select>
+
+                            <div
+                              class="invalid-feedback"
+                              *ngIf="
+                                activites.controls[i].get('attractionLineName').errors?.required &&
+                                ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                  activites.controls[i].get('attractionLineName').touched)
+                              "
+                            >
+                              required
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="trav-dates position-relative">
+                          <div class="form-group citygroup">
+                            <label>Date</label>
+                            <input
+                              type="date"
+                              class="form-control form-control-sm square border-0"
+                              id="activiesdate"
+                              name="activiesdate"
+                              formControlName="attractionLineDate"
+                              [ngClass]="{
+                                'is-invalid':
+                                  activites.controls[i].get('attractionLineDate').errors &&
+                                  ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                    activites.controls[i].get('attractionLineDate').touched)
+                              }"
+                            />
+                            <div
+                              class="invalid-feedback"
+                              *ngIf="
+                                activites.controls[i].get('attractionLineDate').errors?.required &&
+                                ((isValidFormSubmitted != null && !isValidFormSubmitted) ||
+                                  activites.controls[i].get('attractionLineDate').touched)
+                              "
+                            >
+                              required
+                            </div>
+                          </div>
+                        </div>
+                        <ul class="nav position-abs" *ngIf="i === 0">
+                          <li class="nav-item">
+                            <a class="nav-link px-1">
+                              <i class="ft-map-pin  text-primary" style="font-size: 20px"></i>
+                            </a>
+                          </li>
+                          <li class="nav-item" *ngIf="isEdit"  placement="left" ngbTooltip="Add Acitivities">
+                            <a class="nav-link px-1">
+                              <i class="ft-plus-square  text-primary" style="font-size: 20px" (click)="deleteQueryParameterFromCurrentRoute() "></i>
+                            </a>
+                          </li>
+                        </ul>
+                        <!-- <div class="add-activities-right px-1" >
+                          <a (click)="addActivities(i)" *ngIf="activites.length === i + 1"  type="button" class="text-primary">
+                            <i class="ft-plus-circle mr-2"></i>
+                          </a>
+                          <a (click)="deleteActivities(i ,act.value.attractionLineId)"   type="button" class="text-primary">
+                            <i class="ft-trash-2"></i>
+                          </a>
+                        </div> -->
+                      </div>
+
+                      <div class="activitiesPaxCount">
+                        <div class="form-group mb-2">
+                          <label for="paxCount">Pax Count</label>
+                          <input
+                            type="number"
+                            id="paxCount"
+                            name="paxCount"
+                            class="form-control form-control-sm square"
+                            formControlName="attractionLinePaxCount"
+                          />
+                        </div>
+                      </div>
+                      <div class="form-group mb-0" *ngIf="keys?.includes(activitiesAddPax)">
+                        <button
+                          type="button"
+
+                          (click)="openPersonModal(i)"
+                          class="btn btn-sm btn-icon p-0 m-2"
+                          style="margin-top: 19px !important"
+                        >
+                          <i class="icon-user-follow" style="font-size: 30px; margin-top: 3px" aria-hidden="true"></i>
+                        </button>
+                        <button
+                          class="btn btn-sm btn-icon mx-2 mt-2 text-primary font-weight-bold"
+                          *ngIf="activites.at(i).value.activitiesPax && activites.at(i).value.activitiesPax?.length > 0"
+                          (click)="showActivitiesPaxInfo(i)"
+                        >
+                          +Pax Info ({{ activites.at(i).value.activitiesPax?.length }})
+                        </button>
+                      </div>
+
+                      <div
+                        class="col-12 col-lg-12 col-md-12 px-0"
+                        id="actPaxcollapse"
+                        [hidden]="!activitiesPaxHide[i]"
+                        *ngIf="activites.at(i).value.activitiesPax && activites.at(i).value.activitiesPax?.length > 0"
+                      >
+                        <h4 class="card-title text-left">Added Persons</h4>
+                        <div class="table-responsive table">
+                          <table class="table m-0">
+                            <thead>
+                              <tr class="refresh">
+                                <th scope="col">S NO</th>
+                                <th scope="col">Pax Type</th>
+                                <th scope="col">Gender</th>
+                                <th scope="col">First Name</th>
+                                <th scope="col">Last Name</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Mobile Number</th>
+                                <th scope="col">Dob</th>
+                                <th scope="col" >Action</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr *ngFor="let actPax of activites.at(i).value.activitiesPax; index as actPaxListIndex;trackBy: trackByFn">
+                                <td scope="row" class="pt-3 wrap-text">
+                                  {{ (page - 1) * pageSize + actPaxListIndex + 1 }}
+                                </td>
+                                <td scope="row" class="pt-3 wrap-text">{{ actPax?.attractionLinePassengerType }}</td>
+                                <td scope="row" class="pt-3 wrap-text">{{ actPax?.attractionLinePassengerGender }}</td>
+                                <td scope="row" class="pt-3 wrap-text">
+                                  {{ actPax?.attractionLinePassengerFristName }}
+                                </td>
+                                <td scope="row" class="pt-3 wrap-text">
+                                  {{ actPax?.attractionLinePassengerLastName }}
+                                </td>
+                                <td scope="row" class="pt-3 wrap-text">{{ actPax?.attractionLinePassengerEmail }}</td>
+                                <td scope="row" class="pt-3 wrap-text">{{ actPax?.attractionLinePassengerPhone }}</td>
+                                <td scope="row" class="pt-3 wrap-text">
+                                  {{ actPax?.attractionLinePassengerDob | date: 'dd-MMM-yyyy' }}
+                                </td>
+                                <td scope="row" class="pt-3 wrap-text">
+                                  <i class="ft-trash-2 pointer" (click)="deleteActivitiesPax(i, actPaxListIndex,actPax.attractionLinePassengerId, actPax.attractionLineId
+                                  )"></i>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mt-1 full-right card srchbarright">
+                  <app-products-navigations
+                  [activeId]="5"
+                  [flightLink]="flightLink"
+                  [hotelLink]="hotelLink"
+                  [ancillaryLink]="ancillaryLink"
+                  [holidayLink]="holidayLink"
+                  [activityLink]="activityLink"
+                  ></app-products-navigations>
+                </div>
+              </div>
+            </div>
+            <hr />
+            <div class="form-row align-items-center justify-content-end hrline">
+              <div class="col-md-12 text-right mt-1">
+                <div class="pull-left d-flex">
+                  <button type="button"   *ngIf="isEdit&&keys?.includes(activitiesRFQBtn)" class="btn btn-info ml-2 mr-2" (click)="createActivitiesRfq()">
+                    <i class="ft-navigation"></i> RFP
+                  </button>
+                  <button type="button"  *ngIf="isEdit&&keys?.includes(activitiesUpdateBtn)"   class="btn btn-info mr-2" (click)="onUpdateActivitiesForm()">
+                    <i class="ft-bookmark"></i> Update
+                  </button>
+
+                  <i class="ft-shield  ml-2 mt-1 icon-check-font cursor-pointer"  (click)="openPolicyPopup()" *ngIf="isEdit&&policyList?.length>0" [ngClass]="{'text-success':policyList[0]?.policyIsQualified=='Yes','text-danger':policyList[0]?.policyIsQualified=='No'}"></i>
+                  <button type="button"  *ngIf="!isEdit&&keys?.includes(activitiesSaveBtn)" class="btn btn-primary mr-2" (click)="onSubmitActivitiesForm()">
+                    <i class="ft-bookmark"></i> Save
+                  </button>
+                </div>
+                <div class="pull-right d-flex">
+                  <button type="button" *ngIf="isEdit&&keys?.includes(activitiesOfflineBtn)"  (click)="offline()" class="btn btn-outline-info ml-2">
+                    Offline
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

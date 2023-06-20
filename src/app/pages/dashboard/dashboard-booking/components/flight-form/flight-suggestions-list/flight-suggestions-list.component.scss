@@ -1,0 +1,89 @@
+
+
+
+
+/* swiper****/
+
+.marin-left-auto{
+  margin-left: auto;
+}
+.btn-suggestions{
+  position: absolute;
+  z-index: 999;
+  background-color: #2f8be6;
+  border: none;
+  top:45%;
+}
+
+.btn-suggestions.next{
+  right:0;
+}
+
+.btn-suggestions i{
+  color: #fff;
+
+}
+
+.truncate{
+  overflow: hidden;
+  width: 100%;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  font-size: 13px;
+  margin-top: 10px;
+  font-weight: 600;
+}
+.suggestions-img-icon{
+  color: #fff;
+background-color: #2f8be6;
+border-color: #2f8be6;
+border-radius: 50px;
+-moz-border-radius: 50px;
+-webkit-border-radius: 50px;
+text-align: center;
+display: inline-block;
+padding: 8px;
+width: 40px;
+height: 40px;
+}
+.suggestions-img-icon img{
+  rotate: 90deg;
+}
+
+
+.font-weight-medium {
+  font-weight: 500;
+}
+.font-14 {
+	font-size: 14px;
+}
+.margin-left-100{
+  margin-left: 100px !important;
+}
+
+.btn-shadow-none{
+  box-shadow: none;
+}
+
+
+
+ .airline-image {
+  border: 1px solid #fc3;
+  padding: 1.5px;
+  box-shadow: -3px 3px 3px 0 rgb(25 42 70 / 11%);
+}
+.rounded {
+  border-radius: 0.35rem !important;
+}
+.btncircle{
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  border-radius: 50%;
+  background: #007ad9;
+  box-shadow: 0 3px 5px -1px rgba(0,0,0,.2),
+  0 6px 10px 0 rgba(0,0,0,.14), 0 1px 18px 0 rgba(0,0,0,.12);
+  border: none;
+}

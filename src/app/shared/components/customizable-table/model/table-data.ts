@@ -1,0 +1,31 @@
+export interface TableData {
+  id: number;
+  firstName: string;
+  lastName?: string;
+  middleName?: string;
+  gender?: string;
+  email?: string;
+  mobile?: number;
+  dateOfBirth?: string;
+  mobileCountryCode?: number;
+  paxId?: number;
+  customerId?: string;
+  title?: string;
+  currentAddress?: string;
+  pincode?: string;
+  city?: string;
+  state?: string;
+  country?: string;
+  homeTown?: string;
+  maritalStatus?: string;
+  anniversaryDate?: string;
+  profilePhoto?: string;
+  passportFirstName?: string;
+  passportMiddleName?: string;
+  passportLastName?: string;
+  passportNumber?: string;
+  passportCountry?: string;
+  passportExpiry?: string;
+  visaType?: string;
+  passportNationality?: string;
+}

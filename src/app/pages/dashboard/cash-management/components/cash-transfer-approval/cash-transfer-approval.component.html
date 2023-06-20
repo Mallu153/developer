@@ -1,0 +1,133 @@
+<section id="simple-table">
+  <div class="row">
+    <div class="col-12">
+      <h6 class="mt-2 mb-0">
+        <span class="d-flex align-items-center">
+          <span>
+            <a class="a_link" (click)="goToDashBoard()">Home</a>
+            <i class="ft-chevron-right"></i>
+            <span> Cash Transfer Approval</span>
+          </span>
+        </span>
+      </h6>
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title">Cash Transfer Approval</h4>
+        </div>
+        <div class="card-content">
+          <div class="card-body">
+            <fieldset class="form-group" *ngIf="rows && rows.length > 0">
+              <label
+                >Show
+                <select
+                  name="users-list-select"
+                  class="form-control form-control-sm d-inline-block width-100 p-right-25 pl-4 mx-1"
+                  (click)="updateLimit($event)"
+                >
+                  <option value="10">10</option>
+                  <option value="25">25</option>
+                  <option value="50">50</option>
+                  <option value="100">100</option>
+                </select>
+                entries</label
+              >
+            </fieldset>
+            <ngx-datatable
+              [rows]="rows"
+              [rowHeight]="50"
+              class="bootstrap core-bootstrap"
+              [limit]="limitRef"
+              [columnMode]="ColumnMode.force"
+              [headerHeight]="50"
+              [footerHeight]="50"
+              [scrollbarH]="true"
+              [sorts]="sorts"
+              *ngIf="rows && rows.length > 0"
+            >
+              <ngx-datatable-column name="S.No" [width]="10">
+                <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-row="row">
+                  {{ rowIndex + 1 }}
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column [width]="100" name="Agent Or Bank Name" prop="agentOrBankName">
+                <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                  {{ value }}
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column [width]="50" name="Amount" prop="amount">
+                <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                  {{ value }}
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column [width]="150" name="Reference" prop="reference">
+                <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                  {{ value }}
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Remarks" prop="remarks" [width]="150"></ngx-datatable-column>
+              <ngx-datatable-column [width]="100" name="Actions">
+                <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                  <div>
+                    <button
+                      type="button"
+                      (click)="updateStatusOfCashTransactionLine(row.transactionId, 'Approved', row.amount)"
+                      class="btn btn-primary mr-2"
+                    >
+                      Approve
+                    </button>
+                    <button
+                      type="button"
+                      (click)="openWindowCustomClass(content, row.transactionId)"
+                      class="btn btn-warning"
+                    >
+                      Reject
+                    </button>
+                  </div>
+                </ng-template>
+              </ngx-datatable-column>
+            </ngx-datatable>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Reject Reason</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="rejectTransitionForm">
+      <div class="form-row">
+        <div class="col-md-12 col-12">
+          <div class="form-group mb-2">
+            <label for="remarks">Rejected Remarks</label>
+            <textarea
+              id="remarks"
+              placeholder="Eneter Remarks"
+              rows="2"
+              class="form-control square"
+              name="remarks"
+              formControlName="rejectedRemarks"
+              [ngClass]="{ 'is-invalid': (submitted || f.rejectedRemarks.touched) && f.rejectedRemarks.errors }"
+            >
+            </textarea>
+            <div *ngIf="(submitted || f.rejectedRemarks.touched) && f.rejectedRemarks.errors" class="invalid-feedback">
+              <div *ngIf="f.rejectedRemarks.errors.required">Please enter your rejected remarks</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" (click)="onSubmitRejectTransitionForm()" class="btn btn-primary mr-2">
+      <i class="ft-check-square mr-1"></i>Submit
+    </button>
+    <button type="button" class="btn btn-light" (click)="closePopup()">Close</button>
+  </div>
+</ng-template>

@@ -1,0 +1,213 @@
+<app-dashboard-btns></app-dashboard-btns>
+
+<section id="minimal-statistics">
+  <div class="row">
+    <div class="col-xl-8 col-lg-8 col-12">
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-12">
+          <div class="card font-medium-2">
+            <div class="card-content">
+              <div class="card-body py-0">
+                <div class="media row py-3 px-2 cash-management">
+                  <div class="d-flex align-items-center">
+                    <div class="thumb mr-1">
+                      <img src="assets/img/cashinhand.png" alt="cash-in-hand" width="90" class="rounded-circle" />
+                    </div>
+                    <div class="cash-details">
+                      <h5 class="mb-2">Cash In Hand</h5>
+                      <div class="d-flex mb-1">
+                        <h4 class="balck nummber-space" [countUp]="cash_in_hand_val" [duration]="duration"></h4>
+
+                        <button class="btn-light rounded-corn ml-2">
+                          <a target="_blank" class="text-white"
+                            [routerLink]="['/dashboard/cash-management/agent-cash']">
+                            <i class="fa fa-th-list"></i> List
+                          </a>
+                        </button>
+                      </div>
+                      <h5 class="mb-0" *ngIf="storeInfo?.transitAmount">
+                        Amount In Transit {{ storeInfo?.transitAmount }}
+                      </h5>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xl-6 col-lg-6 col-12 pl-2">
+          <div class="card font-medium-2">
+            <div class="card-content">
+              <div class="card-body py-0">
+                <div class="media row py-3 px-2 cash-management">
+                  <div class="d-flex align-items-center">
+                    <div class="thumb mr-3">
+                      <img src="assets/img/cashinout.png" alt="credit-limit" width="90" class="rounded-circle" />
+                    </div>
+                    <div class="cash-details">
+                      <h5 class="mb-2">Amount Outstanding</h5>
+                      <div class="d-flex mb-1">
+                        <h4 class="balck nummber-space" [countUp]="amount_outstanding_val" [duration]="duration"></h4>
+                        <button class="btn-light rounded-corn ml-2">
+                          <a target="_blank" class="text-white"
+                            [routerLink]="['/dashboard/cash-management/agent-liability']">
+                            <i class="fa fa-th-list"></i> List</a>
+                        </button>
+                      </div>
+                      <!--  <h5 class="mb-0">Last Year <span>2.5%</span></h5> -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-4 col-lg-4 col-12">
+      <div class="card gradient-purple-love white font-medium-2 mb-3">
+        <div class="card-content">
+          <div class="card-body py-1 position-relative">
+            <div class="media pb-3">
+              <div class="media-body text-left">
+                <h4 class="mb-1 text-white">
+                  {{ storeInfo?.pettyCashOpeningAmount === null ? 0 : storeInfo?.pettyCashOpeningAmount }}
+                  <span class="font-small-2">/ {{ storeInfo?.pettyCashAmount === null ? 0 : storeInfo?.pettyCashAmount
+                    }}</span>
+                </h4>
+                <span>Petty Cash</span>
+              </div>
+              <div class="media-right align-self-center">
+                <img src="assets/img/cash-bag.png" alt="petty_cash" width="60" class="rounded-circle" />
+              </div>
+            </div>
+
+            <div class="btns-out d-flex justify-content-center">
+              <a href="javascript:;" (click)="redirectToPayments()"
+                class="btn bg-white btn-md mr-3 shadow d-flex justify-content-center align-items-center">
+                <i class="icon-badge pr-1"></i> Spend</a>
+              <a href="javascript:;" (click)="redirectToPayment_report()"
+                class="btn bg-white btn-md shadow d-flex justify-content-center align-items-center"><i
+                  class="icon-list pr-1"></i> List</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- <h6 class="card-title mb-0 mt-4">Favorites</h6>
+      <div class="row">
+        <img src="assets/img/img11.png" alt="Favorites" class="p-3" width="100%" />
+      </div> -->
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xl-4 col-lg-4 col-md-4 col-12">
+      <app-quote-ageing></app-quote-ageing>
+    </div>
+    <div class="col-xl-4 col-lg-4 col-md-4  col-12">
+      <app-not-issued-vourcher></app-not-issued-vourcher>
+    </div>
+    <div class="col-xl-4 col-lg-4 col-md-4  col-12">
+
+      <app-receipt-payment></app-receipt-payment>
+    </div>
+  </div>
+
+  <div class="row">
+
+    <div class="col-xl-2 col-lg-2 col-md-2  col-12 offset-md-1 mb-2">
+      <button type="button" (click)="gotoCashTransferAgenttoAgent()"
+        class="px-2 list-group-item align-items-center d-flex shadow-vsm list-group-item-action btn btn-outline-primary1 btn-block">
+        <i class="fa fa-user-circle-o mr-2" style="font-size: 20px" aria-hidden="true"></i> Cash Transfer <i
+          class="fa fa-ellipsis-v pr-2" style="margin-left: auto; font-weight: 300" aria-hidden="true"></i>
+      </button>
+    </div>
+    <div class="col-xl-2 col-lg-2 col-md-2  col-12 mb-2 ">
+      <button type="button" (click)="gotoCashWithDrawBankToAgent()"
+        class="px-2 list-group-item align-items-center d-flex shadow-vsm list-group-item-action btn btn-outline-primary1 btn-block">
+        <i class="fa fa-university mr-2" style="font-size: 20px" aria-hidden="true"></i> Cash Withdrawl <i
+          class="fa fa-ellipsis-v pr-2" style="margin-left: auto" aria-hidden="true"></i>
+      </button>
+    </div>
+    <div class="col-xl-2 col-lg-2 col-md-2  col-12 mb-2">
+      <button type="button" (click)="gotoCashDepositAgentToBank()"
+        class="px-2 list-group-item align-items-center d-flex shadow-vsm list-group-item-action btn btn-outline-primary1 btn-block">
+        <i class="fa fa-money mr-2" style="font-size: 20px" aria-hidden="true"></i> Cash Deposit
+        <i class="fa fa-ellipsis-v pr-2" style="margin-left: auto" aria-hidden="true"></i>
+      </button>
+    </div>
+    <div class="col-xl-2 col-lg-2 col-md-2  col-12 mb-2">
+      <button type="button" (click)="gotoCashTransferApproval()"
+        class="px-2 list-group-item align-items-center d-flex shadow-vsm list-group-item-action btn btn-outline-primary1 btn-block">
+        <i class="fa fa-check mr-2" style="font-size: 20px" aria-hidden="true"></i> Cash Transfer - Approval
+        <span style="margin-left: auto">{{ transactionApprovalsCountData }}</span>
+      </button>
+    </div>
+    <div class="col-xl-2 col-lg-2 col-md-2  col-12 mb-2">
+      <button type="button"
+        class="px-2 list-group-item align-items-center d-flex shadow-vsm list-group-item-action btn btn-outline-primary1 btn-block">
+        <i class="fa fa-address-card-o mr-2" style="font-size: 20px" aria-hidden="true"></i> Cheques <i
+          class="fa fa-ellipsis-v pr-2" style="margin-left: auto" aria-hidden="true"></i>
+      </button>
+    </div>
+
+  </div>
+  <!-- <div class="row">
+        <div class="col-xl-4 col-lg-4 col-md-4  col-12">
+          <div class="card1 py-3">
+            <div class="card-content">
+              <div class="card-body1 px-0 py-2">
+                <div class="d-flex justify-content-around">
+                  <div (click)="go_to_registeredMailsSR()">
+                    <div class="reg-mail d-flex justify-content-between align-items-center bg-primary rounded p-2">
+                      <div class="text-white w-100">
+                        <i class="ft-mail font-medium-3 mt-1" triggers="mouseenter:mouseleave"
+                          ngbPopover="Registered Mails"></i>
+                      </div>
+                      <div class="in-bdg">
+                        <span class="badge badge-light">{{ registeredMailsSR }}</span>
+                      </div>
+                    </div>
+
+                    <div class="font-small-3 text-center text-bold-400">Registered</div>
+                  </div>
+
+                  <div (click)="go_to_nonRegisteredMails()">
+                    <div class="reg-mail d-flex justify-content-between align-items-center bg-danger rounded p-2">
+                      <div class="text-white w-100">
+                        <i class="ft-mail font-medium-3 mt-1" triggers="mouseenter:mouseleave"
+                          ngbPopover="Unregistered Mails"></i>
+                      </div>
+                      <div class="in-bdg">
+                        <span class="badge badge-light"> {{ nonRegisteredMails }}</span>
+                      </div>
+                    </div>
+
+                    <div class="font-small-3 text-center text-bold-400">Unregistered</div>
+                  </div>
+
+                  <div (click)="go_to_registeredMailsGEN()">
+                    <div class="reg-mail d-flex justify-content-between align-items-center bg-warning rounded p-2">
+                      <div class="text-white w-100">
+                        <i class="ft-mail font-medium-3 mt-1" triggers="mouseenter:mouseleave"
+                          ngbPopover="General Mails"></i>
+                      </div>
+                      <div class="in-bdg">
+                        <span class="badge badge-light"> {{ registeredMailsGEN }}</span>
+                      </div>
+                    </div>
+
+                    <div class="font-small-3 text-center text-bold-400">General</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> -->
+</section>
+
+

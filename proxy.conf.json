@@ -1,0 +1,183 @@
+{
+  "/userManagement": {
+    "target": "http://travsr.dev.com/usermanagement/",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/userManagement": ""
+    }
+  },
+  "/loginAfterHitApi": {
+    "target": "http://192.178.10.122/tt-micro-services_v1/",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/loginAfterHitApi": ""
+    }
+  },
+  "/apiMasterData": {
+    "target": "http://travsr.dev.com/jdbcapi/",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/apiMasterData": ""
+    }
+  },
+  "/apiSearchData": {
+    "target": "http://travsr.dev.com/system-master/",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/apiSearchData": ""
+    }
+  },
+  "/apiServiceRequest": {
+    "target": "http://travsr.dev.com/servicerequest",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/apiServiceRequest": ""
+    }
+  },
+  "/apiPax": {
+    "target": "http://travsr.dev.com/paxdata/",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/apiPax": ""
+    }
+  },
+  "/apiRFQ": {
+    "target": "http://travsr.dev.com/option/",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/apiRFQ": ""
+    }
+  },
+  "/BPF": {
+    "target": "http://travsr.dev.com/bpf/",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/BPF": ""
+    }
+  },
+  "/flightBooking": {
+    "target": "http://travsr.dev.com/flight-api/",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/flightBooking": ""
+    }
+  },
+  "/store-management": {
+    "target": "http://travsr.dev.com/store-management/",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/store-management": ""
+    }
+  },
+  "/resources-assignment": {
+    "target": "http://travsr.dev.com/resources-assignment/",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/resources-assignment": ""
+    }
+  },
+  "/domainName": {
+    "target": "http://travsr.dev.com/",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/domainName": ""
+    }
+  },
+  "/serviceConfig": {
+    "target": "http://travsr.dev.com/travrconfig/",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/serviceConfig": ""
+    }
+  },
+  "/TT_MAIL_BOX": {
+    "target": "http://travpx.dev.com/tt-email/",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/TT_MAIL_BOX": ""
+    }
+  },
+  "/Whatsapp": {
+    "target": "http://travwaapi.dev.com:5700/",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/Whatsapp": ""
+    }
+  },
+  "/refreshTokenFeLoginManagement": {
+    "target": "http://travsr.dev.com/fe-login-management/",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/refreshTokenFeLoginManagement": ""
+    }
+  },
+  "/hr": {
+    "target": "http://travsr.dev.com/hr/",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/hr": ""
+    }
+  },
+  "/packages": {
+    "target": "http://travsr.dev.com/packages/",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/packages": ""
+    }
+  },
+  "/reports": {
+    "target": "http://travsr.dev.com/reports/",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/reports": ""
+    }
+  },
+  "/deals": {
+    "target": "http://travsr.dev.com/deals/",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/deals": ""
+    }
+  }
+
+}

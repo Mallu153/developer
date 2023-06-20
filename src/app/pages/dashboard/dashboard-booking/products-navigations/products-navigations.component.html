@@ -1,0 +1,62 @@
+<ul
+  ngbNav
+  #basicnav="ngbNav"
+  [(activeId)]="activeId"
+  (click)="onActiveIdChangeChange(activeId)"
+  class="nav-justified product-side-navbar-sr"
+  style="position: absolute; top: 0"
+>
+  <li [ngbNavItem]="1"   *ngIf="keys?.includes(flightLink)&&activeId !== 1" placement="left" ngbTooltip="Flight" class="py-0" >
+    <a ngbNavLink>
+      <i class="icon-plane" style="font-size: 20px"></i>
+    </a>
+  </li>
+
+  <li [ngbNavItem]="2"  *ngIf="keys?.includes(hotelLink)&&activeId !== 2"  placement="left" ngbTooltip="Hotel" class="py-0" >
+    <a ngbNavLink>
+      <i class="fa fa-bed" style="font-size: 20px"></i>
+    </a>
+  </li>
+
+  <li [ngbNavItem]="3"  *ngIf="keys?.includes(ancillaryLink)&&activeId !== 3"    placement="left" ngbTooltip="Ancillary" class="py-0" >
+    <a ngbNavLink>
+      <i class="fa fa-car" style="font-size: 20px"></i>
+    </a>
+  </li>
+  <!-- <li
+    [ngbNavItem]="4"
+
+    *ngIf="keys?.includes(holidayLink)&&activeId !== 4"
+    placement="left"
+    ngbTooltip="Holiday Packages"
+    class="py-0"
+
+  >
+    <a ngbNavLink>
+      <i class="icon-bulb" style="font-size: 20px"></i>
+    </a>
+  </li> -->
+  <li
+    [ngbNavItem]="5"
+
+    *ngIf="keys?.includes(activityLink)&&activeId !== 5"
+    placement="left"
+    ngbTooltip="Activities"
+    class="py-0"
+
+  >
+    <a ngbNavLink>
+      <i class="ft-map-pin" style="font-size: 20px"></i>
+    </a>
+  </li>
+
+  <!-- <li class="nav-item"><span  style="font-weight: 500" >more</span></li> -->
+  <!-- <li class="nav-item"><a  style="font-weight: 500" >more</a></li> -->
+</ul>
+<!-- <ul>
+  <li class="nav-item " placement="left" ngbTooltip="Flight"><a  class="nav-link "><i class="icon-plane" style="font-size:20px;"></i></a></li>
+    <li class="nav-item" placement="left" ngbTooltip="Hotel"><a  class="nav-link"><i class="fa fa-bed" style="font-size:20px;"></i></a></li>
+    <li class="nav-item" placement="left" ngbTooltip="Ancillary"><a  class="nav-link"><i class="fa fa-car" style="font-size:20px;"></i></a></li>
+    <li class="nav-item" placement="left" ngbTooltip="Holiday Packages"><a class="nav-link"><i class="icon-bulb" style="font-size:20px;"></i></a></li>
+
+</ul> -->

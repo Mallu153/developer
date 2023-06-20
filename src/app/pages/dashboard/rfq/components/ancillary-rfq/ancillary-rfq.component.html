@@ -1,0 +1,389 @@
+<section id="basic-hidden-label-form-layouts">
+  <div class="row match-height">
+    <div class="col-lg-12 col-md-12 col-12">
+      <app-customer-details></app-customer-details>
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title">{{ title ? title : 'Loading..' }}</h4>
+        </div>
+        <div class="card-content">
+          <div class="card-body">
+            <ul ngbNav #nav="ngbNav" [(activeId)]="active" (navChange)="onNavChange($event)" class="nav-tabs">
+              <li [ngbNavItem]="1" [disabled]="disabled" [destroyOnHide]="false">
+                <!-- <ul class="nav position-abs mr-5" *ngIf="isEdit">
+                  <li class="nav-item">
+                    <a class="nav-link px-1">
+                      <i class="fa fa-car text-primary" style="font-size: 20px"></i>
+                    </a>
+                  </li>
+                  <li class="nav-item" placement="left" ngbTooltip="Add Ancillary" (click)="formResetEvent()">
+                    <a class="nav-link px-1"><i class="ft-plus-square text-primary" style="font-size: 20px"></i></a>
+                  </li>
+                </ul> -->
+                <ng-template ngbNavContent>
+                  <!--  (submittedData)="getFormData($event)" -->
+                  <!-- <button
+                    type="button"
+                    *ngIf="anxServiceRequestForm?.value?.lineUuid"
+                    (click)="openAddonsModal()"
+                    class="btn btn-primary mr-1 pull-right"
+                    style="margin-left: auto; font-family: Arial, Helvetica, sans-serif"
+                  >
+                    <i class="fa fa-plus" aria-hidden="true"></i> Add-ons
+                  </button> -->
+
+                  <app-dynamic-form-builder
+                    *ngIf="formInput && formInput.length > 0 && !isEdit"
+                    [formInput]="formInput"
+                    [formPatch]="formInputPatchData"
+                    (submittedData)="getFormData($event)"
+                    [events]="formOnSubmitEvent.asObservable()"
+                  ></app-dynamic-form-builder>
+
+                  <app-dynamic-form-builder
+                    *ngIf="formInput && formInput?.length > 0 && isEdit"
+                    [formInput]="formInput"
+                    [formPatch]="formInputPatchData"
+                    (submittedData)="getFormData($event)"
+                    [events]="formOnSubmitEvent.asObservable()"
+                    [resetevents]="formOnSubmitResetEvent.asObservable()"
+                  ></app-dynamic-form-builder>
+                </ng-template>
+              </li>
+              <li [ngbNavItem]="2" [disabled]="disabled" [destroyOnHide]="false">
+                <!--  <a ngbNavLink>Attachments</a> -->
+                <ng-template ngbNavContent>
+                  <app-service-request-attachments
+                    *ngIf="anxServiceRequestForm?.value?.id && serviceAttachments && serviceAttachments?.length > 0"
+                    [srRequestData]="anxServiceRequestForm.value"
+                    [serviceAttachments]="serviceAttachments"
+                    [events]="attachmentOnSubmitEvent.asObservable()"
+                    (submittedAttachmentData)="getSubmittedAttachments($events)"
+                  ></app-service-request-attachments>
+                </ng-template>
+              </li>
+              <li [ngbNavItem]="3" [destroyOnHide]="true" [disabled]="disabled">
+                <!--  <a ngbNavLink>Attachments</a> -->
+                <ng-template ngbNavContent>
+                  <app-service-request-pricing
+                    *ngIf="serviceRequestData && formInput && anxServiceRequestForm.value.id"
+                    [serviceTpeHeaderId]="serviceTypeId"
+                    [serviceRequestData]="serviceRequestData"
+                    [serviceRequest]="anxServiceRequestForm.value"
+                    [formInput]="formInput"
+                    [events]="priceOnSubmitEvent.asObservable()"
+                    (submittedPriceData)="onServicePricingAdd($event)"
+                  ></app-service-request-pricing>
+                </ng-template>
+              </li>
+            </ul>
+
+            <div [ngbNavOutlet]="nav" class="mt-2"></div>
+          <form [formGroup]="anxServiceRequestForm">
+            <div class="col-12 col-md-12 p-0">
+              <div class="form-row align-items-center srchbar">
+                <div class="col-12 col-md-6 d-flex adtinput">
+                  <div class="form-group mr-3">
+                    <label for="adt">Adt</label>
+                    <input type="number" id="adt" class="form-control form-control-sm square" name="adt"  formControlName="anxLineAdtCount"/>
+                  </div>
+                  <div class="form-group mr-3">
+                    <label for="chd">Chd</label>
+                    <input type="number" id="chd" class="form-control form-control-sm square" name="chd"  formControlName="anxLineChdCount"/>
+                  </div>
+                  <div class="form-group">
+                    <label for="inf">Inf</label>
+                    <input type="number" id="inf" class="form-control form-control-sm square" name="inf" formControlName="anxLineInfCount"/>
+                  </div>
+                  <div class="form-group mb-0">
+                    <!-- <button type="button" (click)="openPersonModal()"  class="btn btn-sm btn-icon p-0 m-2" style="margin-top: 19px !important">
+                      <i class="icon-user-follow" style="font-size: 30px; margin-top: 3px" aria-hidden="true"></i>
+                    </button> -->
+                    <button class="btn btn-sm btn-icon mx-2 mt-2 text-primary font-weight-bold"
+                    *ngIf="passengersList && passengersList?.length > 0"
+                    (click)="collapsePassengers.toggle()"
+                      [attr.aria-expanded]="isCollapsedSelectedPersons"
+                      aria-controls="collapseExample6756"
+                    >
+                      +Pax Info ({{ passengersList?.length }})
+                    </button>
+                  </div>
+                </div>
+                <div class="col-md-6" style="margin-left: auto">
+                  <div>
+                   <!--  (click)="openAddonsModal()" -->
+                  <!--   <button
+                      type="button"
+                      class="btn btn-outline-info mr-1 mb-0 pull-right ml-2"
+                      style="width: 150px"
+                      (click)="openAddonsModal(anxServiceRequestForm.value.anxLineAdtCount,anxServiceRequestForm.value.anxLineChdCount,anxServiceRequestForm.value.anxLineInfCount)"
+                      *ngIf="isEdit"
+                    >
+                      Add-ons
+                    </button> -->
+                  </div>
+                  <div class="lpo--detalils">
+                    <span class="btn btn-link text-info pull-right" (click)="openSm(content)" style="width: 150px"> LPO Details </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row p-0 m-0" #collapsePassengers="ngbCollapse" [(ngbCollapse)]="isCollapsedSelectedPersons">
+              <div class="col-12 col-lg-12 col-md-12 px-0">
+                <h4 class="card-title text-left" *ngIf="passengersList && passengersList?.length > 0">Added Passengers</h4>
+                <div class="table-responsive table">
+                  <div class="outer">
+                    <div class="inner">
+                      <table class="table m-0" *ngIf="passengersList && passengersList?.length > 0">
+                        <thead>
+                          <tr class="refresh">
+                            <th scope="col">S NO</th>
+                            <th scope="col">Pax Type</th>
+                            <th scope="col">First Name</th>
+                            <th scope="col">Last Name</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Mobile Number</th>
+                            <th scope="col">Dob</th>
+                            <th scope="col" *ngIf="1isEdit">Action</th>
+                          </tr>
+                        </thead>
+                        <tbody *ngIf="passengersList && passengersList?.length > 0">
+                          <tr *ngFor="let j of passengersList | slice: (page - 1) * pageSize:page * pageSize; index as i">
+                            <td scope="row" class="pt-3 wrap-text">{{ (page - 1) * pageSize + i + 1 }}</td>
+                            <td scope="row" class="pt-3 wrap-text">{{ j?.paxType?.name }}</td>
+                            <td scope="row" class="pt-3 wrap-text">{{ j?.firstName }}</td>
+                            <td scope="row" class="pt-3 wrap-text">{{ j?.lastName }}</td>
+                            <td scope="row" class="pt-3 wrap-text">{{ j?.email }}</td>
+                            <td scope="row" class="pt-3 wrap-text">{{ j?.phone }}</td>
+                            <td scope="row" class="pt-3 wrap-text">{{ j?.dob | date: 'dd-MMM-yyyy' }}</td>
+                            <td scope="row" class="pt-3 wrap-text" *ngIf="!isEdit">
+                              <i class="ft-trash-2 pointer" (click)="delete(i)"></i>
+                            </td>
+                            <td scope="row" class="pt-3 wrap-text" *ngIf="!isEdit">
+                              <i class="ft-trash-2 pointer" ></i>
+                            </td>
+                            <td scope="row" class="pt-3 wrap-text" *ngIf="1isEdit">
+                              <i class="ft-trash-2 pointer" (click)="inActivePassengers(i, j.requestLinePaxId)"></i>
+                            </td>
+                          </tr>
+                        </tbody>
+                        <div class="d-flex justify-content-between p-2">
+                          <ngb-pagination
+                            [collectionSize]="passengersList?.length"
+                            [(page)]="page"
+                            [maxSize]="5"
+                            [boundaryLinks]="true"
+                            [pageSize]="pageSize"
+                            class="d-flex justify-content-center"
+                          >
+                          </ngb-pagination>
+                        </div>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+
+          <div class="form-row">
+            <button type="button" (click)="getSupplierDetailes()" class="btn btn-primary mr-2">
+              <i class="icon-users mr-1"></i>
+              Get Supplier
+            </button>
+          </div>
+          <div class="row" *ngIf="supplierDeatils && supplierDeatils.length >0">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-content">
+                  <div class="card-body">
+                    <fieldset class="form-group">
+                      <label>Show
+                        <select name="users-list-select"[(ngModel)]="pageSize" class="form-control form-control-sm d-inline-block width-100 p-right-25 ">
+                          <option [ngValue]="10">10</option>
+                          <option [ngValue]="15">15</option>
+                          <option [ngValue]="25">25</option>
+                          <option [ngValue]="50">50</option>
+                          <option [ngValue]="100">100</option>
+                        </select>
+                        entries</label>
+                      <label for="ngx-filter-ref" class="float-right">Search:
+                        <input id="ngx-filter-ref" class="form-control form-control-sm d-inline-block width-200"
+                          type="text"
+                           id="search"
+                           [(ngModel)]="searchText"
+                           placeholder="Search" />
+                      </label>
+                    </fieldset>
+                    <div class="table-responsive">
+                      <table class="table table-bordered m-0">
+                        <thead>
+                          <tr class="refresh pointer">
+                            <th scope="col">#</th>
+                            <th scope="col" class="highlight_text"[appSort]="supplierDeatils" data-order="desc" data-name="businessName">
+                              Supplier
+                            </th>
+                            <th scope="col" class="highlight_text"[appSort]="supplierDeatils" data-order="desc" data-name="primaryConatct">
+                              Contact
+                            </th>
+                            <th scope="col" class="highlight_text"[appSort]="supplierDeatils" data-order="desc" data-name="primaryEmail">
+                              Email
+                            </th>
+                            <th scope="col" class="highlight_text"[appSort]="supplierDeatils" data-order="desc" data-name="primaryPhoneNumber">
+                             Phone Number
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let supplier of supplierDeatils | filter:searchText | slice: (page-1) * pageSize : page * pageSize; index as i;
+                          trackBy: trackByFn
+                          ">
+                            <td scope="row">
+                              <ul class="list-unstyled mb-0">
+                                <li class="d-inline-block mr-2 mb-2">
+                                  <div class="checkbox">
+                                    <input
+                                    type="checkbox"
+                                    (change)="isAllSelected()"
+                                     id="{{'color-checkbox-5' + i}}"
+                                     [(ngModel)]="supplier.isSelected"
+                                     value="{{supplier}}"
+                                      >
+                                    <label for="{{'color-checkbox-5' + i}}"></label>
+                                  </div>
+                                </li>
+                              </ul>
+                            </td>
+                            <td scope="row">{{supplier?.businessName}}</td>
+                            <td scope="row">{{supplier?.primaryConatct}}</td>
+                            <td scope="row">{{supplier?.primaryEmail}}</td>
+                            <td scope="row">{{supplier?.primaryPhoneNumber}}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+
+                      <div class="d-flex justify-content-between p-2" *ngIf="supplierDeatils?.length >0" >
+                        <p>Showing 1 to {{pageSize}} of {{supplierDeatils?.length}} entries</p>
+                        <ngb-pagination [collectionSize]="supplierDeatils?.length" [(page)]="page" [maxSize]="10"
+                          [boundaryLinks]="true" [pageSize]="pageSize"  class="d-flex justify-content-center">
+                        </ngb-pagination>
+                      </div>
+                    </div>
+                    <div>
+
+                      <button type="button"  (click)="next()"
+                      *ngIf="serviceTypeHeader" class=" btn  btn-primary mr-2">
+
+                        {{ isEdit ? 'SEND' : 'Save' }}
+                      </button>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+            <div class="form-row" *ngIf="active > 0">
+              <div class="col-md-3" *ngIf="active > 1">
+                <button type="button" (click)="back()" class="btn btn-primary mr-2 float-left">Back</button>
+              </div>
+              <div
+                class="col-md-3"
+                [ngClass]="{
+                  'offset-md-9': active === 1,
+                  'offset-md-6': active > 1
+                }"
+                *ngIf="active < 3"
+              >
+                <!-- (click)="next()" -->
+                <!-- <button
+                  type="button"
+                  (click)="next()"
+                  *ngIf="serviceTypeHeader"
+                  class="btn btn-primary mr-2 float-right"
+                >
+                  <i class="fa fa-spinner fa-spin" *ngIf="loading"></i>
+                  {{ isEdit ? 'Update' : 'Save' }}
+                </button> -->
+
+              </div>
+              <div class="offset-md-6 col-md-3" *ngIf="active === 3">
+                <button type="button" (click)="onServicePricing(2)" class="btn btn-primary mr-2 float-right">
+                  <i class="ft-dollar-sign mr-1"></i>
+                  Payment
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- <div class="col-lg-3 col-md-3 col-12">
+      <app-service-request-support
+        *ngIf="serviceTypeHeader"
+        [serviceType]="serviceTypeHeader"
+      ></app-service-request-support>
+    </div> -->
+  </div>
+</section>
+<!--LPO DETAILS -->
+<ng-template #content let-modal>
+  <div class="modal-header py-1">
+    <h4 class="modal-title">LPO Details</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.close('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="anxServiceRequestForm">
+      <div class="form-row">
+        <div class="col-md-4 col-12">
+          <div class="form-group mb-2">
+            <label for="lpo_Number">LPO Number</label>
+            <input
+              type="text"
+              id="lpo_Number"
+              placeholder="Enter LPO Number"
+              class="form-control square"
+              name="lpo_Number"
+              formControlName="anxLineLpoNumber"
+            />
+          </div>
+        </div>
+        <div class="col-md-4 col-12">
+          <div class="form-group mb-2">
+            <label for="anxLineLpoDate">LPO Date</label>
+
+            <input
+              type="date"
+              id="anxLineLpoDate"
+              class="form-control square"
+              name="anxLineLpoDate"
+              formControlName="anxLineLpoDate"
+            />
+          </div>
+        </div>
+        <div class="col-md-4 col-12">
+          <div class="form-group mb-2">
+            <label for="lpo_amount">LPO Amount</label>
+            <input
+              type="number"
+              id="lpo_amount"
+              placeholder="Enter LPO Amount"
+              class="form-control square"
+              name="lpo_amount"
+              formControlName="anxLineLpoAmount"
+            />
+          </div>
+        </div>
+      </div>
+    </form>
+
+  </div>
+</ng-template>
+<!--LPO DETAILS END-->
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#fff" type="ball-clip-rotate-multiple"
+  [fullScreen]="true" *ngIf="requestCreationLoading">
+  <p style="color: white"> Loading... </p>
+</ngx-spinner>

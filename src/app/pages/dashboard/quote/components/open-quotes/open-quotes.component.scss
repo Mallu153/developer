@@ -1,0 +1,9 @@
+
+
+.markup--name--extra-text--hide{
+  overflow: hidden;
+width: 100%;
+display: -webkit-box;
+-webkit-line-clamp: 1;
+-webkit-box-orient: vertical;
+}
